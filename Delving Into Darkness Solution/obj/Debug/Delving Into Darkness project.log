@@ -1,0 +1,12 @@
+﻿  Delving_Into_Darkness.cpp
+  game.cpp
+  main.cpp
+  Generando código...
+LINK : warning LNK4098: la biblioteca predeterminada'MSVCRT' entra en conflicto con otras bibliotecas; use la biblioteca /NODEFAULTLIB:biblioteca
+raylib.lib(rcore.obj) : warning LNK4099: no se encontró PDB '' con 'raylib.lib(rcore.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
+raylib.lib(rglfw.obj) : warning LNK4099: no se encontró PDB '' con 'raylib.lib(rglfw.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
+raylib.lib(rshapes.obj) : warning LNK4099: no se encontró PDB '' con 'raylib.lib(rshapes.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
+raylib.lib(rtext.obj) : warning LNK4099: no se encontró PDB '' con 'raylib.lib(rtext.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
+raylib.lib(rtextures.obj) : warning LNK4099: no se encontró PDB '' con 'raylib.lib(rtextures.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
+raylib.lib(utils.obj) : warning LNK4099: no se encontró PDB '' con 'raylib.lib(utils.obj)' o en ''; se vinculará el objeto sin tener en cuenta información de depuración
+  Delving Into Darkness project.vcxproj -> C:\Users\Aula 1\Desktop\Delving Into Darkness\Delving Into Darkness Solution\bin\Debug\Delving Into Darkness project.exe
