@@ -24,12 +24,18 @@
     <ClCompile Include="src\Delving_Into_Darkness.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="src\menu\menu.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game\game.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="src\Delving_Into_Darkness.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="src\menu\menu.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
