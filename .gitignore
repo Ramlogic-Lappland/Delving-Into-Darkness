@@ -1,13 +1,12 @@
 # Folders
-Sigil_Solution/Debug/
-Sigil_Solution/.vs/
-Sigil_Solution/Debug/
-Sigil_Solution/x64/
-Sigil_Solution/Sigil_Project/Debug/
-Sigil_Solution/Sigil_Project/Release/
-Sigil_Solution/Sigil_Project/x64/	
-Sigil_Solution/bin/
-Sigil_Solution/obj/
+Delving Into Darkness Solution/Debug/
+Delving Into Darkness Solution/.vs/
+Delving Into Darkness Solution/Debug/
+Delving Into Darkness Solution/x64/
+Delving Into Darkness Solution/bin/
+Delving Into Darkness Solution/obj/
+Delving Into Darkness Solution/obj/
+Delving Into Darkness Solution/.vs/
 
 # Prerequisites
 *.d
