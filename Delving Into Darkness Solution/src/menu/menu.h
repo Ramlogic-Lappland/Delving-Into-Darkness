@@ -1,7 +1,13 @@
 #pragma once
 
-void initMenu();
+namespace Menu
+{
 
-void updateMenu();
+	void initMenu();
 
-void drawMenu();
+	void updateMenu();
+
+	void drawMenu();
+
+	void unloadMenu();
+}

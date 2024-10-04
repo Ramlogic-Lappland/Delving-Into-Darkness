@@ -13,78 +13,78 @@ namespace gameManager
     CreateScreen Screen;
     CreateCurrentScreen CurrentScreen;
 
-
-int run(void)
-{
-    init();
-
-    SetTargetFPS(60);
-
-    while (!WindowShouldClose())
+    int run(void)
     {
-        update();
+        init();
 
-        draw();
+        SetTargetFPS(60);
+
+        while (!WindowShouldClose())
+        {
+            gameManager::update();
+
+            gameManager::draw();
+        }
+
+        gameManager::close();
+
+        return 0;
     }
 
-    close();
-
-    return 0;
-}
-
-void init()
-{
-    Screen.size = {1000, 800};
-    Screen.name = "Delving Into Darkness";
-    gameManager::CurrentScreen  = menu;
-
-    initMenu();
-
-    InitWindow(static_cast<int>(Screen.size.x), static_cast<int>(Screen.size.y), Screen.name);
-
-}
-
-void update()
-{
-    switch (CurrentScreen)
+    void init()
     {
-    case menu:
-        updateMenu();
-        break;
-    case game:
-       // updateGame();
-        break;
-    case credits:
-       // updateCredits();
-        break;
-    default:
-        break;
-    }
-}
+        Screen.size = { 1200, 850 };
+        Screen.name = "Delving Into Darkness";
+        gameManager::CurrentScreen = menu;
 
-void draw()
-{
-    BeginDrawing();
-    ClearBackground(BLACK);
+        InitWindow(static_cast<int>(Screen.size.x), static_cast<int>(Screen.size.y), Screen.name);
 
-    if (CurrentScreen == menu)
-    {
-        drawMenu();
-    }
-    if (CurrentScreen == game)
-    {
-       // drawGame();
-    }
-    if (CurrentScreen == credits)
-    {
-       // drawCredits();
-    }
-    EndDrawing();
-}
+        Menu::initMenu();
 
-void close()
-{
-    CloseWindow();
-}
+    }
+
+    void update()
+    {
+        switch (CurrentScreen)
+        {
+        case menu:
+            Menu::updateMenu();
+            break;
+        case game:
+            // updateGame();
+            break;
+        case credits:
+            // updateCredits();
+            break;
+        default:
+            break;
+        }
+    }
+
+    void draw()
+    {
+        BeginDrawing();
+        ClearBackground(BLACK);
+
+        if (CurrentScreen == menu)
+        {
+            Menu::drawMenu();
+        }
+        if (CurrentScreen == game)
+        {
+            // drawGame();
+        }
+        if (CurrentScreen == credits)
+        {
+            // drawCredits();
+        }
+        EndDrawing();
+    }
+
+    void close()
+    {
+        Menu::unloadMenu();
+        CloseWindow();
+    }
 
 }
