@@ -1,0 +1,34 @@
+# Folders
+Sigil_Solution/Debug/
+Sigil_Solution/.vs/
+Sigil_Solution/Debug/
+Sigil_Solution/x64/
+Sigil_Solution/Sigil_Project/Debug/
+Sigil_Solution/Sigil_Project/Release/
+Sigil_Solution/Sigil_Project/x64/	
+Sigil_Solution/bin/
+Sigil_Solution/obj/
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+
+# Fortran module files
+*.mod
+*.smod
+
+
+# Executables
+*.exe
+*.out
+*.app
