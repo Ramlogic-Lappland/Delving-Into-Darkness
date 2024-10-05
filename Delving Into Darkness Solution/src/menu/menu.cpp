@@ -8,6 +8,8 @@
 namespace Menu
 {
 	const int bookAmountFrames = 12;
+	Music menuMusic;
+	
 
 	Texture2D menuBackground;
 	Image image;
@@ -25,6 +27,8 @@ namespace Menu
 	bool bookAnimationOn = true;
 
 	int correction = 0;
+
+	float timePlayed = 0.0f;
 
 	void initMenu()
 	{
@@ -45,20 +49,26 @@ namespace Menu
 			bookFrames[8] = LoadTexture("res/OpenBook/9.png");
 			bookFrames[9] = LoadTexture("res/OpenBook/10.png");
 			bookFrames[10] = LoadTexture("res/OpenBook/11.png");
-			bookFrames[11] = LoadTexture("res/OpenBook/12.png");
-
-
+			bookFrames[11] = LoadTexture("res/OpenBook/12.png");  
 
 			image = LoadImage("res/itch_Io_logo.png");     
 			ImageResize(&image, 21, 21); 
 			itchLogo = LoadTextureFromImage(image);
 			UnloadImage(image);
 
-
+			menuMusic = LoadMusicStream("res/sound/TheVeilofNight.mp3");
+			PlayMusicStream(menuMusic);
+			SetMusicVolume(menuMusic, 0.5f);
 	}
 
 	void updateMenu()
 	{
+		UpdateMusicStream(menuMusic);
+
+		timePlayed = GetMusicTimePlayed(menuMusic) / GetMusicTimeLength(menuMusic);
+
+		if (timePlayed > 1.0f) timePlayed = 1.0f;
+
 		elapsedTime += GetFrameTime();
 
 		if (bookAnimationOn) {
@@ -79,6 +89,7 @@ namespace Menu
 				elapsedTime = 0.0f;  // Reset elapsed time
 			}
 		}
+
 
 	}
 
@@ -109,6 +120,8 @@ namespace Menu
 	void unloadMenu()
 	{
 		system("cls");
+
+		UnloadMusicStream(menuMusic);
 
 		UnloadTexture(menuBackground);
 		UnloadTexture(itchLogo);

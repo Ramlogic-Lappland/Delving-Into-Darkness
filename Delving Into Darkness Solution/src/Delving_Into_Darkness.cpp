@@ -15,6 +15,8 @@ namespace gameManager
 
     int run(void)
     {
+        InitAudioDevice();
+
         init();
 
         SetTargetFPS(60);
