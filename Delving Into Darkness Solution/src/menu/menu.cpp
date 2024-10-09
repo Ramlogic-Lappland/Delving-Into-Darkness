@@ -7,16 +7,23 @@
 
 namespace Menu
 {
+	const int candleAmountFrames = 4;
 	const int bookAmountFrames = 12;
+
 	Music menuMusic;
-	
+	Sound bookOpen;
 
 	Texture2D menuBackground;
 	Image image;
 
 	Texture2D bookFrames[bookAmountFrames];
+	Texture2D candleFrames[candleAmountFrames];
 
 	Texture2D itchLogo;
+
+	int candleCurrentFrame = 0;
+	float candleFrameTime = 0.5f;
+	float candleElapsedTime = 0.0f;
 
 	int currentFrame = 0;    // current frame
 	float frameTime = 0.2f;  // Time for each frame (in seconds)
@@ -38,11 +45,13 @@ namespace Menu
 			menuBackground = LoadTextureFromImage(image);          // Image converted to texture, GPU memory (VRAM)
 			UnloadImage(image);   // Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
 
+			//book opens
 			bookFrames[0] = LoadTexture("res/OpenBook/1.png");
 			bookFrames[1] = LoadTexture("res/OpenBook/2.png");
 			bookFrames[2] = LoadTexture("res/OpenBook/3.png");
 			bookFrames[3] = LoadTexture("res/OpenBook/4.png");
 			bookFrames[4] = LoadTexture("res/OpenBook/5.png");
+			//markers open from here on
 			bookFrames[5] = LoadTexture("res/OpenBook/6.png");
 			bookFrames[6] = LoadTexture("res/OpenBook/7.png");
 			bookFrames[7] = LoadTexture("res/OpenBook/8.png");
@@ -56,9 +65,17 @@ namespace Menu
 			itchLogo = LoadTextureFromImage(image);
 			UnloadImage(image);
 
-			menuMusic = LoadMusicStream("res/sound/TheVeilofNight.mp3");
+			candleFrames[0] = LoadTexture("res/candle/can5.png");
+			candleFrames[1] = LoadTexture("res/candle/can6.png");
+			candleFrames[2] = LoadTexture("res/candle/can7.png");
+			candleFrames[3] = LoadTexture("res/candle/can8.png");
+
+			menuMusic = LoadMusicStream("res/sounds/TheVeilofNight.mp3");
+			bookOpen = LoadSound("res/sounds/bookpage.wav");
+
 			PlayMusicStream(menuMusic);
 			SetMusicVolume(menuMusic, 0.5f);
+			SetSoundVolume(bookOpen, 0.1f);
 	}
 
 	void updateMenu()
@@ -70,6 +87,13 @@ namespace Menu
 		if (timePlayed > 1.0f) timePlayed = 1.0f;
 
 		elapsedTime += GetFrameTime();
+		candleElapsedTime += GetFrameTime();
+
+		if (currentFrame == 0)
+		{
+			PlaySound(bookOpen);
+		}
+
 
 		if (bookAnimationOn) {
 			// Update elapsed time
@@ -88,6 +112,11 @@ namespace Menu
 
 				elapsedTime = 0.0f;  // Reset elapsed time
 			}
+		}
+
+		if (candleElapsedTime >= candleFrameTime) {
+			candleCurrentFrame = (candleCurrentFrame + 1) % candleAmountFrames; // Cycle to the next frame
+			candleElapsedTime = 0.0f; // Reset elapsed time
 		}
 
 
@@ -115,13 +144,17 @@ namespace Menu
 			DrawTexture(itchLogo, 948, 265, WHITE);
 		}
 
+		DrawTexture(candleFrames[candleCurrentFrame], 40, 30, WHITE);
+
 	}
 
 	void unloadMenu()
 	{
 		system("cls");
 
+		CloseAudioDevice();
 		UnloadMusicStream(menuMusic);
+		UnloadSound(bookOpen);
 
 		UnloadTexture(menuBackground);
 		UnloadTexture(itchLogo);
@@ -130,7 +163,11 @@ namespace Menu
 			UnloadTexture(bookFrames[i]);
 		}
 
-		std::cout << "MENU UNLOADED";
+		for (int i = 0; i < candleAmountFrames; i++) {
+			UnloadTexture(candleFrames[i]);
+		}
+
+		std::cout << "MENU UNLOADED --------------------------------------------------" << "\n";
 	}
 
 }
