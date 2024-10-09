@@ -8,7 +8,7 @@
 namespace Menu
 {
 	const int candleAmountFrames = 4;
-	const int bookAmountFrames = 12;
+	const int bookAmountFrames = 19;
 
 	Music menuMusic;
 	Sound bookOpen;
@@ -31,7 +31,11 @@ namespace Menu
 
 	int bookWidth = static_cast<int>(gameManager::Screen.size.x * 0.75);
 	int bookHeight = static_cast<int>(gameManager::Screen.size.y * 0.75);
-	bool bookAnimationOn = true;
+	int bookOpenFrames = 12;
+	int bookSwapPageFrames = 7;
+	bool bookOpenAnimationOn = true;
+	bool bookSwapRight = false;
+	bool bookSwapLeft = false;
 
 	int correction = 0;
 
@@ -45,13 +49,13 @@ namespace Menu
 			menuBackground = LoadTextureFromImage(image);          // Image converted to texture, GPU memory (VRAM)
 			UnloadImage(image);   // Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
 
-			//book opens
+			//Book opens
 			bookFrames[0] = LoadTexture("res/OpenBook/1.png");
 			bookFrames[1] = LoadTexture("res/OpenBook/2.png");
 			bookFrames[2] = LoadTexture("res/OpenBook/3.png");
 			bookFrames[3] = LoadTexture("res/OpenBook/4.png");
 			bookFrames[4] = LoadTexture("res/OpenBook/5.png");
-			//markers open from here on
+			//Markers open from here on
 			bookFrames[5] = LoadTexture("res/OpenBook/6.png");
 			bookFrames[6] = LoadTexture("res/OpenBook/7.png");
 			bookFrames[7] = LoadTexture("res/OpenBook/8.png");
@@ -59,6 +63,14 @@ namespace Menu
 			bookFrames[9] = LoadTexture("res/OpenBook/10.png");
 			bookFrames[10] = LoadTexture("res/OpenBook/11.png");
 			bookFrames[11] = LoadTexture("res/OpenBook/12.png");  
+			//Page swap
+			bookFrames[12] = LoadTexture("res/OpenBook/13.png");
+			bookFrames[13] = LoadTexture("res/OpenBook/14.png");
+			bookFrames[14] = LoadTexture("res/OpenBook/15.png");
+			bookFrames[15] = LoadTexture("res/OpenBook/16.png");
+			bookFrames[16] = LoadTexture("res/OpenBook/17.png");
+			bookFrames[17] = LoadTexture("res/OpenBook/18.png");
+			bookFrames[18] = LoadTexture("res/OpenBook/19.png");
 
 			image = LoadImage("res/itch_Io_logo.png");     
 			ImageResize(&image, 21, 21); 
@@ -76,7 +88,8 @@ namespace Menu
 			PlayMusicStream(menuMusic);
 			SetMusicVolume(menuMusic, 0.5f);
 			SetSoundVolume(bookOpen, 0.1f);
-	}
+
+	} //END INIT =============================================================================================
 
 	void updateMenu()
 	{
@@ -89,30 +102,73 @@ namespace Menu
 		elapsedTime += GetFrameTime();
 		candleElapsedTime += GetFrameTime();
 
-		if (currentFrame == 0)
-		{
+		if (currentFrame == 0){
 			PlaySound(bookOpen);
 		}
 
 
-		if (bookAnimationOn) {
+		if (bookOpenAnimationOn){
 			// Update elapsed time
 			elapsedTime += GetFrameTime();
 
 			// Check if it's time to switch frames
 			if (elapsedTime >= frameTime) {
 				// Increment frame if we're not at the last frame
-				if (currentFrame < bookAmountFrames - 1) {
+				if (currentFrame < bookOpenFrames - 1) {
 					currentFrame++;
 				}
 				else {
 					// Stop the animation when the last frame is reached
-					bookAnimationOn = false;
+					bookOpenAnimationOn = false;
 				}
 
 				elapsedTime = 0.0f;  // Reset elapsed time
 			}
 		}
+
+		if (!bookOpenAnimationOn){ // SWAP MENU STAGE
+			if (!bookSwapRight && currentFrame == bookOpenFrames - 1){ // START SWAP RIGHT
+				if (IsKeyPressed(KEY_RIGHT)){
+					bookSwapRight = true;
+				}
+			}
+			if (bookSwapRight){
+				elapsedTime += GetFrameTime();
+
+				if (elapsedTime >= frameTime) {
+
+					if (currentFrame < bookOpenFrames + bookSwapPageFrames - 1) {
+						currentFrame++;
+					}
+					else {
+						bookSwapRight = false;
+					}
+
+					elapsedTime = 0.0f;
+				}	
+			} // END SWAP RIGHT 
+
+			if (!bookSwapLeft && currentFrame == ( bookOpenFrames + bookSwapPageFrames - 1)){
+				if (IsKeyPressed(KEY_LEFT)){
+					bookSwapLeft = true;
+				}
+			}
+			if (bookSwapLeft){
+				elapsedTime += GetFrameTime();
+
+				if (elapsedTime >= frameTime) {
+
+					if (currentFrame > bookOpenFrames  - 1) {
+						currentFrame--;
+					}
+					else {
+						bookSwapLeft = false;
+					}
+
+					elapsedTime = 0.0f;
+				}
+			}// SWAP LEFT
+		} // END SWAPPING MENU STAGE
 
 		if (candleElapsedTime >= candleFrameTime) {
 			candleCurrentFrame = (candleCurrentFrame + 1) % candleAmountFrames; // Cycle to the next frame
@@ -120,7 +176,7 @@ namespace Menu
 		}
 
 
-	}
+	} //END UPDATE =============================================================================================
 
 	void drawMenu()
 	{
@@ -129,24 +185,21 @@ namespace Menu
 
 		DrawTexture(menuBackground, 0, 0, GRAY);
 
-		if (currentFrame < 5)
-		{
+		if (currentFrame < 5){
 			DrawTexture(bookFrames[currentFrame], 180 - (14 * currentFrame), 0, WHITE);
 			correction = 14 * currentFrame;
 		}
 		else 
-			if (currentFrame >= 5)
-			{
+			if (currentFrame >= 5){
 				DrawTexture(bookFrames[currentFrame], 180 - correction, 0, WHITE);
 			}
-		if (currentFrame > 9)
-		{
+		if (currentFrame > 9){
 			DrawTexture(itchLogo, 948, 265, WHITE);
 		}
 
 		DrawTexture(candleFrames[candleCurrentFrame], 40, 30, WHITE);
 
-	}
+	} //END DRAW =============================================================================================
 
 	void unloadMenu()
 	{
@@ -170,4 +223,4 @@ namespace Menu
 		std::cout << "MENU UNLOADED --------------------------------------------------" << "\n";
 	}
 
-}
+} //END UNLOAD =============================================================================================
