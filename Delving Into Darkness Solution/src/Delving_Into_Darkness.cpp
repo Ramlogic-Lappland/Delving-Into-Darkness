@@ -58,7 +58,7 @@ namespace gameManager
             // updateGame();
             break;
         case credits:
-            // updateCredits();
+            Menu::updateMenu();
             break;
         default:
             break;
@@ -80,7 +80,7 @@ namespace gameManager
         }
         if (CurrentScreen == credits)
         {
-            // drawCredits();
+            Menu::drawMenu();
         }
         EndDrawing();
     }

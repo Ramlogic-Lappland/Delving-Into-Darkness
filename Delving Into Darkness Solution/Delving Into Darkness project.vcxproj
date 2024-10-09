@@ -149,12 +149,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\collisionManager\collisionManager.cpp" />
     <ClCompile Include="src\menu\menu.cpp" />
     <ClCompile Include="src\Delving_Into_Darkness.cpp" />
     <ClCompile Include="src\game\game.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\collisionManager\collisionManager.h" />
     <ClInclude Include="src\menu\menu.h" />
     <ClInclude Include="src\Delving_Into_Darkness.h" />
     <ClInclude Include="src\game\game.h" />

@@ -10,9 +10,13 @@ namespace Menu
 	const int candleAmountFrames = 4;
 	const int bookAmountFrames = 19;
 	const int buttonframes = 2;
+	const int pointerOffSet = 10;
+	const int bookOpenFrames = 12;
+	const int bookSwapPageFrames = 7;
 
 	Music menuMusic;
 	Sound bookOpen;
+	Sound flipPage;
 
 	Image image;
 
@@ -26,29 +30,24 @@ namespace Menu
 	Vector2 pointerPosition = {0.0f, 0.0f};
 
 	int candleCurrentFrame = 0;
-	float candleFrameTime = 0.5f;
-	float candleElapsedTime = 0.0f;
-
 	int currentFrame = 0;    // current frame
-	float frameTime = 0.2f;  // Time for each frame (in seconds)
-	float elapsedTime = 0.0f; // elapsed time
-
 	int bookWidth = static_cast<int>(gameManager::Screen.size.x * 0.75);
 	int bookHeight = static_cast<int>(gameManager::Screen.size.y * 0.75);
-	int bookOpenFrames = 12;
-	int bookSwapPageFrames = 7;
+	int correction = 0;
+
+	float candleFrameTime = 0.5f;
+	float candleElapsedTime = 0.0f;
+	float frameTime = 0.2f;  // Time for each frame (in seconds)
+	float elapsedTime = 0.0f; // elapsed time
+    float timePlayed = 0.0f;
+
 	bool bookOpenAnimationOn = true;
 	bool bookSwapRight = false;
 	bool bookSwapLeft = false;
 	bool buttonHover = false;
 
-	int correction = 0;
-
-	float timePlayed = 0.0f;
-
 	void initMenu()
 	{
-
 			image = LoadImage("res/BookDesk/grayDesk.png");     // Loaded in CPU memory (RAM)
 			ImageResize(&image, static_cast<int>(gameManager::Screen.size.x), static_cast<int>(gameManager::Screen.size.y)); // resize image before aplying to texture
 			menuBackground = LoadTextureFromImage(image);          // Image converted to texture, GPU memory (VRAM)
@@ -76,29 +75,28 @@ namespace Menu
 			bookFrames[16] = LoadTexture("res/OpenBook/17.png");
 			bookFrames[17] = LoadTexture("res/OpenBook/18.png");
 			bookFrames[18] = LoadTexture("res/OpenBook/19.png");
-
-			image = LoadImage("res/itch_Io_logo.png");     
-			ImageResize(&image, 21, 21); 
-			itchLogo = LoadTextureFromImage(image);
-			UnloadImage(image);
-
+			//ItchIO Logo 
+			itchLogo = LoadTexture("res/miscellaneous/itch_Io_logo.png");
+			//Candle Anim
 			candleFrames[0] = LoadTexture("res/candle/can5.png");
 			candleFrames[1] = LoadTexture("res/candle/can6.png");
 			candleFrames[2] = LoadTexture("res/candle/can7.png");
 			candleFrames[3] = LoadTexture("res/candle/can8.png");
-
-
+			//Button
 			buttonTest[0] = LoadTexture("res/button/button01.png");
 			buttonTest[1] = LoadTexture("res/button/button02.png");
-
+			//MousePointer
 			pointerTex = LoadTexture("res/miscellaneous/feather.png");
 
+			//Audio
 			menuMusic = LoadMusicStream("res/sounds/TheVeilofNight.mp3");
-			bookOpen = LoadSound("res/sounds/bookpage.wav");
-
+			bookOpen = LoadSound("res/sounds/openBook.wav");
+			flipPage = LoadSound("res/sounds/pageFlip.wav");
+			//Init AudioFiles
 			PlayMusicStream(menuMusic);
 			SetMusicVolume(menuMusic, 0.5f);
 			SetSoundVolume(bookOpen, 0.1f);
+			SetSoundVolume(flipPage, 0.3f);
 
 	} //END INIT =============================================================================================
 
@@ -143,6 +141,8 @@ namespace Menu
 			if (!bookSwapRight && currentFrame == bookOpenFrames - 1){ // START SWAP RIGHT
 				if (IsKeyPressed(KEY_RIGHT)){
 					bookSwapRight = true;
+					PlaySound(flipPage);
+					gameManager::CurrentScreen = gameManager::credits; // CHANGE MENU DRAW STATE FROM MENU TO CREDITS
 				}
 			}
 			if (bookSwapRight){
@@ -164,6 +164,8 @@ namespace Menu
 			if (!bookSwapLeft && currentFrame == ( bookOpenFrames + bookSwapPageFrames - 1)){
 				if (IsKeyPressed(KEY_LEFT)){
 					bookSwapLeft = true;
+					PlaySound(flipPage);
+					gameManager::CurrentScreen = gameManager::menu; // CHANGE MENU DRAW STATE FROM CREDITS TO MENU 
 				}
 			}
 			if (bookSwapLeft){
@@ -194,7 +196,6 @@ namespace Menu
 
 	void drawMenu()
 	{
-
 		ClearBackground(DARKGRAY);
 
 		DrawTexture(menuBackground, 0, 0, GRAY);
@@ -207,29 +208,39 @@ namespace Menu
 			if (currentFrame >= 5){
 				DrawTexture(bookFrames[currentFrame], 180 - correction, 0, WHITE);
 			}
-		if (currentFrame > 9){
-			DrawTexture(itchLogo, 948, 265, WHITE);
+		if (currentFrame > 9){ // LOGO LOAD
+			DrawTexture(itchLogo, 948, 265, WHITE); 
 		}
 
+		if (gameManager::CurrentScreen == gameManager::menu && currentFrame > 8 && currentFrame < 13) // MENU STATE AND NO ANIMATION 
+		{
+			DrawTexture(buttonTest[0], 340, 260, WHITE);
+		}
 
 
 		DrawTexture(candleFrames[candleCurrentFrame], 40, 30, WHITE);
 
-		DrawTexture(pointerTex, static_cast<int>(pointerPosition.x) - 10, static_cast<int>(pointerPosition.y) - 10, WHITE);
+		DrawTexture(pointerTex, static_cast<int>(pointerPosition.x) - pointerOffSet, static_cast<int>(pointerPosition.y) - pointerOffSet, WHITE);
 	} //END DRAW =============================================================================================
 
 	void unloadMenu()
 	{
 		system("cls");
+		std::cout << "MENU UNLOAD START --------------------------------------------------" << "\n";
 
 		CloseAudioDevice();
 		UnloadMusicStream(menuMusic);
 		UnloadSound(bookOpen);
+		UnloadSound(flipPage);
 
 		UnloadTexture(menuBackground);
 		UnloadTexture(itchLogo);
 		UnloadTexture(pointerTex);
 		
+		for (int i = 0; i < buttonframes; i++) {
+			UnloadTexture(buttonTest[i]);
+		}
+
 		for (int i = 0; i < bookAmountFrames; i++) {
 			UnloadTexture(bookFrames[i]);
 		}
