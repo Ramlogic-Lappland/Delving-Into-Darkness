@@ -41,6 +41,8 @@ namespace gameManager
 
         InitWindow(static_cast<int>(Screen.size.x), static_cast<int>(Screen.size.y), Screen.name);
 
+        HideCursor();
+
         Menu::initMenu();
 
     }

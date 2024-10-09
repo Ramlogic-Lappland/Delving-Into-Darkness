@@ -9,17 +9,21 @@ namespace Menu
 {
 	const int candleAmountFrames = 4;
 	const int bookAmountFrames = 19;
+	const int buttonframes = 2;
 
 	Music menuMusic;
 	Sound bookOpen;
 
-	Texture2D menuBackground;
 	Image image;
 
+	Texture2D menuBackground;
 	Texture2D bookFrames[bookAmountFrames];
 	Texture2D candleFrames[candleAmountFrames];
-
 	Texture2D itchLogo;
+	Texture2D buttonTest[buttonframes];
+	Texture2D pointerTex;
+
+	Vector2 pointerPosition = {0.0f, 0.0f};
 
 	int candleCurrentFrame = 0;
 	float candleFrameTime = 0.5f;
@@ -36,6 +40,7 @@ namespace Menu
 	bool bookOpenAnimationOn = true;
 	bool bookSwapRight = false;
 	bool bookSwapLeft = false;
+	bool buttonHover = false;
 
 	int correction = 0;
 
@@ -82,6 +87,12 @@ namespace Menu
 			candleFrames[2] = LoadTexture("res/candle/can7.png");
 			candleFrames[3] = LoadTexture("res/candle/can8.png");
 
+
+			buttonTest[0] = LoadTexture("res/button/button01.png");
+			buttonTest[1] = LoadTexture("res/button/button02.png");
+
+			pointerTex = LoadTexture("res/miscellaneous/feather.png");
+
 			menuMusic = LoadMusicStream("res/sounds/TheVeilofNight.mp3");
 			bookOpen = LoadSound("res/sounds/bookpage.wav");
 
@@ -93,6 +104,8 @@ namespace Menu
 
 	void updateMenu()
 	{
+		pointerPosition = GetMousePosition();
+
 		UpdateMusicStream(menuMusic);
 
 		timePlayed = GetMusicTimePlayed(menuMusic) / GetMusicTimeLength(menuMusic);
@@ -170,6 +183,7 @@ namespace Menu
 			}// SWAP LEFT
 		} // END SWAPPING MENU STAGE
 
+
 		if (candleElapsedTime >= candleFrameTime) {
 			candleCurrentFrame = (candleCurrentFrame + 1) % candleAmountFrames; // Cycle to the next frame
 			candleElapsedTime = 0.0f; // Reset elapsed time
@@ -197,8 +211,11 @@ namespace Menu
 			DrawTexture(itchLogo, 948, 265, WHITE);
 		}
 
+
+
 		DrawTexture(candleFrames[candleCurrentFrame], 40, 30, WHITE);
 
+		DrawTexture(pointerTex, static_cast<int>(pointerPosition.x) - 10, static_cast<int>(pointerPosition.y) - 10, WHITE);
 	} //END DRAW =============================================================================================
 
 	void unloadMenu()
@@ -211,6 +228,7 @@ namespace Menu
 
 		UnloadTexture(menuBackground);
 		UnloadTexture(itchLogo);
+		UnloadTexture(pointerTex);
 		
 		for (int i = 0; i < bookAmountFrames; i++) {
 			UnloadTexture(bookFrames[i]);
@@ -218,6 +236,10 @@ namespace Menu
 
 		for (int i = 0; i < candleAmountFrames; i++) {
 			UnloadTexture(candleFrames[i]);
+		}
+
+		for (int i = 0; i < buttonframes; i++) {
+			UnloadTexture(buttonTest[i]);
 		}
 
 		std::cout << "MENU UNLOADED --------------------------------------------------" << "\n";
