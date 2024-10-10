@@ -10,4 +10,8 @@ namespace Menu
 	void drawMenu();
 
 	void unloadMenu();
+
+	void openBookAnim();
+
+	void swapMenuPage();
 }

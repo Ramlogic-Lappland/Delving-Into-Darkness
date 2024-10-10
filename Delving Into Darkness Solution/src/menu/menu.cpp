@@ -117,74 +117,9 @@ namespace Menu
 			PlaySound(bookOpen);
 		}
 
+		openBookAnim();
 
-		if (bookOpenAnimationOn){
-			// Update elapsed time
-			elapsedTime += GetFrameTime();
-
-			// Check if it's time to switch frames
-			if (elapsedTime >= frameTime) {
-				// Increment frame if we're not at the last frame
-				if (currentFrame < bookOpenFrames - 1) {
-					currentFrame++;
-				}
-				else {
-					// Stop the animation when the last frame is reached
-					bookOpenAnimationOn = false;
-				}
-
-				elapsedTime = 0.0f;  // Reset elapsed time
-			}
-		}
-
-		if (!bookOpenAnimationOn){ // SWAP MENU STAGE
-			if (!bookSwapRight && currentFrame == bookOpenFrames - 1){ // START SWAP RIGHT
-				if (IsKeyPressed(KEY_RIGHT)){
-					bookSwapRight = true;
-					PlaySound(flipPage);
-					gameManager::CurrentScreen = gameManager::credits; // CHANGE MENU DRAW STATE FROM MENU TO CREDITS
-				}
-			}
-			if (bookSwapRight){
-				elapsedTime += GetFrameTime();
-
-				if (elapsedTime >= frameTime) {
-
-					if (currentFrame < bookOpenFrames + bookSwapPageFrames - 1) {
-						currentFrame++;
-					}
-					else {
-						bookSwapRight = false;
-					}
-
-					elapsedTime = 0.0f;
-				}	
-			} // END SWAP RIGHT 
-
-			if (!bookSwapLeft && currentFrame == ( bookOpenFrames + bookSwapPageFrames - 1)){
-				if (IsKeyPressed(KEY_LEFT)){
-					bookSwapLeft = true;
-					PlaySound(flipPage);
-					gameManager::CurrentScreen = gameManager::menu; // CHANGE MENU DRAW STATE FROM CREDITS TO MENU 
-				}
-			}
-			if (bookSwapLeft){
-				elapsedTime += GetFrameTime();
-
-				if (elapsedTime >= frameTime) {
-
-					if (currentFrame > bookOpenFrames  - 1) {
-						currentFrame--;
-					}
-					else {
-						bookSwapLeft = false;
-					}
-
-					elapsedTime = 0.0f;
-				}
-			}// SWAP LEFT
-		} // END SWAPPING MENU STAGE
-
+		swapMenuPage();
 
 		if (candleElapsedTime >= candleFrameTime) {
 			candleCurrentFrame = (candleCurrentFrame + 1) % candleAmountFrames; // Cycle to the next frame
@@ -254,6 +189,85 @@ namespace Menu
 		}
 
 		std::cout << "MENU UNLOADED --------------------------------------------------" << "\n";
+
+	}//END UNLOAD =============================================================================================
+
+
+
+
+
+	void openBookAnim()// BOOK OPEN ANIM 
+	{
+		if (bookOpenAnimationOn) {
+			// Update elapsed time
+			elapsedTime += GetFrameTime();
+
+			// Check if it's time to switch frames
+			if (elapsedTime >= frameTime) {
+				// Increment frame if we're not at the last frame
+				if (currentFrame < bookOpenFrames - 1) {
+					currentFrame++;
+				}
+				else {
+					// Stop the animation when the last frame is reached
+					bookOpenAnimationOn = false;
+				}
+
+				elapsedTime = 0.0f;  // Reset elapsed time
+			}
+		}
+    }
+
+	void swapMenuPage() //SWAP MENU PAGE
+	{
+		if (!bookOpenAnimationOn) { // SWAP MENU STAGE
+			if (!bookSwapRight && currentFrame == bookOpenFrames - 1) { // START SWAP RIGHT
+				if (IsKeyPressed(KEY_RIGHT)) {
+					bookSwapRight = true;
+					PlaySound(flipPage);
+					gameManager::CurrentScreen = gameManager::credits; // CHANGE MENU DRAW STATE FROM MENU TO CREDITS
+				}
+			}
+			if (bookSwapRight) {
+				elapsedTime += GetFrameTime();
+
+				if (elapsedTime >= frameTime) {
+
+					if (currentFrame < bookOpenFrames + bookSwapPageFrames - 1) {
+						currentFrame++;
+					}
+					else {
+						bookSwapRight = false;
+					}
+
+					elapsedTime = 0.0f;
+				}
+			} // END SWAP RIGHT 
+
+			if (!bookSwapLeft && currentFrame == (bookOpenFrames + bookSwapPageFrames - 1)) {
+				if (IsKeyPressed(KEY_LEFT)) {
+					bookSwapLeft = true;
+					PlaySound(flipPage);
+					gameManager::CurrentScreen = gameManager::menu; // CHANGE MENU DRAW STATE FROM CREDITS TO MENU 
+				}
+			}
+			if (bookSwapLeft) {
+				elapsedTime += GetFrameTime();
+
+				if (elapsedTime >= frameTime) {
+
+					if (currentFrame > bookOpenFrames - 1) {
+						currentFrame--;
+					}
+					else {
+						bookSwapLeft = false;
+					}
+
+					elapsedTime = 0.0f;
+				}
+			}// SWAP LEFT
+		} // END SWAPPING MENU STAGE
 	}
 
-} //END UNLOAD =============================================================================================
+
+}// END NAMESPACE
