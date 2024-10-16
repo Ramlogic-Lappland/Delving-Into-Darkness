@@ -1,7 +1,37 @@
 #pragma once
 
-void initGame();
+#include "raylib.h"
 
-void updateGame();
+namespace Game
+{
+	struct CreatePlayer
+	{
+		Texture2D playerTexture;
 
-void drawGame();
+		Rectangle playerTextureCordenate;
+		Rectangle playerRect;
+
+		Vector2 pivot;
+		Vector2 speed;
+
+		float acceleration;
+		float rotation;
+
+		int lives;
+		//int shieldCharge;
+		//int shootState;
+		
+		//bool shieldState;
+		int animationState;
+	};
+
+	void initGame();
+
+	void updateGame();
+
+	void drawGame();
+
+	void unloadGame();
+
+	void playerRotationUpdate();
+}

@@ -4,13 +4,14 @@
 #include <iostream>
 
 #include "menu/menu.h"
-
+#include "game/game.h"
+#include "globals.h"
 using namespace std;
 
 
 namespace gameManager
 {
-    CreateScreen Screen;
+    //CreateScreen Screen;
     CreateCurrentScreen CurrentScreen;
 
     int run(void)
@@ -35,15 +36,17 @@ namespace gameManager
 
     void init()
     {
-        Screen.size = { 1200, 850 };
-        Screen.name = "Delving Into Darkness";
+       // Screen.size = { 1200, 850 };
+       // Screen.name = "Delving Into Darkness";
+        Globals:: initGlobals();
         gameManager::CurrentScreen = menu;
 
-        InitWindow(static_cast<int>(Screen.size.x), static_cast<int>(Screen.size.y), Screen.name);
+        InitWindow(static_cast<int>(Globals::Screen.size.x), static_cast<int>(Globals::Screen.size.y), Globals::Screen.name);
 
-        HideCursor();
+        //HideCursor();
 
         Menu::initMenu();
+        Game::initGame();
 
     }
 
@@ -55,7 +58,7 @@ namespace gameManager
             Menu::updateMenu();
             break;
         case game:
-            // updateGame();
+            Game::updateGame();
             break;
         case credits:
             Menu::updateMenu();
@@ -76,7 +79,7 @@ namespace gameManager
         }
         if (CurrentScreen == game)
         {
-            // drawGame();
+            Game::drawGame();
         }
         if (CurrentScreen == credits)
         {
@@ -88,6 +91,7 @@ namespace gameManager
     void close()
     {
         Menu::unloadMenu();
+        Game::unloadGame();
         CloseWindow();
     }
 

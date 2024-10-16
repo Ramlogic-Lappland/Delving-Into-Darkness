@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClCompile Include="src\button\button.cpp" />
     <ClCompile Include="src\collisionManager\collisionManager.cpp" />
+    <ClCompile Include="src\globals.cpp" />
     <ClCompile Include="src\menu\menu.cpp" />
     <ClCompile Include="src\Delving_Into_Darkness.cpp" />
     <ClCompile Include="src\game\game.cpp" />
@@ -159,6 +160,7 @@
   <ItemGroup>
     <ClInclude Include="src\button\button.h" />
     <ClInclude Include="src\collisionManager\collisionManager.h" />
+    <ClInclude Include="src\globals.h" />
     <ClInclude Include="src\menu\menu.h" />
     <ClInclude Include="src\Delving_Into_Darkness.h" />
     <ClInclude Include="src\game\game.h" />

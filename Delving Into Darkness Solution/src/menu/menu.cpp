@@ -4,9 +4,11 @@
 #include "raylib.h"
 
 #include "Delving_Into_Darkness.h"
+#include "game/game.h"
+
 #include "collisionManager/collisionManager.h"
 #include "button/button.h"
-
+#include "globals.h"
 namespace Menu
 {
 	button::createButton playBttn;
@@ -33,8 +35,8 @@ namespace Menu
 
 	int candleCurrentFrame = 0;
 	int currentFrame = 0;    // current frame
-	int bookWidth = static_cast<int>(gameManager::Screen.size.x * 0.75);
-	int bookHeight = static_cast<int>(gameManager::Screen.size.y * 0.75);
+	int bookWidth = static_cast<int>(Globals::Screen.size.x * 0.75);
+	int bookHeight = static_cast<int>(Globals::Screen.size.y * 0.75);
 	int correction = 0;
 
 	float candleFrameTime = 0.5f;
@@ -59,7 +61,7 @@ namespace Menu
 		button::assignWidthAndHeight(playBttn); //   PLAY BTTN INITIALIZATION END
 
 		image = LoadImage("res/BookDesk/grayDesk.png");     // Loaded in CPU memory (RAM)
-		ImageResize(&image, static_cast<int>(gameManager::Screen.size.x), static_cast<int>(gameManager::Screen.size.y)); // resize image before aplying to texture
+		ImageResize(&image, static_cast<int>(Globals::Screen.size.x), static_cast<int>(Globals::Screen.size.y)); // resize image before aplying to texture
 		menuBackground = LoadTextureFromImage(image);          // Image converted to texture, GPU memory (VRAM)
 		UnloadImage(image);   // Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
 
@@ -130,6 +132,9 @@ namespace Menu
 
 		if (collisions::rectangleXrectangle(playBttn.position.x, playBttn.position.y, playBttn.width, playBttn.height, pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height))){
 			playBttn.buttonFrame = 1;
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+				gameManager::CurrentScreen = gameManager::game;
+			}
 		}
 		else {
 			playBttn.buttonFrame = 0;
