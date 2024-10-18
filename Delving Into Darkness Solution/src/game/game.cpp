@@ -7,10 +7,14 @@
 #include "Delving_Into_Darkness.h"
 #include "globals.h"
 #include "game/player/player.h"
+#include "game/player/projectile/projectile.h"
 
 namespace Game
 {
+#define PLAYER_MAX_PROJECTILES 15
+
 	Player::CreatePlayer player;
+	Projectile::createProjectile projectile[PLAYER_MAX_PROJECTILES] = { 0 };
 
 	Vector2 pointerPosition = { 0.0f, 0.0f };
 	Vector2 playerPosition;
@@ -38,6 +42,15 @@ namespace Game
 		ImageResize(&image, static_cast<int>(Globals::Screen.size.x), static_cast<int>(Globals::Screen.size.y)); 
 		gameBackground = LoadTextureFromImage(image);
 		UnloadImage(image);
+
+		for (int i = 0; i < PLAYER_MAX_PROJECTILES; i++)
+		{
+			projectile[i].position = { 0, 0 };
+			projectile[i].speed = { 0, 0 };
+			projectile[i].radius = 8;
+			projectile[i].state = false;
+			projectile[i].lifeSpawn = 0;
+		}
 	}
 
 	void updateGame()
@@ -56,6 +69,23 @@ namespace Game
 		}
 		player.playerRect.x += player.speed.x * GetFrameTime();
 		player.playerRect.y += player.speed.y * GetFrameTime();
+
+
+		if (IsKeyPressed(KEY_SPACE))
+		{
+
+			for (int i = 0; i < PLAYER_MAX_PROJECTILES; i++)
+			{
+				if (!projectile[i].state)
+				{
+					Projectile::spawnProjectile(projectile[i], player);
+				}
+			}
+		}
+		for (int i = 0; i < PLAYER_MAX_PROJECTILES; i++)
+		{
+			if (projectile[i].state) projectile[i].lifeSpawn++;
+		}
 	}
 
 	void drawGame()

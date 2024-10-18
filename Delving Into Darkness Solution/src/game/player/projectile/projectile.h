@@ -2,7 +2,7 @@
 
 #include "raylib.h"
 
-namespace projectile
+namespace Projectile
 {
 	struct createProjectile
 	{
@@ -17,4 +17,5 @@ namespace projectile
 
 		bool state;
 	};
+	void spawnProjectile(createProjectile& projectile, Player::CreatePlayer& player);
 }
