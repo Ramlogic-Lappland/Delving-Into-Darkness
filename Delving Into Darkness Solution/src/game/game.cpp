@@ -29,6 +29,7 @@ namespace Game
 
 	void initGame()
 	{
+		//SetExitKey(0);
 		player.playerTexture = LoadTexture("res/character/test.png");
 		player.playerRect = { Globals::Screen.size.x /2, Globals::Screen.size.y / 2, 45, 45};
 		player.playerTextureCordenate = { 0, 0, 45, 45 };
@@ -62,7 +63,7 @@ namespace Game
 
 		if (pointerPosition.x < Globals::Screen.size.x && pointerPosition.y < Globals::Screen.size.y) {
 			if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
-				dirVector = NormalizeVector(dirVector);	
+				dirVector = NormalizeVector(dirVector);
 				player.speed.x += dirVector.x * player.acceleration;				
 				player.speed.y += dirVector.y * player.acceleration;
 			}
@@ -78,14 +79,21 @@ namespace Game
 			{
 				if (!projectile[i].state)
 				{
-					Projectile::spawnProjectile(projectile[i], player);
+					Projectile::spawnProjectile(projectile[i], player, dirVector);
 				}
 			}
 		}
 		for (int i = 0; i < PLAYER_MAX_PROJECTILES; i++)
 		{
 			if (projectile[i].state) projectile[i].lifeSpawn++;
+			if (projectile[i].state)
+			{
+				// Movement
+				projectile[i].position.x += projectile[i].speed.x * GetFrameTime();
+				projectile[i].position.y -= projectile[i].speed.y * GetFrameTime();
+			}
 		}
+
 	}
 
 	void drawGame()
@@ -94,6 +102,11 @@ namespace Game
 		DrawText(TextFormat("Angle in radians: %.2f", angle), 10, 10, 20, WHITE);
 		DrawText(TextFormat("Angle in degrees: %.2f", angleToDegrees), 10, 40, 20, WHITE);
 		DrawText(TextFormat("animation state: %i", player.animationState), 10, 80, 20, WHITE);
+		for (int i = 0; i < PLAYER_MAX_PROJECTILES; i++)
+		{
+			if (projectile[i].state) DrawCircleV(projectile[i].position, projectile[i].radius, WHITE);
+		}
+
 		DrawTexturePro(player.playerTexture, player.playerTextureCordenate, player.playerRect, player.pivot, player.rotation, WHITE);
 	}
 

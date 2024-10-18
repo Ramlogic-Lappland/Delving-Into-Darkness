@@ -1,6 +1,7 @@
 #pragma once
 
 #include "raylib.h"
+#include "game/player/player.h"
 
 namespace Projectile
 {
@@ -17,5 +18,5 @@ namespace Projectile
 
 		bool state;
 	};
-	void spawnProjectile(createProjectile& projectile, Player::CreatePlayer& player);
+	void spawnProjectile(createProjectile& projectile, Player::CreatePlayer& player,Vector2 dirVector);
 }
