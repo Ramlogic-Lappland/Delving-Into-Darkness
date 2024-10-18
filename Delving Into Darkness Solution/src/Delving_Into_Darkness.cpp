@@ -36,8 +36,6 @@ namespace gameManager
 
     void init()
     {
-       // Screen.size = { 1200, 850 };
-       // Screen.name = "Delving Into Darkness";
         Globals:: initGlobals();
         gameManager::CurrentScreen = menu;
 
