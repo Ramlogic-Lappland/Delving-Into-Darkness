@@ -14,7 +14,7 @@ namespace Game
 #define PLAYER_MAX_PROJECTILES 15
 
 	Player::CreatePlayer player;
-	Projectile::createProjectile projectile[PLAYER_MAX_PROJECTILES] = { 0 };
+	Projectile::createProjectile projectile[PLAYER_MAX_PROJECTILES];
 
 	Vector2 pointerPosition = { 0.0f, 0.0f };
 	Vector2 playerPosition;
@@ -26,6 +26,8 @@ namespace Game
 	float rotationSpeed = 100.0f;
 	float angle;
 	float angleToDegrees;
+
+	float projectileSpawnDistance = 30.0f;
 
 	void initGame()
 	{
@@ -47,10 +49,10 @@ namespace Game
 		for (int i = 0; i < PLAYER_MAX_PROJECTILES; i++)
 		{
 			projectile[i].position = { 0, 0 };
-			projectile[i].speed = { 0, 0 };
-			projectile[i].radius = 8;
+			projectile[i].direction = { 0, 0 };
+			projectile[i].speed = 500;
+			projectile[i].radius = 5.0f;
 			projectile[i].state = false;
-			projectile[i].lifeSpawn = 0;
 		}
 	}
 
@@ -60,10 +62,12 @@ namespace Game
 		playerPosition = { player.playerRect.x, player.playerRect.y };
 		playerRotationUpdate();
 		checkAnimState();
+		dirVector = NormalizeVector(dirVector);
+
 
 		if (pointerPosition.x < Globals::Screen.size.x && pointerPosition.y < Globals::Screen.size.y) {
 			if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
-				dirVector = NormalizeVector(dirVector);
+				
 				player.speed.x += dirVector.x * player.acceleration;				
 				player.speed.y += dirVector.y * player.acceleration;
 			}
@@ -71,26 +75,28 @@ namespace Game
 		player.playerRect.x += player.speed.x * GetFrameTime();
 		player.playerRect.y += player.speed.y * GetFrameTime();
 
-
-		if (IsKeyPressed(KEY_SPACE))
-		{
-
-			for (int i = 0; i < PLAYER_MAX_PROJECTILES; i++)
-			{
-				if (!projectile[i].state)
-				{
-					Projectile::spawnProjectile(projectile[i], player, dirVector);
-				}
+		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+			Projectile::createProjectile* newProjectile = GetInactiveProjectile();
+			if (newProjectile != nullptr) {
+				newProjectile->position = {
+					player.playerRect.x + dirVector.x * projectileSpawnDistance,
+					player.playerRect.y + dirVector.y * projectileSpawnDistance
+				};
+				newProjectile->direction = dirVector;
+				newProjectile->state = true;
 			}
 		}
-		for (int i = 0; i < PLAYER_MAX_PROJECTILES; i++)
-		{
-			if (projectile[i].state) projectile[i].lifeSpawn++;
-			if (projectile[i].state)
-			{
-				// Movement
-				projectile[i].position.x += projectile[i].speed.x * GetFrameTime();
-				projectile[i].position.y -= projectile[i].speed.y * GetFrameTime();
+
+		for (int i = 0; i < PLAYER_MAX_PROJECTILES; i++) {
+			if (projectile[i].state) {
+				projectile[i].position.x += projectile[i].direction.x * projectile[i].speed * GetFrameTime();
+				projectile[i].position.y += projectile[i].direction.y * projectile[i].speed * GetFrameTime();
+
+				// CHECK PROJECTILE BOUNDS
+				if (projectile[i].position.x < 0 || projectile[i].position.x > Globals::Screen.size.x ||
+					projectile[i].position.y < 0 || projectile[i].position.y > Globals::Screen.size.y) {
+					projectile[i].state = false;  
+				}
 			}
 		}
 
@@ -104,7 +110,7 @@ namespace Game
 		DrawText(TextFormat("animation state: %i", player.animationState), 10, 80, 20, WHITE);
 		for (int i = 0; i < PLAYER_MAX_PROJECTILES; i++)
 		{
-			if (projectile[i].state) DrawCircleV(projectile[i].position, projectile[i].radius, WHITE);
+			if (projectile[i].state) { DrawCircleV(projectile[i].position, projectile[i].radius, RED); }
 		}
 
 		DrawTexturePro(player.playerTexture, player.playerTextureCordenate, player.playerRect, player.pivot, player.rotation, WHITE);
@@ -176,4 +182,14 @@ namespace Game
 		}
 		return v;
 	}
+
+	Projectile::createProjectile* GetInactiveProjectile() {
+		for (int i = 0; i < PLAYER_MAX_PROJECTILES; i++) {
+			if (!projectile[i].state) {
+				return &projectile[i];  // Return pointer to inactive bullet
+			}
+		}
+		return nullptr;  // No inactive bullets available
+	}
+
 }

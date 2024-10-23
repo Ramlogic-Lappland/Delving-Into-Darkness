@@ -1,6 +1,7 @@
 #pragma once
 
 #include "raylib.h"
+#include "game/player/projectile/projectile.h"
 
 namespace Game
 {
@@ -17,4 +18,6 @@ namespace Game
 	void checkAnimState();
 
 	Vector2 NormalizeVector(Vector2 v);
+
+	Projectile::createProjectile* GetInactiveProjectile();
 }

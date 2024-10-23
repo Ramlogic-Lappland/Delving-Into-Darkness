@@ -9,10 +9,11 @@ namespace Projectile
 	{
 		Vector2 position;
 		Vector2 size;
-		Vector2 speed;
+		Vector2 direction;
 
 		float radius;
 		float rotation;
+		float speed;
 
 		int lifeSpawn;
 
