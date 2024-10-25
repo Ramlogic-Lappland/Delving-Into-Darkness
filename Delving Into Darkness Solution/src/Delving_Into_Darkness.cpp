@@ -15,9 +15,7 @@ namespace gameManager
     CreateCurrentScreen CurrentScreen;
 
     int run(void)
-    {
-        InitAudioDevice();
-
+    {     
         init();
 
         SetTargetFPS(60);
@@ -36,6 +34,8 @@ namespace gameManager
 
     void init()
     {
+        InitAudioDevice();
+
         Globals:: initGlobals();
         gameManager::CurrentScreen = menu;
 
