@@ -38,6 +38,7 @@ namespace Game
 		player.pivot = { static_cast<float>(player.playerTexture.width/2), static_cast<float>(player.playerTexture.height/2) };
 		player.rotation = 0;
 		player.animationState = 1;
+		player.maxAcceleration = 700;
 		player.acceleration = 10.0f;
 		//player.maxAcceleration = 150.0f;
 
@@ -50,7 +51,7 @@ namespace Game
 		{
 			projectile[i].position = { 0, 0 };
 			projectile[i].direction = { 0, 0 };
-			projectile[i].speed = 500;
+			projectile[i].speed = 700;
 			projectile[i].radius = 5.0f;
 			projectile[i].state = false;
 		}
@@ -72,6 +73,8 @@ namespace Game
 				player.speed.y += dirVector.y * player.acceleration;
 			}
 		}
+		if (player.speed.x > player.maxAcceleration) { player.speed.x = player.maxAcceleration; }
+		if (player.speed.y > player.maxAcceleration) { player.speed.y = player.maxAcceleration; }
 		player.playerRect.x += player.speed.x * GetFrameTime();
 		player.playerRect.y += player.speed.y * GetFrameTime();
 
@@ -100,6 +103,8 @@ namespace Game
 			}
 		}
 
+		playerBounds();
+
 	}
 
 	void drawGame()
@@ -123,8 +128,6 @@ namespace Game
 		UnloadTexture(gameBackground);
 		std::cout << "GAME UNLOADED --------------------------------" << "\n";
 	}
-
-
 
 
 	/*========================================================= FUNCTIONS =========================================================*/
@@ -190,6 +193,22 @@ namespace Game
 			}
 		}
 		return nullptr;  // No inactive bullets available
+	}
+
+	void playerBounds()
+	{
+		if (player.playerRect.x > Globals::Screen.size.x + (player.playerRect.width * 1.5)) {
+			player.playerRect.x = static_cast<float>(0 - (player.playerRect.width));
+		}
+		if (player.playerRect.x < 0 - (player.playerRect.width * 1.5)) {
+			player.playerRect.x = static_cast<float>(Globals::Screen.size.x + player.playerRect.width);
+		}
+		if (player.playerRect.y > Globals::Screen.size.y + (player.playerRect.height * 1.5)) {
+			player.playerRect.y = static_cast<float>(0 - (player.playerRect.height));
+		}
+		if (player.playerRect.y < 0 - (player.playerRect.height * 1.5)) {
+			player.playerRect.y = static_cast<float>(Globals::Screen.size.y + player.playerRect.height);
+		}
 	}
 
 }

@@ -20,4 +20,6 @@ namespace Game
 	Vector2 NormalizeVector(Vector2 v);
 
 	Projectile::createProjectile* GetInactiveProjectile();
+
+	void playerBounds();
 }
