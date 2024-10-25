@@ -34,7 +34,7 @@ namespace Game
 		//SetExitKey(0);
 		player.playerTexture = LoadTexture("res/character/test.png");
 		player.playerRect = { Globals::Screen.size.x /2, Globals::Screen.size.y / 2, 45, 45};
-		player.playerTextureCordenate = { 0, 0, 45, 45 };
+		player.playerTextureCoordinate = { 0, 0, 45, 45 };
 		player.pivot = { static_cast<float>(player.playerTexture.width/2), static_cast<float>(player.playerTexture.height/2) };
 		player.rotation = 0;
 		player.animationState = 1;
@@ -118,7 +118,7 @@ namespace Game
 			if (projectile[i].state) { DrawCircleV(projectile[i].position, projectile[i].radius, RED); }
 		}
 
-		DrawTexturePro(player.playerTexture, player.playerTextureCordenate, player.playerRect, player.pivot, player.rotation, WHITE);
+		DrawTexturePro(player.playerTexture, player.playerTextureCoordinate, player.playerRect, player.pivot, player.rotation, WHITE);
 	}
 
 	void unloadGame()

@@ -8,7 +8,7 @@ namespace Player
 	{
 		Texture2D playerTexture;
 
-		Rectangle playerTextureCordenate;
+		Rectangle playerTextureCoordinate;
 		Rectangle playerRect;
 
 		Vector2 pivot;

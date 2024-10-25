@@ -7,7 +7,7 @@ namespace Slime
 	{
 		Vector2 position;
 		Vector2 speed;
-		float radious;
+		float radius;
 		bool state;
 	};
 }
