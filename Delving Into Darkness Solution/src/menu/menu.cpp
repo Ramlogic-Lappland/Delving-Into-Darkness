@@ -1,14 +1,15 @@
 #include "menu.h"
 
 #include <iostream>
+
 #include "raylib.h"
 
 #include "Delving_Into_Darkness.h"
 #include "game/game.h"
-
 #include "collisionManager/collisionManager.h"
 #include "button/button.h"
 #include "globals.h"
+
 namespace Menu
 {
 	button::createButton playBttn;

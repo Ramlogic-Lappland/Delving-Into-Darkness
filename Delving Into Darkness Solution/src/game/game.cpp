@@ -11,10 +11,10 @@
 
 namespace Game
 {
-#define PLAYER_MAX_PROJECTILES 15
+	const int playerMaxProjectiles = 15;
 
 	Player::CreatePlayer player;
-	Projectile::createProjectile projectile[PLAYER_MAX_PROJECTILES];
+	Projectile::createProjectile projectile[playerMaxProjectiles];
 
 	Vector2 pointerPosition = { 0.0f, 0.0f };
 	Vector2 playerPosition;
@@ -47,7 +47,7 @@ namespace Game
 		gameBackground = LoadTextureFromImage(image);
 		UnloadImage(image);
 
-		for (int i = 0; i < PLAYER_MAX_PROJECTILES; i++)
+		for (int i = 0; i < playerMaxProjectiles; i++)
 		{
 			projectile[i].position = { 0, 0 };
 			projectile[i].direction = { 0, 0 };
@@ -90,7 +90,7 @@ namespace Game
 			}
 		}
 
-		for (int i = 0; i < PLAYER_MAX_PROJECTILES; i++) {
+		for (int i = 0; i < playerMaxProjectiles; i++) {
 			if (projectile[i].state) {
 				projectile[i].position.x += projectile[i].direction.x * projectile[i].speed * GetFrameTime();
 				projectile[i].position.y += projectile[i].direction.y * projectile[i].speed * GetFrameTime();
@@ -113,7 +113,7 @@ namespace Game
 		DrawText(TextFormat("Angle in radians: %.2f", angle), 10, 10, 20, WHITE);
 		DrawText(TextFormat("Angle in degrees: %.2f", angleToDegrees), 10, 40, 20, WHITE);
 		DrawText(TextFormat("animation state: %i", player.animationState), 10, 80, 20, WHITE);
-		for (int i = 0; i < PLAYER_MAX_PROJECTILES; i++)
+		for (int i = 0; i < playerMaxProjectiles; i++)
 		{
 			if (projectile[i].state) { DrawCircleV(projectile[i].position, projectile[i].radius, RED); }
 		}
@@ -187,7 +187,7 @@ namespace Game
 	}
 
 	Projectile::createProjectile* GetInactiveProjectile() {
-		for (int i = 0; i < PLAYER_MAX_PROJECTILES; i++) {
+		for (int i = 0; i < playerMaxProjectiles; i++) {
 			if (!projectile[i].state) {
 				return &projectile[i];  // Return pointer to inactive bullet
 			}

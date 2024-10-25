@@ -1,7 +1,7 @@
 #include "Delving_Into_Darkness.h"
 
-#include "raylib.h"
 #include <iostream>
+#include "raylib.h"
 
 #include "menu/menu.h"
 #include "game/game.h"
