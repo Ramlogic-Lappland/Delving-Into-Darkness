@@ -2,7 +2,7 @@
 
 #include "raylib.h"
 #include <iostream>
-#include <math.h>
+#include <cmath>
 
 #include "Delving_Into_Darkness.h"
 #include "globals.h"
@@ -39,7 +39,7 @@ namespace Game
 		player.rotation = 0;
 		player.animationState = 1;
 		player.maxAcceleration = 700;
-		player.acceleration = 10.0f;
+		player.acceleration = 400.0f;
 		//player.maxAcceleration = 150.0f;
 
 		image = LoadImage("res/gamebackground/gameGridB.png");     
@@ -69,8 +69,8 @@ namespace Game
 		if (pointerPosition.x < Globals::Screen.size.x && pointerPosition.y < Globals::Screen.size.y) {
 			if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
 				
-				player.speed.x += dirVector.x * player.acceleration;				
-				player.speed.y += dirVector.y * player.acceleration;
+				player.speed.x += dirVector.x * player.acceleration * GetFrameTime();
+				player.speed.y += dirVector.y * player.acceleration * GetFrameTime();
 			}
 		}
 		if (player.speed.x > player.maxAcceleration) { player.speed.x = player.maxAcceleration; }

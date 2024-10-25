@@ -1,7 +1,7 @@
 #include "projectile.h"
 
 #include "raylib.h"
-#include <math.h>
+#include <cmath>
 
 #include "game/player/player.h"
 
