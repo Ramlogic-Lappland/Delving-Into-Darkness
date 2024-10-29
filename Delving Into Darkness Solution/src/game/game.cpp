@@ -16,18 +16,12 @@
 namespace Game
 {
 	const int playerMaxProjectiles = 3;
-
 	const int maxBigSlimes = 6;
 	const int maxMediumSlimes = 12;
 	const int maxSmallSlimes = 24;
-
 	const int bigSlimeSpeed = 200;
 	const int mediumSlimeSpeed = 400;
 	const int smallSlimeSpeed = 600;
-
-	//const float bigSlimeRadius = 35.0f;
-	//const float mediumSlimeRadius = 20.0f;
-	//const float smallSlimeRadius = 10.0f;
 
 	Player::CreatePlayer player;
 	Projectile::createProjectile projectile[playerMaxProjectiles];
@@ -36,22 +30,25 @@ namespace Game
 	Slime::CreateSlime mediumSlime[maxMediumSlimes];
 	Slime::CreateSlime smallSlime[maxSmallSlimes];
 
-
 	Vector2 pointerPosition = { 0.0f, 0.0f };
 	Vector2 dirVector;
+	Vector2 menuBttnPosition;
 
 	Texture2D gameBackground;
+	Texture2D menuBttn;
 	Image image;
+
+	Sound fireBallWav;
 
 	float rotationSpeed = 100.0f;
 	float angle;
 	float angleToDegrees;
-
 	float projectileSpawnDistance = 30.0f;
 
 	bool pause = false;
 	bool pauseMenu = false;
 	bool gameOver = false;
+
 
 	/* ========================================================== INIT GAME =================================================================== */
 	void initGame()
@@ -63,6 +60,12 @@ namespace Game
 		gameBackground = LoadTextureFromImage(image);
 		UnloadImage(image);
 
+		image = LoadImage("res/ui/ingame_menu_button.png");
+		ImageResize(&image, 40, 40);
+		menuBttn = LoadTextureFromImage(image);
+		UnloadImage(image);
+
+		fireBallWav = LoadSound("res/sounds/fireball.wav");
 
 		player.playerTexture = LoadTexture("res/character/test.png");
 		player.playerRect = { Globals::Screen.size.x /2, Globals::Screen.size.y / 2, 45, 45};
@@ -75,8 +78,10 @@ namespace Game
 		player.rad = 18.0f;
 		player.hp = 100;
 
-		spawnElements();
+		menuBttnPosition = { Globals::Screen.size.x - menuBttn.width - 20, static_cast<float>( 0 + menuBttn.height) };
 
+		spawnElements();
+		SetSoundVolume(fireBallWav, 0.16f);
 	}
 	/* ========================================================== INIT END =================================================================== */
 
@@ -150,6 +155,7 @@ namespace Game
 						};
 						newProjectile->direction = dirVector;
 						newProjectile->state = true;
+						PlaySound(fireBallWav);
 					}
 				}
 				for (int i = 0; i < playerMaxProjectiles; i++)
@@ -269,19 +275,15 @@ namespace Game
 	void drawGame()
 	{
 		DrawTexture(gameBackground, 0, 0, GRAY);
-		DrawText(TextFormat("Angle in radians: %.2f", angle), 10, 10, 20, WHITE);
-		DrawText(TextFormat("Angle in degrees: %.2f", angleToDegrees), 10, 40, 20, WHITE);
-		DrawText(TextFormat("animation state: %i", player.animationState), 10, 80, 20, WHITE);
-		DrawText(TextFormat("SCORE: %i", player.score), 900, 50, 30, WHITE);
-		DrawText(TextFormat("HP: %i", player.hp), 900, 100, 20, WHITE);
+#ifdef _DEBUG
 		for (int i = 0; i < playerMaxProjectiles; i++)
 		{
 			if (projectile[i].state) { DrawCircleV(projectile[i].position, projectile[i].radius, RED); }
 		}
-
 		DrawCircle(static_cast<int>(player.position.x), static_cast<int>(player.position.y), player.rad, RED);
+#endif
 		DrawTexturePro(player.playerTexture, player.playerTextureCoordinate, player.playerRect, player.pivot, player.rotation, WHITE);
-
+#ifdef _DEBUG
 		// Draw all big slimes
 		for (int i = 0; i < maxBigSlimes; i++)
 		{
@@ -303,6 +305,13 @@ namespace Game
 				DrawCircleV(smallSlime[i].position, smallSlime[i].rad, RED);
 			}
 		}
+		DrawText(TextFormat("Angle in radians: %.2f", angle), 10, 10, 20, WHITE);
+		DrawText(TextFormat("Angle in degrees: %.2f", angleToDegrees), 10, 40, 20, WHITE);
+		DrawText(TextFormat("animation state: %i", player.animationState), 10, 80, 20, WHITE);
+#endif
+		DrawText(TextFormat("SCORE: %i", player.score), 900, 50, 30, WHITE);
+		DrawText(TextFormat("HP: %i", player.hp), 900, 100, 20, WHITE);
+		DrawTexture(menuBttn, static_cast<int>(menuBttnPosition.x), static_cast<int>(menuBttnPosition.y), WHITE);
 		
 	}
 
@@ -311,6 +320,8 @@ namespace Game
 		std::cout << "UNLOADING GAME --------------------------------" << "\n";
 		UnloadTexture(player.playerTexture);
 		UnloadTexture(gameBackground);
+		UnloadTexture(menuBttn);
+		UnloadSound(fireBallWav);
 		std::cout << "GAME UNLOADED --------------------------------" << "\n";
 	}
 
