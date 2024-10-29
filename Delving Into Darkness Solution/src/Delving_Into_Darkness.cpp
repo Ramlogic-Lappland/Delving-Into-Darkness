@@ -13,6 +13,7 @@ namespace gameManager
 {
     //CreateScreen Screen;
     CreateCurrentScreen CurrentScreen;
+    bool isRunning = true;
 
     int run(void)
     {     
@@ -20,14 +21,14 @@ namespace gameManager
 
         SetTargetFPS(60);
 
-        while (!WindowShouldClose())
+        while (isRunning && !WindowShouldClose())
         {
             gameManager::update();
 
             gameManager::draw();
         }
 
-        gameManager::close();
+        close();
 
         return 0;
     }
@@ -91,6 +92,11 @@ namespace gameManager
         Menu::unloadMenu();
         Game::unloadGame();
         CloseWindow();
+    }
+
+    void stop()
+    {
+        isRunning = false;
     }
 
 }

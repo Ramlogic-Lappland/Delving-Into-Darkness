@@ -15,6 +15,7 @@ namespace Menu
 	button::createButton playBttn;
 	button::createButton creditsBttn;
 	button::createButton returnBttn;
+	button::createButton exitBttn;
 
 	const int candleAmountFrames = 4;
 	const int bookAmountFrames = 19;
@@ -66,11 +67,18 @@ namespace Menu
 		creditsBttn.position = { 330, 340 };
 		creditsBttn.buttonText = new Texture2D[creditsBttn.amountOfFrames];
 
+		exitBttn.amountOfFrames = 2;
+		exitBttn.buttonText[returnBttn.amountOfFrames];
+		exitBttn.buttonFrame = 0;
+		exitBttn.position = { 330, 440 };
+		exitBttn.buttonText = new Texture2D[creditsBttn.amountOfFrames];
+
 		returnBttn.amountOfFrames = 2;
 		returnBttn.buttonText[returnBttn.amountOfFrames];
 		returnBttn.buttonFrame = 0;
 		returnBttn.position = { 750, 550 };
 		returnBttn.buttonText = new Texture2D[creditsBttn.amountOfFrames];
+
 
 		//play Bttn
 		image = LoadImage("res/ui/button/play_button_1.png");
@@ -99,10 +107,20 @@ namespace Menu
 		ImageResize(&image, 160, 38);
 		returnBttn.buttonText[1] = LoadTextureFromImage(image);
 		UnloadImage(image);
+		//exit bttn
+		image = LoadImage("res/ui/button/exit_button_1.png");
+		ImageResize(&image, 200, 44);
+		exitBttn.buttonText[0] = LoadTextureFromImage(image);
+		UnloadImage(image);
+		image = LoadImage("res/ui/button/exit_button_2.png");
+		ImageResize(&image, 200, 44);
+		exitBttn.buttonText[1] = LoadTextureFromImage(image);
+		UnloadImage(image);
 
 		button::assignWidthAndHeight(playBttn); //   PLAY BTTN INITIALIZATION END
 		button::assignWidthAndHeight(creditsBttn);
-		button::assignWidthAndHeight(returnBttn);
+		button::assignWidthAndHeight(exitBttn);
+		button::assignWidthAndHeight(returnBttn); 
 
 		image = LoadImage("res/BookDesk/grayDesk.png");     // Loaded in CPU memory (RAM)
 		ImageResize(&image, static_cast<int>(Globals::Screen.size.x), static_cast<int>(Globals::Screen.size.y)); // resize image before aplying to texture
@@ -204,6 +222,19 @@ namespace Menu
 			creditsBttn.buttonFrame = 0;
 		}
 
+		if (collisions::rectangleXrectangle(exitBttn.position.x, exitBttn.position.y, exitBttn.width, exitBttn.height, pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)) && gameManager::CurrentScreen == gameManager::menu)
+		{
+			exitBttn.buttonFrame = 1;
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			{
+				gameManager::stop();
+			}
+		}
+		else
+		{
+			exitBttn.buttonFrame = 0;
+		}
+
 		if (collisions::rectangleXrectangle(returnBttn.position.x, returnBttn.position.y, returnBttn.width, returnBttn.height, pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)) && gameManager::CurrentScreen == gameManager::credits)
 		{
 			returnBttn.buttonFrame = 1;
@@ -227,7 +258,7 @@ namespace Menu
 			candleCurrentFrame = (candleCurrentFrame + 1) % candleAmountFrames; // Cycle to the next frame
 			candleElapsedTime = 0.0f; // Reset elapsed time
 		}
-
+		
 		swapMenuPage();
 	} //END UPDATE =============================================================================================
 
@@ -255,7 +286,8 @@ namespace Menu
 		if (gameManager::CurrentScreen == gameManager::menu && currentFrame > 8 && currentFrame < 13) // MENU STATE AND NO ANIMATION 
 		{
 			DrawTexture(playBttn.buttonText[playBttn.buttonFrame], static_cast<int>(playBttn.position.x), static_cast<int>(playBttn.position.y), WHITE);
-			DrawTexture(creditsBttn.buttonText[creditsBttn.buttonFrame], static_cast<int>(creditsBttn.position.x), static_cast<int>(creditsBttn.position.y), WHITE);
+			DrawTexture(creditsBttn.buttonText[creditsBttn.buttonFrame], static_cast<int>(creditsBttn.position.x), static_cast<int>(creditsBttn.position.y), WHITE); 
+			DrawTexture(exitBttn.buttonText[exitBttn.buttonFrame], static_cast<int>(exitBttn.position.x), static_cast<int>(exitBttn.position.y), WHITE);
 		}
 
 		if (gameManager::CurrentScreen == gameManager::credits && currentFrame > 16 ) // MENU STATE AND NO ANIMATION 
@@ -289,6 +321,10 @@ namespace Menu
 		for (int i = 0; i < playBttn.amountOfFrames; i++)
 		{
 			UnloadTexture(playBttn.buttonText[i]);
+		}
+		for (int i = 0; i < exitBttn.amountOfFrames; i++)
+		{
+			UnloadTexture(exitBttn.buttonText[i]);
 		}
 		for (int i = 0; i < creditsBttn.amountOfFrames; i++)
 		{
