@@ -13,6 +13,8 @@
 namespace Menu
 {
 	button::createButton playBttn;
+	button::createButton creditsBttn;
+	button::createButton returnBttn;
 
 	const int candleAmountFrames = 4;
 	const int bookAmountFrames = 19;
@@ -55,11 +57,52 @@ namespace Menu
 		playBttn.amountOfFrames = 2; //   PLAY BTTN INITIALIZATION 
 		playBttn.buttonText[playBttn.amountOfFrames];
 		playBttn.buttonFrame = 0;
-		playBttn.position = { 340, 260 };
-		playBttn.buttonText = new Texture2D[playBttn.amountOfFrames]; 
-		playBttn.buttonText[0] = LoadTexture("res/ui/button/button01.png");
-		playBttn.buttonText[1] = LoadTexture("res/ui/button/button02.png");
+		playBttn.position = { 330, 240 };
+		playBttn.buttonText = new Texture2D[playBttn.amountOfFrames];
+
+		creditsBttn.amountOfFrames = 2;
+		creditsBttn.buttonText[creditsBttn.amountOfFrames];
+		creditsBttn.buttonFrame = 0;
+		creditsBttn.position = { 330, 340 };
+		creditsBttn.buttonText = new Texture2D[creditsBttn.amountOfFrames];
+
+		returnBttn.amountOfFrames = 2;
+		returnBttn.buttonText[returnBttn.amountOfFrames];
+		returnBttn.buttonFrame = 0;
+		returnBttn.position = { 750, 550 };
+		returnBttn.buttonText = new Texture2D[creditsBttn.amountOfFrames];
+
+		//play Bttn
+		image = LoadImage("res/ui/button/play_button_1.png");
+		ImageResize(&image,200, 44);
+		playBttn.buttonText[0] = LoadTextureFromImage(image);
+		UnloadImage(image);
+		image = LoadImage("res/ui/button/play_button_2.png");
+		ImageResize(&image, 200, 44);
+		playBttn.buttonText[1] = LoadTextureFromImage(image);
+		UnloadImage(image);
+		//credits bttn
+		image = LoadImage("res/ui/button/credits_button_1.png");
+		ImageResize(&image, 200, 44);
+		creditsBttn.buttonText[0] = LoadTextureFromImage(image);
+		UnloadImage(image);
+		image = LoadImage("res/ui/button/credits_button_2.png");
+		ImageResize(&image, 200, 44);
+		creditsBttn.buttonText[1] = LoadTextureFromImage(image);
+		UnloadImage(image);
+		//return bttn
+		image = LoadImage("res/ui/button/return_button_1.png");
+		ImageResize(&image, 160, 38);
+		returnBttn.buttonText[0] = LoadTextureFromImage(image);
+		UnloadImage(image);
+		image = LoadImage("res/ui/button/return_button_2.png");
+		ImageResize(&image, 160, 38);
+		returnBttn.buttonText[1] = LoadTextureFromImage(image);
+		UnloadImage(image);
+
 		button::assignWidthAndHeight(playBttn); //   PLAY BTTN INITIALIZATION END
+		button::assignWidthAndHeight(creditsBttn);
+		button::assignWidthAndHeight(returnBttn);
 
 		image = LoadImage("res/BookDesk/grayDesk.png");     // Loaded in CPU memory (RAM)
 		ImageResize(&image, static_cast<int>(Globals::Screen.size.x), static_cast<int>(Globals::Screen.size.y)); // resize image before aplying to texture
@@ -130,21 +173,54 @@ namespace Menu
 
 		openBookAnim();
 
-		swapMenuPage();
-
-		if (collisions::rectangleXrectangle(playBttn.position.x, playBttn.position.y, playBttn.width, playBttn.height, pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)))
+		if (collisions::rectangleXrectangle(playBttn.position.x, playBttn.position.y, playBttn.width, playBttn.height, pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)) && gameManager::CurrentScreen == gameManager::menu)
 		{
 			playBttn.buttonFrame = 1;
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) 
 			{
 				gameManager::CurrentScreen = gameManager::game;
+				Game::initGame();
 			}
-		}
-		else 
+		}else 
 		{
 			playBttn.buttonFrame = 0;
 		}
 
+		if (collisions::rectangleXrectangle(creditsBttn.position.x, creditsBttn.position.y, creditsBttn.width, creditsBttn.height, pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)) && gameManager::CurrentScreen == gameManager::menu)
+		{
+			creditsBttn.buttonFrame = 1;
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			{
+				if (!bookSwapRight && currentFrame == bookOpenFrames - 1)
+				{
+					bookSwapRight = true;
+					PlaySound(flipPage);
+					gameManager::CurrentScreen = gameManager::credits;
+				}
+			}
+		}
+		else
+		{
+			creditsBttn.buttonFrame = 0;
+		}
+
+		if (collisions::rectangleXrectangle(returnBttn.position.x, returnBttn.position.y, returnBttn.width, returnBttn.height, pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)) && gameManager::CurrentScreen == gameManager::credits)
+		{
+			returnBttn.buttonFrame = 1;
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			{
+				if (!bookSwapLeft && currentFrame == (bookOpenFrames + bookSwapPageFrames - 1))
+				{
+					bookSwapLeft = true;
+					PlaySound(flipPage);
+					gameManager::CurrentScreen = gameManager::menu; // CHANGE MENU DRAW STATE FROM CREDITS TO MENU 
+				}
+			}
+		}
+		else
+		{
+			returnBttn.buttonFrame = 0;
+		}
 
 		if (candleElapsedTime >= candleFrameTime) 
 		{
@@ -152,7 +228,7 @@ namespace Menu
 			candleElapsedTime = 0.0f; // Reset elapsed time
 		}
 
-
+		swapMenuPage();
 	} //END UPDATE =============================================================================================
 
 	void drawMenu()
@@ -179,6 +255,12 @@ namespace Menu
 		if (gameManager::CurrentScreen == gameManager::menu && currentFrame > 8 && currentFrame < 13) // MENU STATE AND NO ANIMATION 
 		{
 			DrawTexture(playBttn.buttonText[playBttn.buttonFrame], static_cast<int>(playBttn.position.x), static_cast<int>(playBttn.position.y), WHITE);
+			DrawTexture(creditsBttn.buttonText[creditsBttn.buttonFrame], static_cast<int>(creditsBttn.position.x), static_cast<int>(creditsBttn.position.y), WHITE);
+		}
+
+		if (gameManager::CurrentScreen == gameManager::credits && currentFrame > 16 ) // MENU STATE AND NO ANIMATION 
+		{
+			DrawTexture(returnBttn.buttonText[returnBttn.buttonFrame], static_cast<int>(returnBttn.position.x), static_cast<int>(returnBttn.position.y), WHITE);
 		}
 
 
@@ -207,6 +289,14 @@ namespace Menu
 		for (int i = 0; i < playBttn.amountOfFrames; i++)
 		{
 			UnloadTexture(playBttn.buttonText[i]);
+		}
+		for (int i = 0; i < creditsBttn.amountOfFrames; i++)
+		{
+			UnloadTexture(creditsBttn.buttonText[i]);
+		}
+		for (int i = 0; i < returnBttn.amountOfFrames; i++)
+		{
+			UnloadTexture(returnBttn.buttonText[i]);
 		}
 
 		for (int i = 0; i < bookAmountFrames; i++) 
@@ -260,7 +350,7 @@ namespace Menu
 		{ // SWAP MENU STAGE
 			if (!bookSwapRight && currentFrame == bookOpenFrames - 1)
 			{ // START SWAP RIGHT
-				if (IsKeyPressed(KEY_RIGHT)) 
+				if (IsKeyPressed(KEY_RIGHT))
 				{
 					bookSwapRight = true;
 					PlaySound(flipPage);

@@ -78,7 +78,7 @@ namespace Game
 		player.rad = 18.0f;
 		player.hp = 100;
 
-		menuBttnPosition = { Globals::Screen.size.x - menuBttn.width - 20, static_cast<float>( 0 + menuBttn.height) };
+		menuBttnPosition = { Globals::Screen.size.x - menuBttn.width - 20, static_cast<float>( 0 ) };
 
 		spawnElements();
 		SetSoundVolume(fireBallWav, 0.16f);
@@ -89,183 +89,211 @@ namespace Game
 	/* ========================================================== GAME UPDATE =============================================================== */
 	void updateGame() 
 	{
+		pointerPosition = GetMousePosition();
+
+		if (gameOver == true)
+		{
+			if (IsKeyPressed(KEY_ENTER))
+			{
+				initGame();
+			}
+		}
+
 		if (gameOver == false)
 		{
-			if (pause == false)
+
+			if (IsKeyPressed(KEY_ESCAPE))
 			{
-				/*====================================================== PLAYER ======================================================*/
-				pointerPosition = GetMousePosition();
-
-				player.position = { player.playerRect.x, player.playerRect.y };
-				Player::playerRotationUpdate(player, dirVector, pointerPosition, player.position, angle, angleToDegrees);
-				player.animationState = Player::checkAnimState(player);
-				dirVector = NormalizeVector(dirVector);
-
-
-				if (pointerPosition.x < Globals::Screen.size.x && pointerPosition.y < Globals::Screen.size.y)
-				{
-					if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
-					{
-
-						player.speed.x += dirVector.x * player.acceleration * GetFrameTime();
-						player.speed.y += dirVector.y * player.acceleration * GetFrameTime();
-					}
-				}
-				if (player.speed.x > player.maxAcceleration) { player.speed.x = player.maxAcceleration; }
-				if (player.speed.y > player.maxAcceleration) { player.speed.y = player.maxAcceleration; }
-				player.playerRect.x += player.speed.x * GetFrameTime();
-				player.playerRect.y += player.speed.y * GetFrameTime();
-				playerBounds(); // checks if player hits the wall and spawns on oposite side
-
-				for (int i = 0; i < maxBigSlimes; i++)
-				{
-					if (bigSlime[i].state && collisions::circleCircle({ player.playerRect.x , player.playerRect.y}, player.rad, bigSlime[i].position, bigSlime[i].rad))
-					{
-						player.hp -= 50;
-						spawnElements();
-					}
-				}
-				for (int i = 0; i < maxMediumSlimes; i++)
-				{
-					if (mediumSlime[i].state && collisions::circleCircle(player.position, player.rad, mediumSlime[i].position, mediumSlime[i].rad))
-					{
-						player.hp -= 25;
-						spawnElements();
-					}
-				}
-				for (int i = 0; i < maxSmallSlimes; i++)
-				{
-					if (smallSlime[i].state && collisions::circleCircle(player.position, player.rad, smallSlime[i].position, smallSlime[i].rad))
-					{
-						player.hp -= 15;
-						spawnElements();
-					}
-				}
-				/*=================================================== PLAYER END ======================================================*/
-
-				/*====================================================== PROJECTILE ======================================================*/
+				pauseMenu = !pauseMenu;
+			}
+			if (pointerPosition.x > menuBttnPosition.x && pointerPosition.x < menuBttnPosition.x + menuBttn.width && pointerPosition.y > 0 && pointerPosition.y < menuBttn.height)
+			{
 				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 				{
-					Projectile::createProjectile* newProjectile = GetInactiveProjectile();
-					if (newProjectile != nullptr)
-					{
-						newProjectile->position = {
-							player.playerRect.x + dirVector.x * projectileSpawnDistance,
-							player.playerRect.y + dirVector.y * projectileSpawnDistance
-						};
-						newProjectile->direction = dirVector;
-						newProjectile->state = true;
-						PlaySound(fireBallWav);
-					}
+					pauseMenu = !pauseMenu;
 				}
-				for (int i = 0; i < playerMaxProjectiles; i++)
-				{
-					if (projectile[i].state)
-					{
-						projectile[i].position.x += projectile[i].direction.x * projectile[i].speed * GetFrameTime();
-						projectile[i].position.y += projectile[i].direction.y * projectile[i].speed * GetFrameTime();
+			}
 
-						// CHECK PROJECTILE BOUNDS
-						if (projectile[i].position.x < 0 || projectile[i].position.x > Globals::Screen.size.x ||
-							projectile[i].position.y < 0 || projectile[i].position.y > Globals::Screen.size.y)
-						{
-							projectile[i].state = false;
-						}
-					}
-				}
-				for (int i = 0; i < playerMaxProjectiles; i++)
+			if (player.hp < 0)
+			{
+				gameOver = true;
+			}
+			if (pauseMenu == false)
+			{
+				if (pause == false)
 				{
-					if (projectile[i].state)
-					{
-						for (int a = 0; a < maxBigSlimes; a++)
-						{
-							if (bigSlime[a].state && collisions::circleCircle(bigSlime[a].position, bigSlime[a].rad, projectile[i].position, projectile[i].radius))
-							{
-								projectile[i].state = false;
-								projectile[i].lifeSpawn = 0;
-								bigSlime[a].state = false;
-								player.score += 50;
-								Vector2 spawnSpeed = { bigSlime[a].speed.x * 2, bigSlime[a].speed.y * 2 };
-								Slime::spawnSlime(mediumSlime, maxMediumSlimes, Slime::MEDIUM, { bigSlime[a].position.x, bigSlime[a].position.y }, spawnSpeed);
-								Slime::spawnSlime(mediumSlime, maxMediumSlimes, Slime::MEDIUM, { bigSlime[a].position.x + 75, bigSlime[a].position.y + 75 }, spawnSpeed);
-							}
-						}
-					}
-				}
-				for (int i = 0; i < playerMaxProjectiles; i++)
-				{
-					if (projectile[i].state)
-					{
-						for (int a = 0; a < maxBigSlimes; a++)
-						{
-							if (bigSlime[a].state && collisions::circleCircle(bigSlime[a].position, bigSlime[a].rad, projectile[i].position, projectile[i].radius))
-							{
-								projectile[i].state = false;
-								projectile[i].lifeSpawn = 0;
-								bigSlime[a].state = false;
-								player.score += 25;
-								Vector2 spawnSpeed = { bigSlime[a].speed.x * 2, bigSlime[a].speed.y * 2 };
-								Slime::spawnSlime(mediumSlime, maxMediumSlimes, Slime::MEDIUM, { bigSlime[a].position.x, bigSlime[a].position.y }, spawnSpeed);
-								Slime::spawnSlime(mediumSlime, maxMediumSlimes, Slime::MEDIUM, { bigSlime[a].position.x + 75, bigSlime[a].position.y }, spawnSpeed);
-							}
-						}
-						for (int b = 0; b < maxMediumSlimes; b++)
-						{
-							if (mediumSlime[b].state && collisions::circleCircle(mediumSlime[b].position, mediumSlime[b].rad, projectile[i].position, projectile[i].radius))
-							{
-								projectile[i].state = false;
-								projectile[i].lifeSpawn = 0;
-								mediumSlime[b].state = false;
-								player.score += 50;
-								Vector2 spawnSpeed = { mediumSlime[b].speed.x * 2, mediumSlime[b].speed.y * 2 };
-								Slime::spawnSlime(smallSlime, maxSmallSlimes, Slime::SMALL, { mediumSlime[b].position.x, mediumSlime[b].position.y }, spawnSpeed);
-								Slime::spawnSlime(smallSlime, maxSmallSlimes, Slime::SMALL, { mediumSlime[b].position.x + 55, mediumSlime[b].position.y + 55 }, spawnSpeed);
-							}
-						}
-						for (int c = 0; c < maxSmallSlimes; c++)
-						{
-							if (smallSlime[c].state && collisions::circleCircle(smallSlime[c].position, smallSlime[c].rad, projectile[i].position, projectile[i].radius))
-							{
-								projectile[i].state = false;
-								projectile[i].lifeSpawn = 0;
-								smallSlime[c].state = false;
-								player.score += 100;
-							}
-						}
-					}
-				}
-				/*=================================================== PROJECTILE LOGIC END ======================================================*/
+					/*====================================================== PLAYER ======================================================*/					
+					player.position = { player.playerRect.x, player.playerRect.y };
+					Player::playerRotationUpdate(player, dirVector, pointerPosition, player.position, angle, angleToDegrees);
+					player.animationState = Player::checkAnimState(player);
+					dirVector = NormalizeVector(dirVector);
 
-				/*====================================================== SLIME ======================================================*/
-				// SLIME MOVEMENT
-				for (int i = 0; i < maxBigSlimes; i++) // BIG
-				{
-					if (bigSlime[i].state)
+
+					if (pointerPosition.x < Globals::Screen.size.x && pointerPosition.y < Globals::Screen.size.y)
 					{
-						Slime::slimeBounds(bigSlime[i]);
-						bigSlime[i].position.x += bigSlime[i].speed.x * GetFrameTime();
-						bigSlime[i].position.y += bigSlime[i].speed.y * GetFrameTime();
+						if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
+						{
+
+							player.speed.x += dirVector.x * player.acceleration * GetFrameTime();
+							player.speed.y += dirVector.y * player.acceleration * GetFrameTime();
+						}
 					}
-				}
-				for (int i = 0; i < maxMediumSlimes; i++) // MEDIUM
-				{
-					if (mediumSlime[i].state)
+					if (player.speed.x > player.maxAcceleration) { player.speed.x = player.maxAcceleration; }
+					if (player.speed.y > player.maxAcceleration) { player.speed.y = player.maxAcceleration; }
+					player.playerRect.x += player.speed.x * GetFrameTime();
+					player.playerRect.y += player.speed.y * GetFrameTime();
+					playerBounds(); // checks if player hits the wall and spawns on oposite side
+
+					for (int i = 0; i < maxBigSlimes; i++)
 					{
-						Slime::slimeBounds(mediumSlime[i]);
-						mediumSlime[i].position.x += mediumSlime[i].speed.x * GetFrameTime();
-						mediumSlime[i].position.y += mediumSlime[i].speed.y * GetFrameTime();
+						if (bigSlime[i].state && collisions::circleCircle({ player.playerRect.x , player.playerRect.y }, player.rad, bigSlime[i].position, bigSlime[i].rad))
+						{
+							player.hp -= 50;
+							spawnElements();
+						}
 					}
-				}
-				for (int i = 0; i < maxSmallSlimes; i++) // SMALL
-				{
-					if (smallSlime[i].state)
+					for (int i = 0; i < maxMediumSlimes; i++)
 					{
-						Slime::slimeBounds(smallSlime[i]);
-						smallSlime[i].position.x += smallSlime[i].speed.x * GetFrameTime();
-						smallSlime[i].position.y += smallSlime[i].speed.y * GetFrameTime();
+						if (mediumSlime[i].state && collisions::circleCircle(player.position, player.rad, mediumSlime[i].position, mediumSlime[i].rad))
+						{
+							player.hp -= 25;
+							spawnElements();
+						}
 					}
+					for (int i = 0; i < maxSmallSlimes; i++)
+					{
+						if (smallSlime[i].state && collisions::circleCircle(player.position, player.rad, smallSlime[i].position, smallSlime[i].rad))
+						{
+							player.hp -= 15;
+							spawnElements();
+						}
+					}
+					/*=================================================== PLAYER END ======================================================*/
+
+					/*====================================================== PROJECTILE ======================================================*/
+					if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+					{
+						Projectile::createProjectile* newProjectile = GetInactiveProjectile();
+						if (newProjectile != nullptr)
+						{
+							newProjectile->position = {
+								player.playerRect.x + dirVector.x * projectileSpawnDistance,
+								player.playerRect.y + dirVector.y * projectileSpawnDistance
+							};
+							newProjectile->direction = dirVector;
+							newProjectile->state = true;
+							PlaySound(fireBallWav);
+						}
+					}
+					for (int i = 0; i < playerMaxProjectiles; i++)
+					{
+						if (projectile[i].state)
+						{
+							projectile[i].position.x += projectile[i].direction.x * projectile[i].speed * GetFrameTime();
+							projectile[i].position.y += projectile[i].direction.y * projectile[i].speed * GetFrameTime();
+
+							// CHECK PROJECTILE BOUNDS
+							if (projectile[i].position.x < 0 || projectile[i].position.x > Globals::Screen.size.x ||
+								projectile[i].position.y < 0 || projectile[i].position.y > Globals::Screen.size.y)
+							{
+								projectile[i].state = false;
+							}
+						}
+					}
+					for (int i = 0; i < playerMaxProjectiles; i++)
+					{
+						if (projectile[i].state)
+						{
+							for (int a = 0; a < maxBigSlimes; a++)
+							{
+								if (bigSlime[a].state && collisions::circleCircle(bigSlime[a].position, bigSlime[a].rad, projectile[i].position, projectile[i].radius))
+								{
+									projectile[i].state = false;
+									projectile[i].lifeSpawn = 0;
+									bigSlime[a].state = false;
+									player.score += 50;
+									Vector2 spawnSpeed = { bigSlime[a].speed.x * 2, bigSlime[a].speed.y * 2 };
+									Slime::spawnSlime(mediumSlime, maxMediumSlimes, Slime::MEDIUM, { bigSlime[a].position.x, bigSlime[a].position.y }, spawnSpeed);
+									Slime::spawnSlime(mediumSlime, maxMediumSlimes, Slime::MEDIUM, { bigSlime[a].position.x + 75, bigSlime[a].position.y + 75 }, spawnSpeed);
+								}
+							}
+						}
+					}
+					for (int i = 0; i < playerMaxProjectiles; i++)
+					{
+						if (projectile[i].state)
+						{
+							for (int a = 0; a < maxBigSlimes; a++)
+							{
+								if (bigSlime[a].state && collisions::circleCircle(bigSlime[a].position, bigSlime[a].rad, projectile[i].position, projectile[i].radius))
+								{
+									projectile[i].state = false;
+									projectile[i].lifeSpawn = 0;
+									bigSlime[a].state = false;
+									player.score += 25;
+									Vector2 spawnSpeed = { bigSlime[a].speed.x * 2, bigSlime[a].speed.y * 2 };
+									Slime::spawnSlime(mediumSlime, maxMediumSlimes, Slime::MEDIUM, { bigSlime[a].position.x, bigSlime[a].position.y }, spawnSpeed);
+									Slime::spawnSlime(mediumSlime, maxMediumSlimes, Slime::MEDIUM, { bigSlime[a].position.x + 75, bigSlime[a].position.y }, spawnSpeed);
+								}
+							}
+							for (int b = 0; b < maxMediumSlimes; b++)
+							{
+								if (mediumSlime[b].state && collisions::circleCircle(mediumSlime[b].position, mediumSlime[b].rad, projectile[i].position, projectile[i].radius))
+								{
+									projectile[i].state = false;
+									projectile[i].lifeSpawn = 0;
+									mediumSlime[b].state = false;
+									player.score += 50;
+									Vector2 spawnSpeed = { mediumSlime[b].speed.x * 2, mediumSlime[b].speed.y * 2 };
+									Slime::spawnSlime(smallSlime, maxSmallSlimes, Slime::SMALL, { mediumSlime[b].position.x, mediumSlime[b].position.y }, spawnSpeed);
+									Slime::spawnSlime(smallSlime, maxSmallSlimes, Slime::SMALL, { mediumSlime[b].position.x + 55, mediumSlime[b].position.y + 55 }, spawnSpeed);
+								}
+							}
+							for (int c = 0; c < maxSmallSlimes; c++)
+							{
+								if (smallSlime[c].state && collisions::circleCircle(smallSlime[c].position, smallSlime[c].rad, projectile[i].position, projectile[i].radius))
+								{
+									projectile[i].state = false;
+									projectile[i].lifeSpawn = 0;
+									smallSlime[c].state = false;
+									player.score += 100;
+								}
+							}
+						}
+					}
+					/*=================================================== PROJECTILE LOGIC END ======================================================*/
+
+					/*====================================================== SLIME ======================================================*/
+					// SLIME MOVEMENT
+					for (int i = 0; i < maxBigSlimes; i++) // BIG
+					{
+						if (bigSlime[i].state)
+						{
+							Slime::slimeBounds(bigSlime[i]);
+							bigSlime[i].position.x += bigSlime[i].speed.x * GetFrameTime();
+							bigSlime[i].position.y += bigSlime[i].speed.y * GetFrameTime();
+						}
+					}
+					for (int i = 0; i < maxMediumSlimes; i++) // MEDIUM
+					{
+						if (mediumSlime[i].state)
+						{
+							Slime::slimeBounds(mediumSlime[i]);
+							mediumSlime[i].position.x += mediumSlime[i].speed.x * GetFrameTime();
+							mediumSlime[i].position.y += mediumSlime[i].speed.y * GetFrameTime();
+						}
+					}
+					for (int i = 0; i < maxSmallSlimes; i++) // SMALL
+					{
+						if (smallSlime[i].state)
+						{
+							Slime::slimeBounds(smallSlime[i]);
+							smallSlime[i].position.x += smallSlime[i].speed.x * GetFrameTime();
+							smallSlime[i].position.y += smallSlime[i].speed.y * GetFrameTime();
+						}
+					}
+					/*====================================================== SLIME END ======================================================*/
 				}
-				/*====================================================== SLIME END ======================================================*/
 			}
 		}
 	}
@@ -305,9 +333,9 @@ namespace Game
 				DrawCircleV(smallSlime[i].position, smallSlime[i].rad, RED);
 			}
 		}
-		DrawText(TextFormat("Angle in radians: %.2f", angle), 10, 10, 20, WHITE);
-		DrawText(TextFormat("Angle in degrees: %.2f", angleToDegrees), 10, 40, 20, WHITE);
-		DrawText(TextFormat("animation state: %i", player.animationState), 10, 80, 20, WHITE);
+		DrawText(TextFormat("Angle in radians: %.2f", angle), 10, 60, 20, WHITE);
+		DrawText(TextFormat("Angle in degrees: %.2f", angleToDegrees), 10, 80, 20, WHITE);
+		DrawText(TextFormat("animation state: %i", player.animationState), 10, 100, 20, WHITE);
 #endif
 		DrawText(TextFormat("SCORE: %i", player.score), 900, 50, 30, WHITE);
 		DrawText(TextFormat("HP: %i", player.hp), 900, 100, 20, WHITE);

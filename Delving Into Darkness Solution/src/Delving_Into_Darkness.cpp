@@ -44,7 +44,7 @@ namespace gameManager
         //HideCursor();
 
         Menu::initMenu();
-        Game::initGame();
+        //Game::initGame();
 
     }
 
