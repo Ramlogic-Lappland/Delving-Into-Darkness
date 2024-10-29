@@ -15,8 +15,8 @@ namespace Slime
 	void getRadomSpawnDirection(CreateSlime& slime)
 	{
         float angle = rand() % 360 * (PI / 180.0f);
-        float speedMultiplier = (slime.type == Slime::BIG) ? 100.0f :
-            (slime.type == Slime::MEDIUM) ? 150.0f : 200.0f;
+        float speedMultiplier = (slime.type == Slime::BIG) ? 140.0f :
+            (slime.type == Slime::MEDIUM) ? 180.0f : 200.0f;
         slime.speed = { cosf(angle) * speedMultiplier, sinf(angle) * speedMultiplier };
 	}
 

@@ -26,6 +26,7 @@ namespace Menu
 	Music menuMusic;
 	Sound bookOpen;
 	Sound flipPage;
+	Sound buttonBop;
 
 	Image image;
 
@@ -163,11 +164,13 @@ namespace Menu
 		menuMusic = LoadMusicStream("res/sounds/TheVeilofNight.mp3");
 		bookOpen = LoadSound("res/sounds/openBook.wav");
 		flipPage = LoadSound("res/sounds/pageFlip.wav");
+		buttonBop = LoadSound("res/sounds/buttonpop.wav");
 		//Init AudioFiles
 		PlayMusicStream(menuMusic);
 		SetMusicVolume(menuMusic, 0.5f);
 		SetSoundVolume(bookOpen, 0.1f);
 		SetSoundVolume(flipPage, 0.3f);
+		SetSoundVolume(buttonBop, 0.2f);
 
 	} //END INIT =============================================================================================
 
@@ -196,6 +199,7 @@ namespace Menu
 			playBttn.buttonFrame = 1;
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) 
 			{
+				PlaySound(buttonBop);
 				gameManager::CurrentScreen = gameManager::game;
 				Game::initGame();
 			}
@@ -211,6 +215,7 @@ namespace Menu
 			{
 				if (!bookSwapRight && currentFrame == bookOpenFrames - 1)
 				{
+					PlaySound(buttonBop);
 					bookSwapRight = true;
 					PlaySound(flipPage);
 					gameManager::CurrentScreen = gameManager::credits;
@@ -227,6 +232,7 @@ namespace Menu
 			exitBttn.buttonFrame = 1;
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
+				PlaySound(buttonBop);
 				gameManager::stop();
 			}
 		}
@@ -242,6 +248,7 @@ namespace Menu
 			{
 				if (!bookSwapLeft && currentFrame == (bookOpenFrames + bookSwapPageFrames - 1))
 				{
+					PlaySound(buttonBop);
 					bookSwapLeft = true;
 					PlaySound(flipPage);
 					gameManager::CurrentScreen = gameManager::menu; // CHANGE MENU DRAW STATE FROM CREDITS TO MENU 
@@ -313,6 +320,7 @@ namespace Menu
 		UnloadMusicStream(menuMusic);
 		UnloadSound(bookOpen);
 		UnloadSound(flipPage);
+		UnloadSound(buttonBop);
 
 		UnloadTexture(menuBackground);
 		UnloadTexture(itchLogo);

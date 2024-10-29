@@ -30,6 +30,10 @@ namespace Game
 	Slime::CreateSlime mediumSlime[maxMediumSlimes];
 	Slime::CreateSlime smallSlime[maxSmallSlimes];
 
+	Music gameMusic;
+	Sound fireBallWav;
+	Sound slimeDeath;
+
 	Vector2 pointerPosition = { 0.0f, 0.0f };
 	Vector2 dirVector;
 	Vector2 menuBttnPosition;
@@ -38,12 +42,11 @@ namespace Game
 	Texture2D menuBttn;
 	Image image;
 
-	Sound fireBallWav;
-
 	float rotationSpeed = 100.0f;
 	float angle;
 	float angleToDegrees;
 	float projectileSpawnDistance = 30.0f;
+	float timePlayed = 0.0f;
 
 	bool pause = false;
 	bool pauseMenu = false;
@@ -65,7 +68,10 @@ namespace Game
 		menuBttn = LoadTextureFromImage(image);
 		UnloadImage(image);
 
+
+		slimeDeath = LoadSound("res/sounds/slimeDeath.wav");
 		fireBallWav = LoadSound("res/sounds/fireball.wav");
+		gameMusic = LoadMusicStream("res/sounds/gameSong.mp3");
 
 		player.playerTexture = LoadTexture("res/character/test.png");
 		player.playerRect = { Globals::Screen.size.x /2, Globals::Screen.size.y / 2, 45, 45};
@@ -81,7 +87,10 @@ namespace Game
 		menuBttnPosition = { Globals::Screen.size.x - menuBttn.width - 20, static_cast<float>( 0 ) };
 
 		spawnElements();
+		PlayMusicStream(gameMusic);
+		SetMusicVolume(gameMusic, 0.5f);
 		SetSoundVolume(fireBallWav, 0.16f);
+		SetSoundVolume(slimeDeath, 0.2f);
 	}
 	/* ========================================================== INIT END =================================================================== */
 
@@ -90,6 +99,13 @@ namespace Game
 	void updateGame() 
 	{
 		pointerPosition = GetMousePosition();
+
+		UpdateMusicStream(gameMusic);
+
+		timePlayed = GetMusicTimePlayed(gameMusic) / GetMusicTimeLength(gameMusic);
+
+		if (timePlayed > 1.0f) timePlayed = 1.0f;
+
 
 		if (gameOver == true)
 		{
@@ -210,6 +226,7 @@ namespace Game
 								{
 									projectile[i].state = false;
 									projectile[i].lifeSpawn = 0;
+									PlaySound(slimeDeath);
 									bigSlime[a].state = false;
 									player.score += 50;
 									Vector2 spawnSpeed = { bigSlime[a].speed.x * 2, bigSlime[a].speed.y * 2 };
@@ -229,6 +246,7 @@ namespace Game
 								{
 									projectile[i].state = false;
 									projectile[i].lifeSpawn = 0;
+									PlaySound(slimeDeath);
 									bigSlime[a].state = false;
 									player.score += 25;
 									Vector2 spawnSpeed = { bigSlime[a].speed.x * 2, bigSlime[a].speed.y * 2 };
@@ -242,6 +260,7 @@ namespace Game
 								{
 									projectile[i].state = false;
 									projectile[i].lifeSpawn = 0;
+									PlaySound(slimeDeath);
 									mediumSlime[b].state = false;
 									player.score += 50;
 									Vector2 spawnSpeed = { mediumSlime[b].speed.x * 2, mediumSlime[b].speed.y * 2 };
@@ -350,6 +369,8 @@ namespace Game
 		UnloadTexture(gameBackground);
 		UnloadTexture(menuBttn);
 		UnloadSound(fireBallWav);
+		UnloadSound(slimeDeath);
+		UnloadMusicStream(gameMusic);
 		std::cout << "GAME UNLOADED --------------------------------" << "\n";
 	}
 
