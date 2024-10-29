@@ -123,7 +123,8 @@ namespace Menu
 		elapsedTime += GetFrameTime();
 		candleElapsedTime += GetFrameTime();
 
-		if (currentFrame == 0){
+		if (currentFrame == 0)
+		{
 			PlaySound(bookOpen);
 		}
 
@@ -131,18 +132,22 @@ namespace Menu
 
 		swapMenuPage();
 
-		if (collisions::rectangleXrectangle(playBttn.position.x, playBttn.position.y, playBttn.width, playBttn.height, pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height))){
+		if (collisions::rectangleXrectangle(playBttn.position.x, playBttn.position.y, playBttn.width, playBttn.height, pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)))
+		{
 			playBttn.buttonFrame = 1;
-			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) 
+			{
 				gameManager::CurrentScreen = gameManager::game;
 			}
 		}
-		else {
+		else 
+		{
 			playBttn.buttonFrame = 0;
 		}
 
 
-		if (candleElapsedTime >= candleFrameTime) {
+		if (candleElapsedTime >= candleFrameTime) 
+		{
 			candleCurrentFrame = (candleCurrentFrame + 1) % candleAmountFrames; // Cycle to the next frame
 			candleElapsedTime = 0.0f; // Reset elapsed time
 		}
@@ -156,15 +161,18 @@ namespace Menu
 
 		DrawTexture(menuBackground, 0, 0, GRAY);
 
-		if (currentFrame < 5){
+		if (currentFrame < 5)
+		{
 			DrawTexture(bookFrames[currentFrame], 180 - (14 * currentFrame), 0, WHITE);
 			correction = 14 * currentFrame;
 		}
 		else 
-			if (currentFrame >= 5){
+			if (currentFrame >= 5)
+			{
 				DrawTexture(bookFrames[currentFrame], 180 - correction, 0, WHITE);
 			}
-		if (currentFrame > 9){ // LOGO LOAD
+		if (currentFrame > 9)
+		{ // LOGO LOAD
 			DrawTexture(itchLogo, 948, 265, WHITE); 
 		}
 
@@ -196,15 +204,18 @@ namespace Menu
 		UnloadTexture(itchLogo);
 		UnloadTexture(pointerTex);
 		
-		for (int i = 0; i < playBttn.amountOfFrames; i++) {
+		for (int i = 0; i < playBttn.amountOfFrames; i++)
+		{
 			UnloadTexture(playBttn.buttonText[i]);
 		}
 
-		for (int i = 0; i < bookAmountFrames; i++) {
+		for (int i = 0; i < bookAmountFrames; i++) 
+		{
 			UnloadTexture(bookFrames[i]);
 		}
 
-		for (int i = 0; i < candleAmountFrames; i++) {
+		for (int i = 0; i < candleAmountFrames; i++)
+		{
 			UnloadTexture(candleFrames[i]);
 		}
 
@@ -220,14 +231,17 @@ namespace Menu
 
 	void openBookAnim()// BOOK OPEN ANIM 
 	{
-		if (bookOpenAnimationOn) {
+		if (bookOpenAnimationOn) 
+		{
 			// Update elapsed time
 			elapsedTime += GetFrameTime();
 
 			// Check if it's time to switch frames
-			if (elapsedTime >= frameTime) {
+			if (elapsedTime >= frameTime) 
+			{
 				// Increment frame if we're not at the last frame
-				if (currentFrame < bookOpenFrames - 1) {
+				if (currentFrame < bookOpenFrames - 1) 
+				{
 					currentFrame++;
 				}
 				else {
@@ -242,23 +256,30 @@ namespace Menu
 
 	void swapMenuPage() //SWAP MENU PAGE
 	{
-		if (!bookOpenAnimationOn) { // SWAP MENU STAGE
-			if (!bookSwapRight && currentFrame == bookOpenFrames - 1) { // START SWAP RIGHT
-				if (IsKeyPressed(KEY_RIGHT)) {
+		if (!bookOpenAnimationOn) 
+		{ // SWAP MENU STAGE
+			if (!bookSwapRight && currentFrame == bookOpenFrames - 1)
+			{ // START SWAP RIGHT
+				if (IsKeyPressed(KEY_RIGHT)) 
+				{
 					bookSwapRight = true;
 					PlaySound(flipPage);
 					gameManager::CurrentScreen = gameManager::credits; // CHANGE MENU DRAW STATE FROM MENU TO CREDITS
 				}
 			}
-			if (bookSwapRight) {
+			if (bookSwapRight)
+			{
 				elapsedTime += GetFrameTime();
 
-				if (elapsedTime >= frameTime) {
+				if (elapsedTime >= frameTime) 
+				{
 
-					if (currentFrame < bookOpenFrames + bookSwapPageFrames - 1) {
+					if (currentFrame < bookOpenFrames + bookSwapPageFrames - 1) 
+					{
 						currentFrame++;
 					}
-					else {
+					else 
+					{
 						bookSwapRight = false;
 					}
 
@@ -266,22 +287,28 @@ namespace Menu
 				}
 			} // END SWAP RIGHT 
 
-			if (!bookSwapLeft && currentFrame == (bookOpenFrames + bookSwapPageFrames - 1)) {
-				if (IsKeyPressed(KEY_LEFT)) {
+			if (!bookSwapLeft && currentFrame == (bookOpenFrames + bookSwapPageFrames - 1))
+			{
+				if (IsKeyPressed(KEY_LEFT)) 
+				{
 					bookSwapLeft = true;
 					PlaySound(flipPage);
 					gameManager::CurrentScreen = gameManager::menu; // CHANGE MENU DRAW STATE FROM CREDITS TO MENU 
 				}
 			}
-			if (bookSwapLeft) {
+			if (bookSwapLeft) 
+			{
 				elapsedTime += GetFrameTime();
 
-				if (elapsedTime >= frameTime) {
+				if (elapsedTime >= frameTime) 
+				{
 
-					if (currentFrame > bookOpenFrames - 1) {
+					if (currentFrame > bookOpenFrames - 1) 
+					{
 						currentFrame--;
 					}
-					else {
+					else
+					{
 						bookSwapLeft = false;
 					}
 

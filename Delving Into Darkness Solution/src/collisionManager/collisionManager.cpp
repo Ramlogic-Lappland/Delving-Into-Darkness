@@ -1,11 +1,13 @@
 #include "collisionManager.h"
 
 #include <iostream>
+#include "raylib.h"
 
 namespace collisions
 {
 
-	bool rectangleXrectangle(float r1x, float r1y, float r1w, float r1h, float r2x, float r2y, float r2w, float r2h) {
+	bool rectangleXrectangle(float r1x, float r1y, float r1w, float r1h, float r2x, float r2y, float r2w, float r2h) 
+	{
 
 		// are the sides of one rectangle touching the other?
 
@@ -18,12 +20,13 @@ namespace collisions
 		return false;
 	}
 
-	bool circleCircle(float c1x, float c1y, float c1r, float c2x, float c2y, float c2r) {
+	bool circleCircle(Vector2 pos1, float c1r, Vector2 pos2, float c2r)
+	{
 
 		// get distance between the circle's centers
 		// use the Pythagorean Theorem to compute the distance
-		float distX = c1x - c2x;
-		float distY = c1y - c2y;
+		float distX = pos1.x - pos2.x;
+		float distY = pos1.y - pos2.y;
 		float distance = sqrt((distX * distX) + (distY * distY));
 
 		// if the distance is less than the sum of the circle's
@@ -34,7 +37,8 @@ namespace collisions
 		return false;
 	}
 
-	bool circleRect(float cx, float cy, float radius, float rx, float ry, float rw, float rh) {
+	bool circleRect(float cx, float cy, float radius, float rx, float ry, float rw, float rh) 
+	{
 
 		// temporary variables to set edges for testing
 		float testX = cx;

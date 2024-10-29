@@ -2,7 +2,6 @@
 
 namespace Menu
 {
-
 	void initMenu();
 
 	void updateMenu();

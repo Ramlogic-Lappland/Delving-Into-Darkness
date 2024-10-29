@@ -18,15 +18,4 @@ namespace Projectile
 		projectile.rotation = player.rotation;
 	}
 
-
-	/*
-	  	createProjectile* GetInactiveBullet(createProjectile& projectile) 
-	{
-		if (!projectile.state) {
-			return &projectile;
-		}
-
-		return nullptr;  
-	}
-	*/
 }

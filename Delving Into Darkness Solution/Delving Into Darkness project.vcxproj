@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\game\enemy\slime.cpp" />
+    <ClCompile Include="src\game\player\player.cpp" />
     <ClCompile Include="src\game\player\projectile\projectile.cpp" />
     <ClCompile Include="src\button\button.cpp" />
     <ClCompile Include="src\collisionManager\collisionManager.cpp" />
