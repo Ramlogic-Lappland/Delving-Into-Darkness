@@ -1,6 +1,7 @@
 #include "menu.h"
 
 #include <iostream>
+#include <cstdlib>
 
 #include "raylib.h"
 
@@ -22,6 +23,7 @@ namespace Menu
 	const int pointerOffSet = 10;
 	const int bookOpenFrames = 12;
 	const int bookSwapPageFrames = 7;
+	const char* linkURL = "https://itch.io/c/4957050/delving";
 
 	Music menuMusic;
 	Sound bookOpen;
@@ -37,6 +39,7 @@ namespace Menu
 	Texture2D pointerTex;
 
 	Vector2 pointerPosition = {0.0f, 0.0f};
+	Vector2 itchIoPos = {948, 265};
 
 	int candleCurrentFrame = 0;
 	int currentFrame = 0;    // current frame
@@ -260,6 +263,14 @@ namespace Menu
 			returnBttn.buttonFrame = 0;
 		}
 
+		if (collisions::rectangleXrectangle(itchIoPos.x, itchIoPos.y, static_cast<float>(itchLogo.width), static_cast<float>(itchLogo.height), pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)))
+		{
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			{
+				OpenURL(linkURL);
+			}
+		}
+
 		if (candleElapsedTime >= candleFrameTime) 
 		{
 			candleCurrentFrame = (candleCurrentFrame + 1) % candleAmountFrames; // Cycle to the next frame
@@ -300,6 +311,17 @@ namespace Menu
 		if (gameManager::CurrentScreen == gameManager::credits && currentFrame > 16 ) // MENU STATE AND NO ANIMATION 
 		{
 			DrawTexture(returnBttn.buttonText[returnBttn.buttonFrame], static_cast<int>(returnBttn.position.x), static_cast<int>(returnBttn.position.y), WHITE);
+			DrawText("Game Made By Estanislao Sala Barraquero", 300, 250, 10, BLACK);
+			DrawText("Made using Raylib", 300, 280, 10, BLACK);
+			DrawText("Menu song made by Crow Shade ", 300, 300, 10, BLACK);
+			DrawText("Character made by PixiVan", 300, 320, 10, BLACK);
+			DrawText("Fireball made by Stealthix", 300, 340, 10, BLACK);
+			DrawText("Book made by humblepixel", 300, 360, 10, BLACK);
+			DrawText("Game song made with suno (ai)", 300, 380, 10, BLACK);
+			DrawText("Character portrair made with (ai)", 300, 400, 10, BLACK);
+			DrawText("sounds made by floraphonic (ai)", 300, 420, 10, BLACK);
+
+			DrawText("FOR LINKS CLICK ON ITCH.IO LOGO", 300, 460, 14, BLACK);
 		}
 
 
@@ -452,5 +474,14 @@ namespace Menu
 		} // END SWAPPING MENU STAGE
 	}
 
+	void OpenURL(const char* url) {
+#if defined(_WIN32)
+		system((std::string("start ") + url).c_str());
+#elif defined(__APPLE__)
+		system((std::string("open ") + url).c_str());
+#elif defined(__linux__)
+		system((std::string("xdg-open ") + url).c_str());
+#endif
+	}
 
 }// END NAMESPACE

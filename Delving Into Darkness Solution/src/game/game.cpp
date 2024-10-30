@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cmath>
 
+
 #include "Delving_Into_Darkness.h"
 #include "globals.h"
 #include "collisionManager/collisionManager.h"
@@ -241,7 +242,7 @@ namespace Game
 				}
 			}
 
-			if (player.hp <= 0)
+			if (player.hp <= 0 || player.score >= 3150)
 			{
 				gameOver = true;
 			}
@@ -341,26 +342,7 @@ namespace Game
 							fireballOrigin = { fireBallFrameWidth / 2.0f, fireBallFrameHeight / 2.0f };
 						}
 					}
-					for (int i = 0; i < playerMaxProjectiles; i++)
-					{
-						if (projectile[i].state)
-						{
-							for (int a = 0; a < maxBigSlimes; a++)
-							{
-								if (bigSlime[a].state && collisions::circleCircle(bigSlime[a].position, bigSlime[a].rad, projectile[i].position, projectile[i].radius))
-								{
-									projectile[i].state = false;
-									projectile[i].lifeSpawn = 0;
-									PlaySound(slimeDeath);
-									bigSlime[a].state = false;
-									player.score += 50;
-									Vector2 spawnSpeed = { bigSlime[a].speed.x * 2, bigSlime[a].speed.y * 2 };
-									Slime::spawnSlime(mediumSlime, maxMediumSlimes, Slime::MEDIUM, { bigSlime[a].position.x, bigSlime[a].position.y }, spawnSpeed);
-									Slime::spawnSlime(mediumSlime, maxMediumSlimes, Slime::MEDIUM, { bigSlime[a].position.x + 75, bigSlime[a].position.y + 75 }, spawnSpeed);
-								}
-							}
-						}
-					}
+
 					for (int i = 0; i < playerMaxProjectiles; i++)
 					{
 						if (projectile[i].state)
@@ -447,20 +429,20 @@ namespace Game
 	void drawGame()
 	{
 		DrawTexture(gameBackground, 0, 0, GRAY);
-#ifdef _DEBUG
+//#ifdef _DEBUG
 		for (int i = 0; i < playerMaxProjectiles; i++)
 		{
 			if (projectile[i].state) { DrawCircleV(projectile[i].position, projectile[i].radius, RED); }
 		}
 		DrawCircle(static_cast<int>(player.position.x), static_cast<int>(player.position.y), player.rad, RED);
-#endif
+//#endif
 		for (int i = 0; i < playerMaxProjectiles; i++)
 		{
 			if (projectile[i].state) { DrawTexturePro(fireBallText, fireballRectangle, fireballDestRect, fireballOrigin, projectile[i].rotation - 90, WHITE); }
 		}
 		
 		DrawTexturePro(player.playerTexture, player.playerTextureCoordinate, player.playerRect, player.pivot, player.rotation, WHITE);
-#ifdef _DEBUG
+
 		// Draw all big slimes
 		for (int i = 0; i < maxBigSlimes; i++)
 		{
@@ -482,6 +464,7 @@ namespace Game
 				DrawCircleV(smallSlime[i].position, smallSlime[i].rad, RED);
 			}
 		}
+#ifdef _DEBUG
 		DrawText(TextFormat("Angle in radians: %.2f", angle), 10, 60, 20, WHITE);
 		DrawText(TextFormat("Angle in degrees: %.2f", angleToDegrees), 10, 80, 20, WHITE);
 		DrawText(TextFormat("animation state: %i", player.animationState), 10, 100, 20, WHITE);

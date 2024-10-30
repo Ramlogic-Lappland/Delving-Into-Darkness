@@ -13,4 +13,6 @@ namespace Menu
 	void openBookAnim();
 
 	void swapMenuPage();
+
+	void OpenURL(const char* url);
 }
