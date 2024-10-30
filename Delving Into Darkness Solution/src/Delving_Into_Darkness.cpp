@@ -42,10 +42,9 @@ namespace gameManager
 
         InitWindow(static_cast<int>(Globals::Screen.size.x), static_cast<int>(Globals::Screen.size.y), Globals::Screen.name);
 
-        //HideCursor();
+        HideCursor();
 
         Menu::initMenu();
-        //Game::initGame();
 
     }
 

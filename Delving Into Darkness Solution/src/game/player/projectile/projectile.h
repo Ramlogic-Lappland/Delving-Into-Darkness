@@ -7,6 +7,7 @@ namespace Projectile
 {
 	struct createProjectile
 	{
+
 		Vector2 position;
 		Vector2 size;
 		Vector2 direction;
@@ -14,7 +15,9 @@ namespace Projectile
 		float radius;
 		float rotation;
 		float speed;
+		float fireballFrameCounter;
 
+		int currentFireballFrame;
 		int lifeSpawn;
 
 		bool state;

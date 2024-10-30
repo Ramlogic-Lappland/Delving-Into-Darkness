@@ -7,6 +7,7 @@
 #include "Delving_Into_Darkness.h"
 #include "globals.h"
 #include "collisionManager/collisionManager.h"
+#include "button/button.h"
 
 #include "game/player/player.h"
 #include "game/player/projectile/projectile.h"
@@ -22,6 +23,10 @@ namespace Game
 	const int bigSlimeSpeed = 200;
 	const int mediumSlimeSpeed = 400;
 	const int smallSlimeSpeed = 600;
+	const int pointerOffSet = 10;
+
+	button::createButton returnToMenuBttn;
+	button::createButton playAgainBttn;
 
 	Player::CreatePlayer player;
 	Projectile::createProjectile projectile[playerMaxProjectiles];
@@ -30,6 +35,9 @@ namespace Game
 	Slime::CreateSlime mediumSlime[maxMediumSlimes];
 	Slime::CreateSlime smallSlime[maxSmallSlimes];
 
+	Rectangle fireballRectangle;
+	Rectangle fireballDestRect;
+
 	Music gameMusic;
 	Sound fireBallWav;
 	Sound slimeDeath;
@@ -37,9 +45,14 @@ namespace Game
 	Vector2 pointerPosition = { 0.0f, 0.0f };
 	Vector2 dirVector;
 	Vector2 menuBttnPosition;
+	Vector2 fireballOrigin;
 
 	Texture2D gameBackground;
 	Texture2D menuBttn;
+	Texture2D fireBallText;
+	Texture2D gameMenutexture;
+	Texture2D DefeatMenuTexture;
+	Texture2D pointerTex;
 	Image image;
 
 	float rotationSpeed = 100.0f;
@@ -47,6 +60,12 @@ namespace Game
 	float angleToDegrees;
 	float projectileSpawnDistance = 30.0f;
 	float timePlayed = 0.0f;
+
+	int fireBallFrameWidth;
+	int fireBallFrameHeight;
+	int maxFireBallFrames;
+	float fireballFrameTime;
+
 
 	bool pause = false;
 	bool pauseMenu = false;
@@ -58,16 +77,70 @@ namespace Game
 	{
 		SetExitKey(0);
 
+		pause = false;
+		pauseMenu = false;
+		gameOver = false;
+
+		// BUTTON
+		returnToMenuBttn.amountOfFrames = 2;
+		returnToMenuBttn.buttonText[returnToMenuBttn.amountOfFrames];
+		returnToMenuBttn.buttonFrame = 0;
+		returnToMenuBttn.position = { 450, 350 };
+		returnToMenuBttn.buttonText = new Texture2D[returnToMenuBttn.amountOfFrames];
+		image = LoadImage("res/ui/button/menu_button_1.png");
+		ImageResize(&image,350, 80);
+		returnToMenuBttn.buttonText[0] = LoadTextureFromImage(image);
+		UnloadImage(image);
+		image = LoadImage("res/ui/button/menu_button_2.png");
+		ImageResize(&image, 350, 80);
+		returnToMenuBttn.buttonText[1] = LoadTextureFromImage(image);
+		UnloadImage(image);
+		button::assignWidthAndHeight(returnToMenuBttn);
+
+		playAgainBttn.amountOfFrames = 2;
+		playAgainBttn.buttonText[playAgainBttn.amountOfFrames];
+		playAgainBttn.buttonFrame = 0;
+		playAgainBttn.position = { 450, 550 };
+		playAgainBttn.buttonText = new Texture2D[playAgainBttn.amountOfFrames];
+		image = LoadImage("res/ui/button/playAgain_button_1.png");
+		ImageResize(&image, 350, 80);
+		playAgainBttn.buttonText[0] = LoadTextureFromImage(image);
+		UnloadImage(image);
+		image = LoadImage("res/ui/button/playAgain_button_2.png");
+		ImageResize(&image, 350, 80);
+		playAgainBttn.buttonText[1] = LoadTextureFromImage(image);
+		UnloadImage(image);
+		button::assignWidthAndHeight(playAgainBttn);
+
+		// END BUTTON 
+
+		pointerTex = LoadTexture("res/miscellaneous/cursor.png");
+
+
 		image = LoadImage("res/gamebackground/gameGridB.png");
 		ImageResize(&image, static_cast<int>(Globals::Screen.size.x), static_cast<int>(Globals::Screen.size.y));
 		gameBackground = LoadTextureFromImage(image);
 		UnloadImage(image);
+
+		//MENU TEXTURES
+		image = LoadImage("res/ui/defeatMenu.png");
+		ImageResize(&image, static_cast<int>(Globals::Screen.size.x * 0.75), static_cast<int>(Globals::Screen.size.y * 0.75));
+		DefeatMenuTexture = LoadTextureFromImage(image);
+		UnloadImage(image);
+
+		image = LoadImage("res/ui/ingame_menu_canvas.png");
+		ImageResize(&image, static_cast<int>(Globals::Screen.size.x/ 2), static_cast<int>(Globals::Screen.size.y));
+		gameMenutexture = LoadTextureFromImage(image);
+		UnloadImage(image);
+		// MENU TEXTURES END
 
 		image = LoadImage("res/ui/ingame_menu_button.png");
 		ImageResize(&image, 40, 40);
 		menuBttn = LoadTextureFromImage(image);
 		UnloadImage(image);
 
+		fireBallText = LoadTexture("res/character/projectile/Small_Fireball_10x26.png");
+		
 
 		slimeDeath = LoadSound("res/sounds/slimeDeath.wav");
 		fireBallWav = LoadSound("res/sounds/fireball.wav");
@@ -86,9 +159,14 @@ namespace Game
 
 		menuBttnPosition = { Globals::Screen.size.x - menuBttn.width - 20, static_cast<float>( 0 ) };
 
+		fireBallFrameWidth = fireBallText.width / 10;
+		fireBallFrameHeight = fireBallText.height / 6;
+		maxFireBallFrames = 10;
+		fireballFrameTime = 0.5f;
+
 		spawnElements();
 		PlayMusicStream(gameMusic);
-		SetMusicVolume(gameMusic, 0.5f);
+		SetMusicVolume(gameMusic, 0.2f);
 		SetSoundVolume(fireBallWav, 0.16f);
 		SetSoundVolume(slimeDeath, 0.2f);
 	}
@@ -106,17 +184,50 @@ namespace Game
 
 		if (timePlayed > 1.0f) timePlayed = 1.0f;
 
-
 		if (gameOver == true)
 		{
-			if (IsKeyPressed(KEY_ENTER))
+			if (collisions::rectangleXrectangle(playAgainBttn.position.x, playAgainBttn.position.y, playAgainBttn.width, playAgainBttn.height, pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)))
 			{
-				initGame();
+				playAgainBttn.buttonFrame = 1;
+				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+				{
+					initGame();
+				}
+			}
+			else
+			{
+				playAgainBttn.buttonFrame = 0;
+			}
+
+			if (collisions::rectangleXrectangle(returnToMenuBttn.position.x, returnToMenuBttn.position.y, returnToMenuBttn.width, returnToMenuBttn.height, pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)))
+			{
+				returnToMenuBttn.buttonFrame = 1;
+				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+				{
+					gameManager::CurrentScreen = gameManager::menu;
+				}
+			}
+			else
+			{
+				returnToMenuBttn.buttonFrame = 0;
 			}
 		}
 
+
 		if (gameOver == false)
 		{
+			if (collisions::rectangleXrectangle(returnToMenuBttn.position.x, returnToMenuBttn.position.y, returnToMenuBttn.width, returnToMenuBttn.height, pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)) && pauseMenu == true)
+			{
+				returnToMenuBttn.buttonFrame = 1;
+				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+				{
+					gameManager::CurrentScreen = gameManager::menu;
+				}
+			}
+			else
+			{
+				returnToMenuBttn.buttonFrame = 0;
+			}
 
 			if (IsKeyPressed(KEY_ESCAPE))
 			{
@@ -130,7 +241,7 @@ namespace Game
 				}
 			}
 
-			if (player.hp < 0)
+			if (player.hp <= 0)
 			{
 				gameOver = true;
 			}
@@ -214,6 +325,20 @@ namespace Game
 							{
 								projectile[i].state = false;
 							}
+
+							projectile[i].fireballFrameCounter += GetFrameTime();
+							if (projectile[i].fireballFrameCounter >= fireballFrameTime)
+							{
+								projectile[i].fireballFrameCounter = 0.0f;
+								projectile[i].currentFireballFrame++;
+
+								if (projectile[i].currentFireballFrame > maxFireBallFrames) projectile[i].currentFireballFrame = 0;
+							}
+
+
+							fireballRectangle = { static_cast<float>(projectile[i].currentFireballFrame * fireBallFrameWidth), 0.0f, static_cast<float>(fireBallFrameWidth), static_cast<float>(fireBallFrameHeight)};
+							fireballDestRect = { projectile[i].position.x, projectile[i].position.y, static_cast<float>(fireBallFrameWidth), static_cast<float>(fireBallFrameHeight) };
+							fireballOrigin = { fireBallFrameWidth / 2.0f, fireBallFrameHeight / 2.0f };
 						}
 					}
 					for (int i = 0; i < playerMaxProjectiles; i++)
@@ -329,6 +454,11 @@ namespace Game
 		}
 		DrawCircle(static_cast<int>(player.position.x), static_cast<int>(player.position.y), player.rad, RED);
 #endif
+		for (int i = 0; i < playerMaxProjectiles; i++)
+		{
+			if (projectile[i].state) { DrawTexturePro(fireBallText, fireballRectangle, fireballDestRect, fireballOrigin, projectile[i].rotation - 90, WHITE); }
+		}
+		
 		DrawTexturePro(player.playerTexture, player.playerTextureCoordinate, player.playerRect, player.pivot, player.rotation, WHITE);
 #ifdef _DEBUG
 		// Draw all big slimes
@@ -356,18 +486,49 @@ namespace Game
 		DrawText(TextFormat("Angle in degrees: %.2f", angleToDegrees), 10, 80, 20, WHITE);
 		DrawText(TextFormat("animation state: %i", player.animationState), 10, 100, 20, WHITE);
 #endif
-		DrawText(TextFormat("SCORE: %i", player.score), 900, 50, 30, WHITE);
+		if (pauseMenu == false)
+		{
+			DrawText(TextFormat("SCORE: %i", player.score), 900, 50, 30, WHITE);
+		}
 		DrawText(TextFormat("HP: %i", player.hp), 900, 100, 20, WHITE);
 		DrawTexture(menuBttn, static_cast<int>(menuBttnPosition.x), static_cast<int>(menuBttnPosition.y), WHITE);
+
+		if (pauseMenu == true)
+		{
+			DrawTexture(gameMenutexture, 300, 0, WHITE);
+			DrawText(TextFormat("SCORE: %i", player.score), 500, 150, 30, RED);
+			DrawTexture(returnToMenuBttn.buttonText[returnToMenuBttn.buttonFrame], static_cast<int>(returnToMenuBttn.position.x), static_cast<int>(returnToMenuBttn.position.y), WHITE);
+		}
+
+		if (gameOver == true)
+		{
+			DrawTexture(DefeatMenuTexture, 150, 100, LIGHTGRAY);
+			DrawText(TextFormat("SCORE: %i", player.score), 500, 250, 50, RED);
+			DrawTexture(returnToMenuBttn.buttonText[returnToMenuBttn.buttonFrame], static_cast<int>(returnToMenuBttn.position.x), static_cast<int>(returnToMenuBttn.position.y), LIGHTGRAY);
+			DrawTexture(playAgainBttn.buttonText[playAgainBttn.buttonFrame], static_cast<int>(playAgainBttn.position.x), static_cast<int>(playAgainBttn.position.y), LIGHTGRAY);
+		}
+
+		DrawTexture(pointerTex, static_cast<int>(pointerPosition.x) - pointerOffSet, static_cast<int>(pointerPosition.y) - pointerOffSet, WHITE);
 		
 	}
 
 	void unloadGame()
 	{
 		std::cout << "UNLOADING GAME --------------------------------" << "\n";
+		for (int i = 0; i < returnToMenuBttn.amountOfFrames; i++)
+		{
+			UnloadTexture(returnToMenuBttn.buttonText[i]);
+		}
+		for (int i = 0; i < playAgainBttn.amountOfFrames; i++)
+		{
+			UnloadTexture(playAgainBttn.buttonText[i]);
+		}
 		UnloadTexture(player.playerTexture);
 		UnloadTexture(gameBackground);
-		UnloadTexture(menuBttn);
+		UnloadTexture(fireBallText);
+		UnloadTexture(gameMenutexture);
+		UnloadTexture(DefeatMenuTexture);
+		UnloadTexture(pointerTex);
 		UnloadSound(fireBallWav);
 		UnloadSound(slimeDeath);
 		UnloadMusicStream(gameMusic);
