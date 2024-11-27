@@ -77,37 +77,35 @@ namespace Projectile
 
     void drawProjectile(createProjectile& projectile, Texture2D& fireballTexture) 
     {
-        Rectangle sourceRec = 
-        {
-            static_cast<float>(projectile.currentFireballFrame * projectile.frameWidth),
-            0, 
-            static_cast<float>(projectile.frameWidth), 
-            static_cast<float>(projectile.frameHeight) 
-        };
+        int frameWidth = fireballTexture.width / 10;
+        int frameHeight = fireballTexture.height / 6;
 
+        Rectangle sourceRec =
+        {
+            static_cast<float>((projectile.currentFireballFrame % 10) * frameWidth),    
+            static_cast<float>((projectile.currentFireballFrame / 10) * frameHeight),    
+            static_cast<float>(frameWidth),                                           
+            static_cast<float>(frameHeight)                                           
+        };
         Rectangle destRec = 
-        {
-            projectile.position.x, 
-            projectile.position.y, 
-            static_cast<float>(projectile.frameWidth), 
-            static_cast<float>(projectile.frameHeight)
+        {   
+            projectile.position.x,    
+            projectile.position.y,    
+            static_cast<float>(frameWidth),    
+            static_cast<float>(frameHeight)
         };
 
-        Vector2 origin =
-        {
-            static_cast<float>(projectile.frameWidth) / 2,
-            static_cast<float>(projectile.frameHeight) / 2
-        };
+        Vector2 origin = { frameWidth / 2.0f, frameHeight / 2.0f };
 
-        DrawTexturePro
-        (
-            fireballTexture,  
-            sourceRec,        
-            destRec,          
-            origin,           
+        DrawTexturePro(
+            fireballTexture,   
+            sourceRec,         
+            destRec,           
+            origin,            
             projectile.rotation, 
-            WHITE             
+            WHITE              
         );
+
     }
 }
 
