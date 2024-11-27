@@ -22,14 +22,18 @@ namespace Player
 
 		int hp;
 		int score;
-		//int shieldCharge;
-		//int shootState;
-
-		//bool shieldState;
 		int animationState;
+		//int shieldCharge;
+        //bool shieldState;
 	};
+
+	void initPlayer(CreatePlayer& player);
+
+	void resetPlayer(CreatePlayer& player);
 
 	int checkAnimState(CreatePlayer& player);
 
 	void playerRotationUpdate(CreatePlayer& player, Vector2& dirVector, Vector2& pointerPosition, Vector2& playerPosition, float& angle, float& angleToDegrees);
+
+	void playerBounds(CreatePlayer& player);
 }

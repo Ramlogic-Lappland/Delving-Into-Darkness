@@ -6,6 +6,8 @@
 
 namespace Game
 {
+	extern bool gameInit;
+
 	void initGame();
 
 	void updateGame();
@@ -14,12 +16,10 @@ namespace Game
 
 	void unloadGame();
 
+	void resetGame();
+
 	Vector2 NormalizeVector(Vector2 v);
 
 	Projectile::createProjectile* GetInactiveProjectile();
-
-	void playerBounds();
-
-	void spawnElements();
 
 }

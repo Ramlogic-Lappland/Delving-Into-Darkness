@@ -20,4 +20,6 @@ namespace button
 	};
 
 	void assignWidthAndHeight(createButton& btn);
+
+	void initBttn(createButton& bttn, Vector2 position, Vector2 resize, const char* path, const char* path2, int amountOfFrames);
 }

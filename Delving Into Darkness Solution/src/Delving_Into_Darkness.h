@@ -12,11 +12,12 @@ namespace gameManager
 
 	void draw();
 
-	void close();
-
 	void stop();
 
-	struct CreateScreen {
+	void close();
+
+	struct CreateScreen 
+	{
 		const char* name;
 		Vector2 size;
 	};
@@ -27,6 +28,7 @@ namespace gameManager
 		game,
 		credits,
 	};
+
 	extern CreateScreen Screen;
 	extern CreateCurrentScreen CurrentScreen;
 }

@@ -5,14 +5,24 @@
 
 #include "raylib.h"
 
-#include "Delving_Into_Darkness.h"
-#include "game/game.h"
-#include "collisionManager/collisionManager.h"
-#include "button/button.h"
 #include "globals.h"
+#include "collisionManager/collisionManager.h"
+#include "Delving_Into_Darkness.h"
+#include "button/button.h"
+#include "game/game.h"
+
+
+
+
 
 namespace Menu
 {
+
+	void openBookAnim();
+	void swapMenuPage();
+	void OpenURL(const char* url);
+
+
 	button::createButton playBttn;
 	button::createButton creditsBttn;
 	button::createButton returnBttn;
@@ -57,7 +67,7 @@ namespace Menu
 	bool bookSwapRight = false;
 	bool bookSwapLeft = false;
 
-	void initMenu()
+	void initMenu()  // START INIT ======================================================================================================================================================
 	{
 		playBttn.amountOfFrames = 2; //   PLAY BTTN INITIALIZATION 
 		playBttn.buttonText[playBttn.amountOfFrames];
@@ -93,6 +103,7 @@ namespace Menu
 		ImageResize(&image, 200, 44);
 		playBttn.buttonText[1] = LoadTextureFromImage(image);
 		UnloadImage(image);
+
 		//credits bttn
 		image = LoadImage("res/ui/button/credits_button_1.png");
 		ImageResize(&image, 200, 44);
@@ -175,9 +186,11 @@ namespace Menu
 		SetSoundVolume(flipPage, 0.3f);
 		SetSoundVolume(buttonBop, 0.2f);
 
-	} //END INIT =============================================================================================
+	} //END INIT ======================================================================================================================================================
 
-	void updateMenu()
+
+
+	void updateMenu() // START UPDATE ======================================================================================================================================================
 	{
 		pointerPosition = GetMousePosition();
 
@@ -204,7 +217,14 @@ namespace Menu
 			{
 				PlaySound(buttonBop);
 				gameManager::CurrentScreen = gameManager::game;
-				Game::initGame();
+				if (Game::gameInit == false)
+				{
+					Game::initGame();
+				}
+				else
+				{
+					Game::resetGame();
+				}
 			}
 		}else 
 		{
@@ -224,8 +244,7 @@ namespace Menu
 					gameManager::CurrentScreen = gameManager::credits;
 				}
 			}
-		}
-		else
+		}else
 		{
 			creditsBttn.buttonFrame = 0;
 		}
@@ -238,8 +257,7 @@ namespace Menu
 				PlaySound(buttonBop);
 				gameManager::stop();
 			}
-		}
-		else
+		}else
 		{
 			exitBttn.buttonFrame = 0;
 		}
@@ -257,8 +275,7 @@ namespace Menu
 					gameManager::CurrentScreen = gameManager::menu; // CHANGE MENU DRAW STATE FROM CREDITS TO MENU 
 				}
 			}
-		}
-		else
+		}else
 		{
 			returnBttn.buttonFrame = 0;
 		}
@@ -278,9 +295,13 @@ namespace Menu
 		}
 		
 		swapMenuPage();
-	} //END UPDATE =============================================================================================
 
-	void drawMenu()
+	} // END UPDATE ======================================================================================================================================================
+
+
+
+
+	void drawMenu() // START DRAW ======================================================================================================================================================
 	{
 		ClearBackground(DARKGRAY);
 
@@ -328,12 +349,14 @@ namespace Menu
 		DrawTexture(candleFrames[candleCurrentFrame], 40, 30, WHITE);
 
 		DrawTexture(pointerTex, static_cast<int>(pointerPosition.x) - pointerOffSet, static_cast<int>(pointerPosition.y) - pointerOffSet, WHITE);
-	} //END DRAW =============================================================================================
+
+
+	} // END DRAW ======================================================================================================================================================
 
 
 
 
-	void unloadMenu() // UNLOAD ================================================================================
+	void unloadMenu() // START UNLOAD ======================================================================================================================================================
 	{
 		system("cls");
 		std::cout << "MENU UNLOAD START --------------------------------------------------" << "\n";
@@ -379,13 +402,13 @@ namespace Menu
 
 		std::cout << "MENU UNLOADED --------------------------------------------------" << "\n";
 
-	}//END UNLOAD =============================================================================================
+	} // START UNLOAD ======================================================================================================================================================
 
 
 
 
 
-	void openBookAnim()// BOOK OPEN ANIM 
+	void openBookAnim()  // BOOK OPEN ANIM ======================================================================================================================================================
 	{
 		if (bookOpenAnimationOn) 
 		{
@@ -410,12 +433,14 @@ namespace Menu
 		}
     }
 
-	void swapMenuPage() //SWAP MENU PAGE
+	void swapMenuPage() //SWAP MENU PAGE ======================================================================================================================================================
 	{
 		if (!bookOpenAnimationOn) 
-		{ // SWAP MENU STAGE
+		{
+			// SWAP MENU STAGE =====================================================================
 			if (!bookSwapRight && currentFrame == bookOpenFrames - 1)
-			{ // START SWAP RIGHT
+			{ 
+				// SWAP RIGHT ==================================================================
 				if (IsKeyPressed(KEY_RIGHT))
 				{
 					bookSwapRight = true;
@@ -441,15 +466,16 @@ namespace Menu
 
 					elapsedTime = 0.0f;
 				}
-			} // END SWAP RIGHT 
+			} // END SWAP RIGHT ==================================================================
 
 			if (!bookSwapLeft && currentFrame == (bookOpenFrames + bookSwapPageFrames - 1))
 			{
+				// SWAP LEFT ==================================================================
 				if (IsKeyPressed(KEY_LEFT)) 
 				{
 					bookSwapLeft = true;
 					PlaySound(flipPage);
-					gameManager::CurrentScreen = gameManager::menu; // CHANGE MENU DRAW STATE FROM CREDITS TO MENU 
+					gameManager::CurrentScreen = gameManager::menu; // CHANGE MENU DRAW STATE FROM CREDITS TO MENU ==================================================================
 				}
 			}
 			if (bookSwapLeft) 
@@ -470,17 +496,17 @@ namespace Menu
 
 					elapsedTime = 0.0f;
 				}
-			}// SWAP LEFT
+			}//  END SWAP LEFT ==================================================================
+
+
 		} // END SWAPPING MENU STAGE
 	}
+
+
 
 	void OpenURL(const char* url) {
 #if defined(_WIN32)
 		system((std::string("start ") + url).c_str());
-#elif defined(__APPLE__)
-		system((std::string("open ") + url).c_str());
-#elif defined(__linux__)
-		system((std::string("xdg-open ") + url).c_str());
 #endif
 	}
 

@@ -11,15 +11,12 @@ using namespace std;
 
 namespace gameManager
 {
-    //CreateScreen Screen;
     CreateCurrentScreen CurrentScreen;
     bool isRunning = true;
 
     int run(void)
     {     
         init();
-
-        SetTargetFPS(60);
 
         while (isRunning && !WindowShouldClose())
         {
@@ -86,6 +83,12 @@ namespace gameManager
         EndDrawing();
     }
 
+    void stop()
+    {
+        isRunning = false;
+    }
+
+
     void close()
     {
         Menu::unloadMenu();
@@ -93,9 +96,5 @@ namespace gameManager
         CloseWindow();
     }
 
-    void stop()
-    {
-        isRunning = false;
-    }
 
 }

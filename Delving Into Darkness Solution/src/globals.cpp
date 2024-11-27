@@ -8,7 +8,6 @@ namespace Globals
 
 	void initGlobals()
 	{
-		// 1024 x 768  
 		Screen.originalIntendedSize = { 1200, 850 };
 		Screen.size = { 1200, 850 };
 		Screen.currentSize = { 1024, 768 };

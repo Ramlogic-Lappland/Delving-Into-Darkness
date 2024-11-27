@@ -94,7 +94,7 @@
       <AdditionalDependencies>raylib.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)res" "$(OutDir)res" /i /y /e</Command>
+      <Command>call "$(SolutionDir)scripts\copyScript.bat" "$(solutionDir)" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -156,6 +156,7 @@
     <ClCompile Include="src\button\button.cpp" />
     <ClCompile Include="src\collisionManager\collisionManager.cpp" />
     <ClCompile Include="src\globals.cpp" />
+    <ClCompile Include="src\imageLoader\imageLoader.cpp" />
     <ClCompile Include="src\menu\menu.cpp" />
     <ClCompile Include="src\Delving_Into_Darkness.cpp" />
     <ClCompile Include="src\game\game.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="src\collisionManager\collisionManager.h" />
     <ClInclude Include="src\game\player\player.h" />
     <ClInclude Include="src\globals.h" />
+    <ClInclude Include="src\imageLoader\imageLoader.h" />
     <ClInclude Include="src\menu\menu.h" />
     <ClInclude Include="src\Delving_Into_Darkness.h" />
     <ClInclude Include="src\game\game.h" />

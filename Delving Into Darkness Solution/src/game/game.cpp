@@ -9,32 +9,33 @@
 #include "globals.h"
 #include "collisionManager/collisionManager.h"
 #include "button/button.h"
-
 #include "game/player/player.h"
 #include "game/player/projectile/projectile.h"
-
 #include "enemy/slime.h"
+#include "imageLoader/imageLoader.h"
+
+using namespace Player;
+using namespace Projectile;
+using namespace Slime;
+
 
 namespace Game
 {
-	const int playerMaxProjectiles = 3;
-	const int maxBigSlimes = 6;
-	const int maxMediumSlimes = 12;
-	const int maxSmallSlimes = 24;
-	const int bigSlimeSpeed = 200;
-	const int mediumSlimeSpeed = 400;
-	const int smallSlimeSpeed = 600;
-	const int pointerOffSet = 10;
+	//Internal Functions Declaration
+	void spawnElements();
+	//End Internal Functions Declaration
+
+	const int pointerOffSet = 10; //texture shows slightly off to the side of were the pointer is registered 
 
 	button::createButton returnToMenuBttn;
 	button::createButton playAgainBttn;
 
-	Player::CreatePlayer player;
-	Projectile::createProjectile projectile[playerMaxProjectiles];
+	CreatePlayer player;
+	createProjectile projectile[playerMaxProjectiles];
 
-	Slime::CreateSlime bigSlime[maxBigSlimes];
-	Slime::CreateSlime mediumSlime[maxMediumSlimes];
-	Slime::CreateSlime smallSlime[maxSmallSlimes];
+	CreateSlime bigSlime[maxBigSlimes];
+	CreateSlime mediumSlime[maxMediumSlimes];
+	CreateSlime smallSlime[maxSmallSlimes];
 
 	Rectangle fireballRectangle;
 	Rectangle fireballDestRect;
@@ -44,17 +45,20 @@ namespace Game
 	Sound slimeDeath;
 
 	Vector2 pointerPosition = { 0.0f, 0.0f };
-	Vector2 dirVector;
 	Vector2 menuBttnPosition;
+	Vector2 dirVector;
 	Vector2 fireballOrigin;
 
+	Image image;
+
 	Texture2D gameBackground;
-	Texture2D menuBttn;
-	Texture2D fireBallText;
 	Texture2D gameMenutexture;
 	Texture2D DefeatMenuTexture;
+	Texture2D menuBttn;
+	Texture2D fireBallText;
 	Texture2D pointerTex;
-	Image image;
+
+
 
 	float rotationSpeed = 100.0f;
 	float angle;
@@ -68,6 +72,7 @@ namespace Game
 	float fireballFrameTime;
 
 
+	bool gameInit = false;
 	bool pause = false;
 	bool pauseMenu = false;
 	bool gameOver = false;
@@ -76,100 +81,48 @@ namespace Game
 	/* ========================================================== INIT GAME =================================================================== */
 	void initGame()
 	{
-		SetExitKey(0);
-
 		pause = false;
 		pauseMenu = false;
 		gameOver = false;
 
-		// BUTTON
-		returnToMenuBttn.amountOfFrames = 2;
-		returnToMenuBttn.buttonText[returnToMenuBttn.amountOfFrames];
-		returnToMenuBttn.buttonFrame = 0;
-		returnToMenuBttn.position = { 450, 350 };
-		returnToMenuBttn.buttonText = new Texture2D[returnToMenuBttn.amountOfFrames];
-		image = LoadImage("res/ui/button/menu_button_1.png");
-		ImageResize(&image,350, 80);
-		returnToMenuBttn.buttonText[0] = LoadTextureFromImage(image);
-		UnloadImage(image);
-		image = LoadImage("res/ui/button/menu_button_2.png");
-		ImageResize(&image, 350, 80);
-		returnToMenuBttn.buttonText[1] = LoadTextureFromImage(image);
-		UnloadImage(image);
-		button::assignWidthAndHeight(returnToMenuBttn);
-
-		playAgainBttn.amountOfFrames = 2;
-		playAgainBttn.buttonText[playAgainBttn.amountOfFrames];
-		playAgainBttn.buttonFrame = 0;
-		playAgainBttn.position = { 450, 550 };
-		playAgainBttn.buttonText = new Texture2D[playAgainBttn.amountOfFrames];
-		image = LoadImage("res/ui/button/playAgain_button_1.png");
-		ImageResize(&image, 350, 80);
-		playAgainBttn.buttonText[0] = LoadTextureFromImage(image);
-		UnloadImage(image);
-		image = LoadImage("res/ui/button/playAgain_button_2.png");
-		ImageResize(&image, 350, 80);
-		playAgainBttn.buttonText[1] = LoadTextureFromImage(image);
-		UnloadImage(image);
-		button::assignWidthAndHeight(playAgainBttn);
-
-		// END BUTTON 
-
 		pointerTex = LoadTexture("res/miscellaneous/cursor.png");
 
+		// BUTTON Init
+		
+		initBttn(returnToMenuBttn, { 450, 350 }, { 350, 80 }, "res/ui/button/menu_button_1.png", "res/ui/button/menu_button_2.png", 2); // Return to menu button (amount of frames - position - path img1 - path img2 - resize)
 
-		image = LoadImage("res/gamebackground/gameGridB.png");
-		ImageResize(&image, static_cast<int>(Globals::Screen.size.x), static_cast<int>(Globals::Screen.size.y));
-		gameBackground = LoadTextureFromImage(image);
-		UnloadImage(image);
+		initBttn(playAgainBttn, { 450, 550 }, { 350, 80 }, "res/ui/button/playAgain_button_1.png", "res/ui/button/playAgain_button_2.png", 2); // Play again Button
 
-		//MENU TEXTURES
-		image = LoadImage("res/ui/defeatMenu.png");
-		ImageResize(&image, static_cast<int>(Globals::Screen.size.x * 0.75), static_cast<int>(Globals::Screen.size.y * 0.75));
-		DefeatMenuTexture = LoadTextureFromImage(image);
-		UnloadImage(image);
+		// END BUTTON Init
 
-		image = LoadImage("res/ui/ingame_menu_canvas.png");
-		ImageResize(&image, static_cast<int>(Globals::Screen.size.x/ 2), static_cast<int>(Globals::Screen.size.y));
-		gameMenutexture = LoadTextureFromImage(image);
-		UnloadImage(image);
-		// MENU TEXTURES END
-
-		image = LoadImage("res/ui/ingame_menu_button.png");
-		ImageResize(&image, 40, 40);
-		menuBttn = LoadTextureFromImage(image);
-		UnloadImage(image);
+		imageLoader::initImage(gameBackground, { Globals::Screen.size.x, Globals::Screen.size.y }, "res/gamebackground/gameGridB.png"); // texture - size.x - size.y - path
+		imageLoader::initImage(DefeatMenuTexture, { static_cast<float>(Globals::Screen.size.x * 0.75) , static_cast<float>(Globals::Screen.size.y * 0.75) }, "res/ui/defeatMenu.png");
+		imageLoader::initImage(gameMenutexture, { static_cast<float>(Globals::Screen.size.x / 2) , static_cast<float>(Globals::Screen.size.y) }, "res/ui/ingame_menu_canvas.png");
+		imageLoader::initImage(menuBttn, {40, 40}, "res/ui/ingame_menu_button.png");
+		//imageLoader::initImage(, {}, );
 
 		fireBallText = LoadTexture("res/character/projectile/Small_Fireball_10x26.png");
-		
+
+		projectile->frameWidth = fireBallText.width / 10;
+		projectile->frameHeight = fireBallText.height / 6;
+		maxFireBallFrames = 10*6;
+		fireballFrameTime = 0.5f;
 
 		slimeDeath = LoadSound("res/sounds/slimeDeath.wav");
 		fireBallWav = LoadSound("res/sounds/fireball.wav");
 		gameMusic = LoadMusicStream("res/sounds/gameSong.mp3");
+		
+		menuBttnPosition = { Globals::Screen.size.x - menuBttn.width - 20, static_cast<float>(0) };
 
-		player.playerTexture = LoadTexture("res/character/test.png");
-		player.playerRect = { Globals::Screen.size.x /2, Globals::Screen.size.y / 2, 45, 45};
-		player.playerTextureCoordinate = { 0, 0, 45, 45 };
-		player.pivot = { static_cast<float>(player.playerTexture.width/2), static_cast<float>(player.playerTexture.height/2) };
-		player.rotation = 0;
-		player.animationState = 1;
-		player.maxAcceleration = 700;
-		player.acceleration = 400.0f;
-		player.rad = 18.0f;
-		player.hp = 100;
-
-		menuBttnPosition = { Globals::Screen.size.x - menuBttn.width - 20, static_cast<float>( 0 ) };
-
-		fireBallFrameWidth = fireBallText.width / 10;
-		fireBallFrameHeight = fireBallText.height / 6;
-		maxFireBallFrames = 10;
-		fireballFrameTime = 0.5f;
-
+		initPlayer(player); // init player
 		spawnElements();
-		PlayMusicStream(gameMusic);
+		
 		SetMusicVolume(gameMusic, 0.2f);
 		SetSoundVolume(fireBallWav, 0.16f);
 		SetSoundVolume(slimeDeath, 0.2f);
+		PlayMusicStream(gameMusic);
+
+		gameInit = true;
 	}
 	/* ========================================================== INIT END =================================================================== */
 
@@ -177,13 +130,11 @@ namespace Game
 	/* ========================================================== GAME UPDATE =============================================================== */
 	void updateGame() 
 	{
-		pointerPosition = GetMousePosition();
-
 		UpdateMusicStream(gameMusic);
-
 		timePlayed = GetMusicTimePlayed(gameMusic) / GetMusicTimeLength(gameMusic);
-
 		if (timePlayed > 1.0f) timePlayed = 1.0f;
+
+		pointerPosition = GetMousePosition();
 
 		if (gameOver == true)
 		{
@@ -192,7 +143,7 @@ namespace Game
 				playAgainBttn.buttonFrame = 1;
 				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 				{
-					initGame();
+					resetGame();
 				}
 			}
 			else
@@ -217,6 +168,7 @@ namespace Game
 
 		if (gameOver == false)
 		{
+			// Menu logic
 			if (collisions::rectangleXrectangle(returnToMenuBttn.position.x, returnToMenuBttn.position.y, returnToMenuBttn.width, returnToMenuBttn.height, pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)) && pauseMenu == true)
 			{
 				returnToMenuBttn.buttonFrame = 1;
@@ -230,7 +182,7 @@ namespace Game
 				returnToMenuBttn.buttonFrame = 0;
 			}
 
-			if (IsKeyPressed(KEY_ESCAPE))
+			if (IsKeyPressed(KEY_P))
 			{
 				pauseMenu = !pauseMenu;
 			}
@@ -241,21 +193,24 @@ namespace Game
 					pauseMenu = !pauseMenu;
 				}
 			}
+			// End menu logic 
 
-			if (player.hp <= 0 || player.score >= 3150)
+			//Game over logic
+			if (player.hp <= 0 || player.score >= 3150) // delete score once respawn for  enemies is applied
 			{
 				gameOver = true;
 			}
+			//End of game over logic
+
 			if (pauseMenu == false)
 			{
 				if (pause == false)
 				{
 					/*====================================================== PLAYER ======================================================*/					
 					player.position = { player.playerRect.x, player.playerRect.y };
-					Player::playerRotationUpdate(player, dirVector, pointerPosition, player.position, angle, angleToDegrees);
-					player.animationState = Player::checkAnimState(player);
+					playerRotationUpdate(player, dirVector, pointerPosition, player.position, angle, angleToDegrees);
+					player.animationState = checkAnimState(player);
 					dirVector = NormalizeVector(dirVector);
-
 
 					if (pointerPosition.x < Globals::Screen.size.x && pointerPosition.y < Globals::Screen.size.y)
 					{
@@ -270,7 +225,8 @@ namespace Game
 					if (player.speed.y > player.maxAcceleration) { player.speed.y = player.maxAcceleration; }
 					player.playerRect.x += player.speed.x * GetFrameTime();
 					player.playerRect.y += player.speed.y * GetFrameTime();
-					playerBounds(); // checks if player hits the wall and spawns on oposite side
+
+					playerBounds(player); // checks if player hits the wall and spawns on oposite side
 
 					for (int i = 0; i < maxBigSlimes; i++)
 					{
@@ -301,7 +257,7 @@ namespace Game
 					/*====================================================== PROJECTILE ======================================================*/
 					if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 					{
-						Projectile::createProjectile* newProjectile = GetInactiveProjectile();
+						createProjectile* newProjectile = GetInactiveProjectile();
 						if (newProjectile != nullptr)
 						{
 							newProjectile->position = {
@@ -310,38 +266,15 @@ namespace Game
 							};
 							newProjectile->direction = dirVector;
 							newProjectile->state = true;
+							newProjectile->rotation = player.rotation;
+							newProjectile->currentFireballFrame = 0;
+							newProjectile ->fireballFrameCounter = 0;
 							PlaySound(fireBallWav);
 						}
 					}
-					for (int i = 0; i < playerMaxProjectiles; i++)
-					{
-						if (projectile[i].state)
-						{
-							projectile[i].position.x += projectile[i].direction.x * projectile[i].speed * GetFrameTime();
-							projectile[i].position.y += projectile[i].direction.y * projectile[i].speed * GetFrameTime();
 
-							// CHECK PROJECTILE BOUNDS
-							if (projectile[i].position.x < 0 || projectile[i].position.x > Globals::Screen.size.x ||
-								projectile[i].position.y < 0 || projectile[i].position.y > Globals::Screen.size.y)
-							{
-								projectile[i].state = false;
-							}
+					updateProjectiles(projectile, playerMaxProjectiles);
 
-							projectile[i].fireballFrameCounter += GetFrameTime();
-							if (projectile[i].fireballFrameCounter >= fireballFrameTime)
-							{
-								projectile[i].fireballFrameCounter = 0.0f;
-								projectile[i].currentFireballFrame++;
-
-								if (projectile[i].currentFireballFrame > maxFireBallFrames) projectile[i].currentFireballFrame = 0;
-							}
-
-
-							fireballRectangle = { static_cast<float>(projectile[i].currentFireballFrame * fireBallFrameWidth), 0.0f, static_cast<float>(fireBallFrameWidth), static_cast<float>(fireBallFrameHeight)};
-							fireballDestRect = { projectile[i].position.x, projectile[i].position.y, static_cast<float>(fireBallFrameWidth), static_cast<float>(fireBallFrameHeight) };
-							fireballOrigin = { fireBallFrameWidth / 2.0f, fireBallFrameHeight / 2.0f };
-						}
-					}
 
 					for (int i = 0; i < playerMaxProjectiles; i++)
 					{
@@ -357,8 +290,8 @@ namespace Game
 									bigSlime[a].state = false;
 									player.score += 25;
 									Vector2 spawnSpeed = { bigSlime[a].speed.x * 2, bigSlime[a].speed.y * 2 };
-									Slime::spawnSlime(mediumSlime, maxMediumSlimes, Slime::MEDIUM, { bigSlime[a].position.x, bigSlime[a].position.y }, spawnSpeed);
-									Slime::spawnSlime(mediumSlime, maxMediumSlimes, Slime::MEDIUM, { bigSlime[a].position.x + 75, bigSlime[a].position.y }, spawnSpeed);
+									spawnSlime(mediumSlime, maxMediumSlimes, MEDIUM, { bigSlime[a].position.x, bigSlime[a].position.y }, spawnSpeed);
+									spawnSlime(mediumSlime, maxMediumSlimes, MEDIUM, { bigSlime[a].position.x + 75, bigSlime[a].position.y }, spawnSpeed);
 								}
 							}
 							for (int b = 0; b < maxMediumSlimes; b++)
@@ -371,8 +304,8 @@ namespace Game
 									mediumSlime[b].state = false;
 									player.score += 50;
 									Vector2 spawnSpeed = { mediumSlime[b].speed.x * 2, mediumSlime[b].speed.y * 2 };
-									Slime::spawnSlime(smallSlime, maxSmallSlimes, Slime::SMALL, { mediumSlime[b].position.x, mediumSlime[b].position.y }, spawnSpeed);
-									Slime::spawnSlime(smallSlime, maxSmallSlimes, Slime::SMALL, { mediumSlime[b].position.x + 55, mediumSlime[b].position.y + 55 }, spawnSpeed);
+									spawnSlime(smallSlime, maxSmallSlimes, SMALL, { mediumSlime[b].position.x, mediumSlime[b].position.y }, spawnSpeed);
+									spawnSlime(smallSlime, maxSmallSlimes, SMALL, { mediumSlime[b].position.x + 55, mediumSlime[b].position.y + 55 }, spawnSpeed);
 								}
 							}
 							for (int c = 0; c < maxSmallSlimes; c++)
@@ -382,7 +315,7 @@ namespace Game
 									projectile[i].state = false;
 									projectile[i].lifeSpawn = 0;
 									smallSlime[c].state = false;
-									player.score += 100;
+									player.score += 75;
 								}
 							}
 						}
@@ -395,7 +328,7 @@ namespace Game
 					{
 						if (bigSlime[i].state)
 						{
-							Slime::slimeBounds(bigSlime[i]);
+							slimeBounds(bigSlime[i]);
 							bigSlime[i].position.x += bigSlime[i].speed.x * GetFrameTime();
 							bigSlime[i].position.y += bigSlime[i].speed.y * GetFrameTime();
 						}
@@ -404,7 +337,7 @@ namespace Game
 					{
 						if (mediumSlime[i].state)
 						{
-							Slime::slimeBounds(mediumSlime[i]);
+							slimeBounds(mediumSlime[i]);
 							mediumSlime[i].position.x += mediumSlime[i].speed.x * GetFrameTime();
 							mediumSlime[i].position.y += mediumSlime[i].speed.y * GetFrameTime();
 						}
@@ -413,7 +346,7 @@ namespace Game
 					{
 						if (smallSlime[i].state)
 						{
-							Slime::slimeBounds(smallSlime[i]);
+							slimeBounds(smallSlime[i]);
 							smallSlime[i].position.x += smallSlime[i].speed.x * GetFrameTime();
 							smallSlime[i].position.y += smallSlime[i].speed.y * GetFrameTime();
 						}
@@ -429,17 +362,22 @@ namespace Game
 	void drawGame()
 	{
 		DrawTexture(gameBackground, 0, 0, GRAY);
-//#ifdef _DEBUG
+
+#ifdef _DEBUG
+		DrawCircle(static_cast<int>(player.position.x + 2), static_cast<int>(player.position.y), player.rad, RED); // player hitbox
+#endif
+
 		for (int i = 0; i < playerMaxProjectiles; i++)
 		{
-			if (projectile[i].state) { DrawCircleV(projectile[i].position, projectile[i].radius, RED); }
+			if (projectile[i].state)
+			{
+#ifdef _DEBUG
+			DrawCircleV(projectile[i].position, projectile[i].radius, RED); //projectile hitbox
+#endif
+				//Projectile::drawProjectile(projectile[i], fireBallText);
+			}
 		}
-		DrawCircle(static_cast<int>(player.position.x), static_cast<int>(player.position.y), player.rad, RED);
-//#endif
-		for (int i = 0; i < playerMaxProjectiles; i++)
-		{
-			if (projectile[i].state) { DrawTexturePro(fireBallText, fireballRectangle, fireballDestRect, fireballOrigin, projectile[i].rotation - 90, WHITE); }
-		}
+		drawProjectiles(projectile, playerMaxProjectiles, fireBallText);
 		
 		DrawTexturePro(player.playerTexture, player.playerTextureCoordinate, player.playerRect, player.pivot, player.rotation, WHITE);
 
@@ -464,6 +402,7 @@ namespace Game
 				DrawCircleV(smallSlime[i].position, smallSlime[i].rad, RED);
 			}
 		}
+
 #ifdef _DEBUG
 		DrawText(TextFormat("Angle in radians: %.2f", angle), 10, 60, 20, WHITE);
 		DrawText(TextFormat("Angle in degrees: %.2f", angleToDegrees), 10, 80, 20, WHITE);
@@ -531,7 +470,7 @@ namespace Game
 		return v;
 	}
 
-	Projectile::createProjectile* GetInactiveProjectile() 
+	createProjectile* GetInactiveProjectile() 
 	{
 		for (int i = 0; i < playerMaxProjectiles; i++) 
 		{
@@ -543,32 +482,13 @@ namespace Game
 		return nullptr;  // No inactive bullets available
 	}
 
-	void playerBounds()
-	{
-		if (player.playerRect.x > Globals::Screen.size.x + (player.playerRect.width * 1.5))
-		{
-			player.playerRect.x = static_cast<float>(0 - (player.playerRect.width));
-		}
-		if (player.playerRect.x < 0 - (player.playerRect.width * 1.5))
-		{
-			player.playerRect.x = static_cast<float>(Globals::Screen.size.x + player.playerRect.width);
-		}
-		if (player.playerRect.y > Globals::Screen.size.y + (player.playerRect.height * 1.5)) 
-		{
-			player.playerRect.y = static_cast<float>(0 - (player.playerRect.height));
-		}
-		if (player.playerRect.y < 0 - (player.playerRect.height * 1.5)) 
-		{
-			player.playerRect.y = static_cast<float>(Globals::Screen.size.y + player.playerRect.height);
-		}
-	}
 
 	void spawnElements()
 	{
 		for (int i = 0; i < maxBigSlimes; i++)
 		{
 			bigSlime[i].rad = 40.0f;
-			bigSlime[i].type = Slime::BIG;
+			bigSlime[i].type = BIG;
 			getSpawnOutOfBounds(bigSlime[i]);
 			getRadomSpawnDirection(bigSlime[i]);
 			bigSlime[i].state = true;
@@ -576,13 +496,13 @@ namespace Game
 		for (int i = 0; i < maxMediumSlimes; i++)
 		{
 			mediumSlime[i].rad = 30.0f;
-			mediumSlime[i].type = Slime::MEDIUM;
+			mediumSlime[i].type = MEDIUM;
 			mediumSlime[i].state = false;
 		}
 		for (int i = 0; i < maxSmallSlimes; i++)
 		{
 			smallSlime[i].rad = 20.0f;
-			smallSlime[i].type = Slime::SMALL;
+			smallSlime[i].type = SMALL;
 			smallSlime[i].state = false;
 		}
 		for (int i = 0; i < playerMaxProjectiles; i++)
@@ -593,6 +513,17 @@ namespace Game
 			projectile[i].radius = 10.0f;
 			projectile[i].state = false;
 		}
+
+	}
+
+	void resetGame()
+	{
+		resetPlayer(player);
+		spawnElements();
+		PlayMusicStream(gameMusic);
+		pause = false;
+		pauseMenu = false;
+		gameOver = false;
 	}
 	/* ====================================================== FUNCTIONS  END ========================================================= */
 }
