@@ -35,4 +35,5 @@ namespace Projectile
 	void drawProjectiles(createProjectile projectiles[], int maxProjectiles, Texture2D& fireballTexture);
 
 	void updateProjectileCollition(Player::CreatePlayer& player, createProjectile projectile[], Slime::CreateSlime bigSlime[], Slime::CreateSlime mediumSlime[], Slime::CreateSlime smallSlime[]);
+
 }

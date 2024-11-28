@@ -16,7 +16,7 @@ namespace Projectile
 {
     void drawProjectile(createProjectile& projectile, Texture2D& fireballTexture);
     void updateProjectileAnimation(createProjectile& projectile);
-    
+    Vector2 calculateSplitSpeed(Vector2 originalSpeed, float angleOffset);
 
 
     void spawnProjectile(createProjectile& projectile, Player::CreatePlayer& player, Vector2 dirVector)
@@ -71,9 +71,11 @@ namespace Projectile
                         PlaySound(Game::slimeDeath);
                         bigSlime[a].state = false;
                         player.score += 25;
-                        Vector2 spawnSpeed = { bigSlime[a].speed.x * 2, bigSlime[a].speed.y * 2 };
-                        spawnSlime(mediumSlime, Slime::maxMediumSlimes, Slime::MEDIUM, { bigSlime[a].position.x, bigSlime[a].position.y }, spawnSpeed);
-                        spawnSlime(mediumSlime, Slime::maxMediumSlimes, Slime::MEDIUM, { bigSlime[a].position.x + 75, bigSlime[a].position.y }, spawnSpeed);
+
+                        spawnSlime(mediumSlime, Slime::maxMediumSlimes, Slime::MEDIUM,
+                                   bigSlime[a].position, calculateSplitSpeed(bigSlime[a].speed, 45.0f * DEG2RAD));
+                        spawnSlime(mediumSlime, Slime::maxMediumSlimes, Slime::MEDIUM,
+                                   bigSlime[a].position, calculateSplitSpeed(bigSlime[a].speed, -45.0f * DEG2RAD));
                     }
                 }
                 for (int b = 0; b < Slime::maxMediumSlimes; b++)
@@ -85,9 +87,11 @@ namespace Projectile
                         PlaySound(Game::slimeDeath);
                         mediumSlime[b].state = false;
                         player.score += 50;
-                        Vector2 spawnSpeed = { mediumSlime[b].speed.x * 2, mediumSlime[b].speed.y * 2 };
-                        spawnSlime(smallSlime, Slime::maxSmallSlimes, Slime::SMALL, { mediumSlime[b].position.x, mediumSlime[b].position.y }, spawnSpeed);
-                        spawnSlime(smallSlime, Slime::maxSmallSlimes, Slime::SMALL, { mediumSlime[b].position.x + 55, mediumSlime[b].position.y + 55 }, spawnSpeed);
+
+                        spawnSlime(smallSlime, Slime::maxSmallSlimes, Slime::SMALL,
+                                   mediumSlime[b].position, calculateSplitSpeed(mediumSlime[b].speed, +45.0f * DEG2RAD));
+                        spawnSlime(smallSlime, Slime::maxSmallSlimes, Slime::SMALL,
+                                   mediumSlime[b].position, calculateSplitSpeed(mediumSlime[b].speed, -45.0f * DEG2RAD));
                     }
                 }
                 for (int c = 0; c < Slime::maxSmallSlimes; c++)
@@ -172,6 +176,15 @@ namespace Projectile
         );
 
 
+    }
+
+    Vector2 calculateSplitSpeed(Vector2 originalSpeed, float angleOffset)
+    {
+        float speedMagnitude = sqrt(originalSpeed.x * originalSpeed.x + originalSpeed.y * originalSpeed.y);
+        float originalAngle = atan2(originalSpeed.y, originalSpeed.x);
+
+        float newAngle = originalAngle + angleOffset;
+        return { static_cast<float>( ( cos ( newAngle ) * speedMagnitude ) * 1.5 ), static_cast<float>( ( sin ( newAngle ) * speedMagnitude ) * 1.5 ) };
     }
 }
 
