@@ -21,9 +21,6 @@ using namespace Slime;
 
 namespace Game
 {
-	//Internal Functions Declaration
-	void spawnElements();
-	//End Internal Functions Declaration
 
 	const int pointerOffSet = 10; //texture shows slightly off to the side of were the pointer is registered 
 
@@ -46,7 +43,6 @@ namespace Game
 
 	Vector2 pointerPosition = { 0.0f, 0.0f };
 	Vector2 menuBttnPosition;
-	Vector2 dirVector;
 	Vector2 fireballOrigin;
 
 	Image image;
@@ -60,9 +56,6 @@ namespace Game
 
 
 
-	float rotationSpeed = 100.0f;
-	float angle;
-	float angleToDegrees;
 	float projectileSpawnDistance = 30.0f;
 	float timePlayed = 0.0f;
 
@@ -105,7 +98,7 @@ namespace Game
 
 		projectile->frameWidth = fireBallText.width / 10;
 		projectile->frameHeight = fireBallText.height / 6;
-		maxFireBallFrames = 10*6;
+		maxFireBallFrames = 10;
 		fireballFrameTime = 0.5f;
 
 		slimeDeath = LoadSound("res/sounds/slimeDeath.wav");
@@ -192,66 +185,26 @@ namespace Game
 				{
 					pauseMenu = !pauseMenu;
 				}
-			}
-			// End menu logic 
+			}// End menu logic 
 
 			//Game over logic
 			if (player.hp <= 0 || player.score >= 3150) // delete score once respawn for  enemies is applied
 			{
 				gameOver = true;
-			}
-			//End of game over logic
+			}//End of game over logic
 
 			if (pauseMenu == false)
 			{
 				if (pause == false)
 				{
-					/*====================================================== PLAYER ======================================================*/					
-					player.position = { player.playerRect.x, player.playerRect.y };
-					playerRotationUpdate(player, dirVector, pointerPosition, player.position, angle, angleToDegrees);
-					player.animationState = checkAnimState(player);
-					dirVector = NormalizeVector(dirVector);
+					/*====================================================== PLAYER ======================================================*/
 
-					if (pointerPosition.x < Globals::Screen.size.x && pointerPosition.y < Globals::Screen.size.y)
-					{
-						if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
-						{
-
-							player.speed.x += dirVector.x * player.acceleration * GetFrameTime();
-							player.speed.y += dirVector.y * player.acceleration * GetFrameTime();
-						}
-					}
-					if (player.speed.x > player.maxAcceleration) { player.speed.x = player.maxAcceleration; }
-					if (player.speed.y > player.maxAcceleration) { player.speed.y = player.maxAcceleration; }
-					player.playerRect.x += player.speed.x * GetFrameTime();
-					player.playerRect.y += player.speed.y * GetFrameTime();
+					updatePlayer(player, pointerPosition); // player rotation & movement update 
 
 					playerBounds(player); // checks if player hits the wall and spawns on oposite side
 
-					for (int i = 0; i < maxBigSlimes; i++)
-					{
-						if (bigSlime[i].state && collisions::circleCircle({ player.playerRect.x , player.playerRect.y }, player.rad, bigSlime[i].position, bigSlime[i].rad))
-						{
-							player.hp -= 50;
-							spawnElements();
-						}
-					}
-					for (int i = 0; i < maxMediumSlimes; i++)
-					{
-						if (mediumSlime[i].state && collisions::circleCircle(player.position, player.rad, mediumSlime[i].position, mediumSlime[i].rad))
-						{
-							player.hp -= 25;
-							spawnElements();
-						}
-					}
-					for (int i = 0; i < maxSmallSlimes; i++)
-					{
-						if (smallSlime[i].state && collisions::circleCircle(player.position, player.rad, smallSlime[i].position, smallSlime[i].rad))
-						{
-							player.hp -= 15;
-							spawnElements();
-						}
-					}
+					playerCheckColl(player, bigSlime, mediumSlime, smallSlime); // check player collisions
+
 					/*=================================================== PLAYER END ======================================================*/
 
 					/*====================================================== PROJECTILE ======================================================*/
@@ -363,20 +316,20 @@ namespace Game
 	{
 		DrawTexture(gameBackground, 0, 0, GRAY);
 
-#ifdef _DEBUG
+#ifdef _DEBUG // hit Boxes
 		DrawCircle(static_cast<int>(player.position.x + 2), static_cast<int>(player.position.y), player.rad, RED); // player hitbox
-#endif
-
 		for (int i = 0; i < playerMaxProjectiles; i++)
 		{
 			if (projectile[i].state)
 			{
-#ifdef _DEBUG
-			DrawCircleV(projectile[i].position, projectile[i].radius, RED); //projectile hitbox
-#endif
-				//Projectile::drawProjectile(projectile[i], fireBallText);
+			DrawCircleV(projectile[i].position, projectile[i].radius, RED); //projectile hitbox		
 			}
 		}
+		DrawText(TextFormat("Angle in radians: %.2f", angle), 10, 60, 20, WHITE);
+		DrawText(TextFormat("Angle in degrees: %.2f", angleToDegrees), 10, 80, 20, WHITE);
+		DrawText(TextFormat("animation state: %i", player.animationState), 10, 100, 20, WHITE);
+#endif	     // end hit boxes
+
 		drawProjectiles(projectile, playerMaxProjectiles, fireBallText);
 		
 		DrawTexturePro(player.playerTexture, player.playerTextureCoordinate, player.playerRect, player.pivot, player.rotation, WHITE);
@@ -403,11 +356,6 @@ namespace Game
 			}
 		}
 
-#ifdef _DEBUG
-		DrawText(TextFormat("Angle in radians: %.2f", angle), 10, 60, 20, WHITE);
-		DrawText(TextFormat("Angle in degrees: %.2f", angleToDegrees), 10, 80, 20, WHITE);
-		DrawText(TextFormat("animation state: %i", player.animationState), 10, 100, 20, WHITE);
-#endif
 		if (pauseMenu == false)
 		{
 			DrawText(TextFormat("SCORE: %i", player.score), 900, 50, 30, WHITE);
@@ -459,16 +407,7 @@ namespace Game
 
 
 	/* ========================================================= FUNCTIONS ========================================================= */
-	Vector2 NormalizeVector(Vector2 v) 
-	{
-		float length = sqrtf(v.x * v.x + v.y * v.y);
-		if (length != 0.0f) 
-		{
-			v.x /= length;
-			v.y /= length;
-		}
-		return v;
-	}
+
 
 	createProjectile* GetInactiveProjectile() 
 	{

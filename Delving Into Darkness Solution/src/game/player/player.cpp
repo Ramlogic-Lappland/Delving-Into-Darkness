@@ -3,9 +3,24 @@
 #include <cmath>
 
 #include "globals.h"
+#include "game/game.h"
+#include "collisionManager/collisionManager.h"
+#include "game/enemy/slime.h"
+
 
 namespace Player
 {
+	void playerRotationUpdate(CreatePlayer& player, Vector2& pointerPosition, Vector2& playerPosition);
+	void playerMovementUpdate(CreatePlayer& player, Vector2 pointerPosition);
+
+	Vector2 NormalizeVector(Vector2 v);
+
+	Vector2 dirVector;
+
+	float angle;
+	float angleToDegrees;
+
+
 	void initPlayer(CreatePlayer& player)
 	{
 		player.playerTexture = LoadTexture("res/character/test.png");
@@ -34,7 +49,18 @@ namespace Player
 		player.score = 0;
 	}
 
-	void playerRotationUpdate(CreatePlayer& player, Vector2& dirVector, Vector2& pointerPosition, Vector2& playerPosition,	float& angle, float& angleToDegrees)
+	void updatePlayer(CreatePlayer& player, Vector2 pointerPosition)
+	{
+		player.position = { player.playerRect.x, player.playerRect.y };
+		playerRotationUpdate(player, pointerPosition, player.position);
+
+		player.animationState = checkAnimState(player);
+		dirVector = NormalizeVector(dirVector);
+
+		playerMovementUpdate (player, pointerPosition);
+	}
+
+	void playerRotationUpdate(CreatePlayer& player, Vector2& pointerPosition, Vector2& playerPosition)
 	{
 		dirVector = { pointerPosition.x - playerPosition.x, pointerPosition.y - playerPosition.y };
 
@@ -48,6 +74,22 @@ namespace Player
 		}
 
 		player.rotation = angleToDegrees;
+	}
+
+	void playerMovementUpdate(CreatePlayer& player, Vector2 pointerPosition)
+	{
+		if (pointerPosition.x < Globals::Screen.size.x && pointerPosition.y < Globals::Screen.size.y)
+		{
+			if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
+			{
+				player.speed.x += dirVector.x * player.acceleration * GetFrameTime();
+				player.speed.y += dirVector.y * player.acceleration * GetFrameTime();
+			}
+		}
+		if (player.speed.x > player.maxAcceleration) { player.speed.x = player.maxAcceleration; }
+		if (player.speed.y > player.maxAcceleration) { player.speed.y = player.maxAcceleration; }
+		player.playerRect.x += player.speed.x * GetFrameTime();
+		player.playerRect.y += player.speed.y * GetFrameTime();
 	}
 
 	int checkAnimState( CreatePlayer& player)
@@ -107,6 +149,46 @@ namespace Player
 		{
 			player.playerRect.y = static_cast<float>(Globals::Screen.size.y + player.playerRect.height);
 		}
+	}
+
+	void playerCheckColl(CreatePlayer& player , Slime::CreateSlime bigSlime[], Slime::CreateSlime mediumSlime[], Slime::CreateSlime smallSlime[])
+	{
+		for (int i = 0; i < Slime::maxBigSlimes; i++)
+		{
+			if (bigSlime[i].state && collisions::circleCircle({ player.playerRect.x , player.playerRect.y }, player.rad, bigSlime[i].position, bigSlime[i].rad))
+			{
+				player.hp -= 50;
+				Game::spawnElements();
+			}
+		}
+		for (int i = 0; i < Slime::maxMediumSlimes; i++)
+		{
+			if (mediumSlime[i].state && collisions::circleCircle(player.position, player.rad, mediumSlime[i].position, mediumSlime[i].rad))
+			{
+				player.hp -= 25;
+				Game::spawnElements();
+			}
+		}
+		for (int i = 0; i < Slime::maxSmallSlimes; i++)
+		{
+			if (smallSlime[i].state && collisions::circleCircle(player.position, player.rad, smallSlime[i].position, smallSlime[i].rad))
+			{
+				player.hp -= 15;
+				Game::spawnElements();
+			}
+		}
+	}
+
+
+	Vector2 NormalizeVector(Vector2 v)
+	{
+		float length = sqrtf(v.x * v.x + v.y * v.y);
+		if (length != 0.0f)
+		{
+			v.x /= length;
+			v.y /= length;
+		}
+		return v;
 	}
 
 }

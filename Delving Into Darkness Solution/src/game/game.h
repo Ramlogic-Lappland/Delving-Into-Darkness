@@ -18,7 +18,7 @@ namespace Game
 
 	void resetGame();
 
-	Vector2 NormalizeVector(Vector2 v);
+	void spawnElements();
 
 	Projectile::createProjectile* GetInactiveProjectile();
 

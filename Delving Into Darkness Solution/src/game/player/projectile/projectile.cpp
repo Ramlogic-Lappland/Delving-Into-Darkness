@@ -1,5 +1,6 @@
 #include "projectile.h"
 
+#include <iostream>
 #include <cmath>
 
 #include "raylib.h"
@@ -25,22 +26,22 @@ namespace Projectile
 		projectile.rotation = player.rotation;
 	}
 
-    void updateProjectiles(createProjectile projectile[], int maxProyectiles)
+    void updateProjectiles(createProjectile projectiles[], int maxProyectiles)
     {
         for (int i = 0; i < maxProyectiles; i++)
         {
-            if (projectile[i].state)
+            if (projectiles[i].state)
             {
-                updateProjectileAnimation(projectile[i]);
+                updateProjectileAnimation(projectiles[i]);
 
-                projectile[i].position.x += projectile[i].direction.x * projectile[i].speed * GetFrameTime();
-                projectile[i].position.y += projectile[i].direction.y * projectile[i].speed * GetFrameTime();
+                projectiles[i].position.x += projectiles[i].direction.x * projectiles[i].speed * GetFrameTime();
+                projectiles[i].position.y += projectiles[i].direction.y * projectiles[i].speed * GetFrameTime();
 
                 // CHECK PROJECTILE BOUNDS
-                if (projectile[i].position.x < 0 || projectile[i].position.x > Globals::Screen.size.x ||
-                    projectile[i].position.y < 0 || projectile[i].position.y > Globals::Screen.size.y)
+                if (projectiles[i].position.x < 0 || projectiles[i].position.x > Globals::Screen.size.x ||
+                    projectiles[i].position.y < 0 || projectiles[i].position.y > Globals::Screen.size.y)
                 {
-                    projectile[i].state = false;
+                    projectiles[i].state = false;
                 }
             }
         }
@@ -48,14 +49,19 @@ namespace Projectile
 
     void updateProjectileAnimation(createProjectile& projectile)
     {
-        const float frameTime = 0.1f; 
+        const float frameTime = 0.002f;
 
         projectile.fireballFrameCounter += GetFrameTime();
+        //std::cout << "Fireball Frame Counter: " << projectile.fireballFrameCounter << std::endl;
 
         if (projectile.fireballFrameCounter >= frameTime) 
         {
             projectile.fireballFrameCounter = 0;
             projectile.currentFireballFrame++;
+
+            
+
+           // std::cout << "Fireball Frame Counter: " << projectile.fireballFrameCounter << std::endl;
 
             if (projectile.currentFireballFrame >= projectile.maxFireBallFrames)
             {
@@ -82,8 +88,8 @@ namespace Projectile
 
         Rectangle sourceRec =
         {
-            static_cast<float>((projectile.currentFireballFrame % 10) * frameWidth),    
-            static_cast<float>((projectile.currentFireballFrame / 10) * frameHeight),    
+            static_cast<float>((projectile.currentFireballFrame / 10) * frameWidth),  // X pos
+            static_cast<float>((projectile.currentFireballFrame / 10) *  frameHeight), // y pos
             static_cast<float>(frameWidth),                                           
             static_cast<float>(frameHeight)                                           
         };
@@ -105,6 +111,7 @@ namespace Projectile
             projectile.rotation, 
             WHITE              
         );
+
 
     }
 }
