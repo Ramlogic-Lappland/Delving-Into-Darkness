@@ -7,13 +7,14 @@
 
 #include "game/player/player.h"
 #include "globals.h"
+#include "game/player/player.h"
 
 namespace Projectile
 {
     void drawProjectile(createProjectile& projectile, Texture2D& fireballTexture);
     void updateProjectileAnimation(createProjectile& projectile);
 
-	void spawnProjectile(createProjectile& projectile, Player::CreatePlayer& player, Vector2 dirVector)
+    void spawnProjectile(createProjectile& projectile, Player::CreatePlayer& player, Vector2 dirVector)
 	{
 		projectile.position =
         {
@@ -25,6 +26,8 @@ namespace Projectile
 		projectile.direction.y = (dirVector.y * player.speed.y * GetFrameTime()) * -1;
 		projectile.rotation = player.rotation;
 	}
+
+
 
     void updateProjectiles(createProjectile projectiles[], int maxProyectiles)
     {

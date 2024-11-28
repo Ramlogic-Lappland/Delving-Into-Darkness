@@ -34,8 +34,7 @@ namespace Game
 	CreateSlime mediumSlime[maxMediumSlimes];
 	CreateSlime smallSlime[maxSmallSlimes];
 
-	Rectangle fireballRectangle;
-	Rectangle fireballDestRect;
+
 
 	Music gameMusic;
 	Sound fireBallWav;

@@ -27,7 +27,7 @@ namespace Projectile
 		bool state;
 	};
 
-	void spawnProjectile(createProjectile& projectile, Player::CreatePlayer& player,Vector2 dirVector);
+	//void spawnProjectile(createProjectile projectile);
 
 	void updateProjectiles(createProjectile projectile[], int maxProyectiles);
 

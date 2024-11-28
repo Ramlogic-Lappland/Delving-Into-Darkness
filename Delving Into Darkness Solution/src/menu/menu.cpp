@@ -11,10 +11,6 @@
 #include "button/button.h"
 #include "game/game.h"
 
-
-
-
-
 namespace Menu
 {
 
@@ -94,7 +90,7 @@ namespace Menu
 		returnBttn.buttonText = new Texture2D[creditsBttn.amountOfFrames];
 
 
-		//play Bttn
+		//play Bttn   // change for button function 
 		image = LoadImage("res/ui/button/play_button_1.png");
 		ImageResize(&image,200, 44);
 		playBttn.buttonText[0] = LoadTextureFromImage(image);
@@ -375,18 +371,25 @@ namespace Menu
 		{
 			UnloadTexture(playBttn.buttonText[i]);
 		}
+		delete[] playBttn.buttonText;
+
 		for (int i = 0; i < exitBttn.amountOfFrames; i++)
 		{
 			UnloadTexture(exitBttn.buttonText[i]);
 		}
+		delete[] exitBttn.buttonText;
+
 		for (int i = 0; i < creditsBttn.amountOfFrames; i++)
 		{
 			UnloadTexture(creditsBttn.buttonText[i]);
 		}
+		delete[] creditsBttn.buttonText;
+
 		for (int i = 0; i < returnBttn.amountOfFrames; i++)
 		{
 			UnloadTexture(returnBttn.buttonText[i]);
 		}
+		delete[] returnBttn.buttonText;
 
 		for (int i = 0; i < bookAmountFrames; i++) 
 		{
@@ -397,8 +400,6 @@ namespace Menu
 		{
 			UnloadTexture(candleFrames[i]);
 		}
-
-		delete[] playBttn.buttonText;
 
 		std::cout << "MENU UNLOADED --------------------------------------------------" << "\n";
 
