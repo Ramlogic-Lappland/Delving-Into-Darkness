@@ -13,6 +13,8 @@ namespace Projectile
 {
     void drawProjectile(createProjectile& projectile, Texture2D& fireballTexture);
     void updateProjectileAnimation(createProjectile& projectile);
+    void updateProjectileCollition();
+
 
     void spawnProjectile(createProjectile& projectile, Player::CreatePlayer& player, Vector2 dirVector)
 	{
@@ -48,6 +50,11 @@ namespace Projectile
                 }
             }
         }
+    }
+
+    void updateProjectileCollition()
+    {
+ 
     }
 
     void updateProjectileAnimation(createProjectile& projectile)

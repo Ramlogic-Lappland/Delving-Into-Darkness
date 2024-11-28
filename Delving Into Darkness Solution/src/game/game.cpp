@@ -384,14 +384,19 @@ namespace Game
 	void unloadGame()
 	{
 		std::cout << "UNLOADING GAME --------------------------------" << "\n";
+
 		for (int i = 0; i < returnToMenuBttn.amountOfFrames; i++)
 		{
 			UnloadTexture(returnToMenuBttn.buttonText[i]);
 		}
+		delete[] returnToMenuBttn.buttonText;
+
 		for (int i = 0; i < playAgainBttn.amountOfFrames; i++)
 		{
 			UnloadTexture(playAgainBttn.buttonText[i]);
 		}
+		delete[] playAgainBttn.buttonText;
+
 		UnloadTexture(player.playerTexture);
 		UnloadTexture(gameBackground);
 		UnloadTexture(fireBallText);
@@ -401,6 +406,7 @@ namespace Game
 		UnloadSound(fireBallWav);
 		UnloadSound(slimeDeath);
 		UnloadMusicStream(gameMusic);
+
 		std::cout << "GAME UNLOADED --------------------------------" << "\n";
 	}
 

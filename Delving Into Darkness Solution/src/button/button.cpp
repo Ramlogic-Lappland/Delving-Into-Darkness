@@ -13,7 +13,6 @@ namespace button
 		Image image;
 
 		bttn.amountOfFrames = amountOfFrames;
-		bttn.buttonText[bttn.amountOfFrames];
 		bttn.buttonFrame = 0;
 		bttn.position = { position.x, position.y };
 		bttn.buttonText = new Texture2D[bttn.amountOfFrames];
