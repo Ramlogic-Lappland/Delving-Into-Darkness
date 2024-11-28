@@ -4,12 +4,13 @@
 
 namespace Slime
 {
-	const int maxBigSlimes = 6;
-	const int maxMediumSlimes = 12;
-	const int maxSmallSlimes = 24;
-	const int bigSlimeSpeed = 200;
-	const int mediumSlimeSpeed = 400;
-	const int smallSlimeSpeed = 600;
+	const int maxBigSlimes = 8;
+	const int maxMediumSlimes = 16;
+	const int maxSmallSlimes = 32;
+
+	const int bigSlimeSpeed = 300;
+	const int mediumSlimeSpeed = 600;
+	const int smallSlimeSpeed = 900;
 
 	enum SlimeSize
 	{
@@ -28,8 +29,14 @@ namespace Slime
 	};
 
 	void getSpawnOutOfBounds(CreateSlime& slime);
+
 	void getRadomSpawnDirection(CreateSlime& slime);
+
 	void spawnSlime(CreateSlime slime[], int arraySize, SlimeSize type, Vector2 spawnPosition, Vector2 spawnSpeed);
+
+	void updateSlimeMovement(CreateSlime slimes[], int array);
+
 	void slimeBounds(CreateSlime& slime);
-	void spawnBigSlimesIfNeeded(Slime::CreateSlime bigSlime[]);
+
+	void spawnBigSlimesIfNeeded(CreateSlime bigSlime[]);
 }

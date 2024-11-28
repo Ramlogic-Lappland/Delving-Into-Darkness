@@ -34,8 +34,6 @@ namespace Game
 	CreateSlime mediumSlime[maxMediumSlimes];
 	CreateSlime smallSlime[maxSmallSlimes];
 
-
-
 	Music gameMusic;
 	Sound fireBallWav;
 	Sound slimeDeath;
@@ -232,37 +230,15 @@ namespace Game
 					/*=================================================== PROJECTILE LOGIC END ======================================================*/
 
 					/*====================================================== SLIME ======================================================*/
-					// SLIME MOVEMENT
-
+					
 					spawnBigSlimesIfNeeded(bigSlime);
 
-					for (int i = 0; i < maxBigSlimes; i++) // BIG
-					{
-						if (bigSlime[i].state)
-						{
-							slimeBounds(bigSlime[i]);
-							bigSlime[i].position.x += bigSlime[i].speed.x * GetFrameTime();
-							bigSlime[i].position.y += bigSlime[i].speed.y * GetFrameTime();
-						}
-					}
-					for (int i = 0; i < maxMediumSlimes; i++) // MEDIUM
-					{
-						if (mediumSlime[i].state)
-						{
-							slimeBounds(mediumSlime[i]);
-							mediumSlime[i].position.x += mediumSlime[i].speed.x * GetFrameTime();
-							mediumSlime[i].position.y += mediumSlime[i].speed.y * GetFrameTime();
-						}
-					}
-					for (int i = 0; i < maxSmallSlimes; i++) // SMALL
-					{
-						if (smallSlime[i].state)
-						{
-							slimeBounds(smallSlime[i]);
-							smallSlime[i].position.x += smallSlime[i].speed.x * GetFrameTime();
-							smallSlime[i].position.y += smallSlime[i].speed.y * GetFrameTime();
-						}
-					}
+					updateSlimeMovement(bigSlime, maxBigSlimes);
+
+					updateSlimeMovement(mediumSlime, maxMediumSlimes);
+
+					updateSlimeMovement(smallSlime, maxSmallSlimes);
+
 					/*====================================================== SLIME END ======================================================*/
 				}
 			}

@@ -36,6 +36,19 @@ namespace Slime
         }
     }
 
+    void updateSlimeMovement(CreateSlime slimes[], int array)
+    {
+        for (int i = 0; i < array; i++)
+        {
+            if (slimes[i].state)
+            {
+                slimeBounds(slimes[i]);
+                slimes[i].position.x += slimes[i].speed.x * GetFrameTime();
+                slimes[i].position.y += slimes[i].speed.y * GetFrameTime();
+            }
+        }
+    }
+
 	void slimeBounds(CreateSlime& slime)
 	{
 		if (slime.position.x > Globals::Screen.size.x + (slime.rad * 1.5))
@@ -56,7 +69,8 @@ namespace Slime
 		}
 	}
 
-    void spawnBigSlimesIfNeeded(Slime::CreateSlime bigSlime[])
+
+    void spawnBigSlimesIfNeeded(CreateSlime bigSlime[])
     {
         int activeBigSlimes = 0;
 

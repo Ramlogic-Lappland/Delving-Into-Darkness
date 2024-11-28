@@ -40,7 +40,7 @@ namespace Projectile
         {
             if (projectiles[i].state)
             {
-                updateProjectileAnimation(projectiles[i]);
+                //updateProjectileAnimation(projectiles[i]);
 
                 projectiles[i].position.x += projectiles[i].direction.x * projectiles[i].speed * GetFrameTime();
                 projectiles[i].position.y += projectiles[i].direction.y * projectiles[i].speed * GetFrameTime();
@@ -115,15 +115,12 @@ namespace Projectile
         const float frameTime = 0.002f;
 
         projectile.fireballFrameCounter += GetFrameTime();
-        //std::cout << "Fireball Frame Counter: " << projectile.fireballFrameCounter << std::endl;  it increases
 
         if (projectile.fireballFrameCounter >= frameTime) 
         {
             projectile.fireballFrameCounter = 0;
             projectile.currentFireballFrame++;
-
-            
-
+           
            // std::cout << "Fireball Frame Counter: " << projectile.fireballFrameCounter << std::endl; it increases
 
             if (projectile.currentFireballFrame >= projectile.maxFireBallFrames)
