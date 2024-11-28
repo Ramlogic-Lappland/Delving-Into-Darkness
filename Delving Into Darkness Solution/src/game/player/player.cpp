@@ -49,6 +49,15 @@ namespace Player
 		player.score = 0;
 	}
 
+	void resetPlayerPosition(CreatePlayer& player)
+	{
+		player.playerRect.x = Globals::Screen.size.x / 2;
+		player.playerRect.y = Globals::Screen.size.y / 2;
+		player.rotation = 0;
+		player.speed = { 0, 0 };
+		player.animationState = 1;
+	}
+
 	void updatePlayer(CreatePlayer& player, Vector2 pointerPosition)
 	{
 		player.position = { player.playerRect.x, player.playerRect.y };
@@ -158,23 +167,38 @@ namespace Player
 			if (bigSlime[i].state && collisions::circleCircle({ player.playerRect.x , player.playerRect.y }, player.rad, bigSlime[i].position, bigSlime[i].rad))
 			{
 				player.hp -= 50;
+				if (player.hp < 0)
+				{
+					player.hp = 0;
+				}
 				Game::spawnElements();
+				resetPlayerPosition(player);
 			}
 		}
 		for (int i = 0; i < Slime::maxMediumSlimes; i++)
 		{
 			if (mediumSlime[i].state && collisions::circleCircle(player.position, player.rad, mediumSlime[i].position, mediumSlime[i].rad))
 			{
-				player.hp -= 25;
+				player.hp -= 35;
+				if (player.hp < 0)
+				{
+					player.hp = 0;
+				}
 				Game::spawnElements();
+				resetPlayerPosition(player);
 			}
 		}
 		for (int i = 0; i < Slime::maxSmallSlimes; i++)
 		{
 			if (smallSlime[i].state && collisions::circleCircle(player.position, player.rad, smallSlime[i].position, smallSlime[i].rad))
 			{
-				player.hp -= 15;
+				player.hp -= 25;
+				if (player.hp < 0)
+				{
+					player.hp = 0;
+				}
 				Game::spawnElements();
+				resetPlayerPosition(player);
 			}
 		}
 	}

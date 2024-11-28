@@ -50,8 +50,8 @@ namespace Game
 	Texture2D menuBttn;
 	Texture2D fireBallText;
 	Texture2D pointerTex;
-
-
+	Texture2D slimeTexture;
+	Texture2D hpBarTex;
 
 	float projectileSpawnDistance = 30.0f;
 	float timePlayed = 0.0f;
@@ -61,6 +61,7 @@ namespace Game
 	int maxFireBallFrames;
 	float fireballFrameTime;
 
+	float hpbarwidth;
 
 	bool gameInit = false;
 	bool pause = false;
@@ -92,6 +93,10 @@ namespace Game
 		//imageLoader::initImage(, {}, );
 
 		fireBallText = LoadTexture("res/character/projectile/Small_Fireball_10x26.png");
+		slimeTexture = LoadTexture("res/enemies/slime/Slime_green.png");
+		hpBarTex = LoadTexture("res/ui/hpbar_empty.png");
+
+		hpbarwidth = static_cast<float>(hpBarTex.width) / 100.0f;
 
 		projectile->frameWidth = fireBallText.width / 10;
 		projectile->frameHeight = fireBallText.height / 6;
@@ -185,7 +190,7 @@ namespace Game
 			}// End menu logic 
 
 			//Game over logic
-			if (player.hp <= 0 || player.score >= 3150) // delete score once respawn for  enemies is applied
+			if (player.hp <= 0 ) // delete score once respawn for  enemies is applied
 			{
 				gameOver = true;
 			}//End of game over logic
@@ -239,6 +244,8 @@ namespace Game
 
 					updateSlimeMovement(smallSlime, maxSmallSlimes);
 
+					
+
 					/*====================================================== SLIME END ======================================================*/
 				}
 			}
@@ -273,21 +280,30 @@ namespace Game
 		for (int i = 0; i < maxBigSlimes; i++)
 		{
 			if (bigSlime[i].state) {
+#ifdef _DEBUG // hit Boxes
 				DrawCircleV(bigSlime[i].position, bigSlime[i].rad, RED);
+#endif
+				drawSlime(bigSlime[i], slimeTexture);
 			}
 		}
 		// Draw all medium slimes
 		for (int i = 0; i < maxMediumSlimes; i++)
 		{
 			if (mediumSlime[i].state) {
+#ifdef _DEBUG // hit Boxes
 				DrawCircleV(mediumSlime[i].position, mediumSlime[i].rad, RED);
+#endif
+				drawSlime(mediumSlime[i], slimeTexture);
 			}
 		}
 		// Draw all small slimes
 		for (int i = 0; i < maxSmallSlimes; i++)
 		{
 			if (smallSlime[i].state) {
+#ifdef _DEBUG // hit Boxes
 				DrawCircleV(smallSlime[i].position, smallSlime[i].rad, RED);
+#endif
+				drawSlime(smallSlime[i], slimeTexture);
 			}
 		}
 
@@ -313,6 +329,8 @@ namespace Game
 			DrawTexture(playAgainBttn.buttonText[playAgainBttn.buttonFrame], static_cast<int>(playAgainBttn.position.x), static_cast<int>(playAgainBttn.position.y), LIGHTGRAY);
 		}
 
+		DrawRectangle(10, 10, static_cast<int>(hpbarwidth * player.hp), hpBarTex.height, RED);
+		DrawTexture(hpBarTex, 10, 10, WHITE);
 		DrawTexture(pointerTex, static_cast<int>(pointerPosition.x) - pointerOffSet, static_cast<int>(pointerPosition.y) - pointerOffSet, WHITE);
 		
 	}
@@ -342,8 +360,12 @@ namespace Game
 		UnloadTexture(gameMenutexture);
 		UnloadTexture(DefeatMenuTexture);
 		UnloadTexture(pointerTex);
+		UnloadTexture(slimeTexture);
+		UnloadTexture(hpBarTex);
+
 		UnloadSound(fireBallWav);
 		UnloadSound(slimeDeath);
+
 		UnloadMusicStream(gameMusic);
 
 		std::cout << "GAME UNLOADED --------------------------------" << "\n";
@@ -375,18 +397,27 @@ namespace Game
 			getSpawnOutOfBounds(bigSlime[i]);
 			getRadomSpawnDirection(bigSlime[i]);
 			bigSlime[i].state = true;
+			bigSlime[i].currentFrame = 0;
+			bigSlime[i].frameTime = 0.0f;
+			bigSlime[i].frameRec = { 0, static_cast<float>((slimeTexture.height / 3) * 2), static_cast<float>((slimeTexture.width / 8)), (float)(slimeTexture.height / 3) };
 		}
 		for (int i = 0; i < maxMediumSlimes; i++)
 		{
 			mediumSlime[i].rad = 30.0f;
 			mediumSlime[i].type = MEDIUM;
 			mediumSlime[i].state = false;
+			mediumSlime[i].currentFrame = 0;
+			mediumSlime[i].frameTime = 0.0f;
+			mediumSlime[i].frameRec = { 0, static_cast<float>((slimeTexture.height / 3) * 2), static_cast<float>((slimeTexture.width / 8)), (float)(slimeTexture.height / 3) };
 		}
 		for (int i = 0; i < maxSmallSlimes; i++)
 		{
 			smallSlime[i].rad = 20.0f;
 			smallSlime[i].type = SMALL;
 			smallSlime[i].state = false;
+			smallSlime[i].currentFrame = 0;
+			smallSlime[i].frameTime = 0.0f;
+			smallSlime[i].frameRec = { 0, static_cast<float>((slimeTexture.height / 3) * 2), static_cast<float>((slimeTexture.width / 8)), (float)(slimeTexture.height / 3) };
 		}
 		for (int i = 0; i < playerMaxProjectiles; i++)
 		{

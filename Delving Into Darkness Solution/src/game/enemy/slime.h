@@ -7,13 +7,12 @@
 
 namespace Slime
 {
-	extern std::vector<int> bigSlimeSlots;
-	extern std::vector<int> mediumSlimeSlots;
-	extern std::vector<int> smallSlimeSlots;
-
-	extern int bigSlimeIndex;
-	extern int mediumSlimeIndex;
-	extern int smallSlimeIndex;
+	//extern std::vector<int> bigSlimeSlots;
+	//extern std::vector<int> mediumSlimeSlots;
+	//extern std::vector<int> smallSlimeSlots;
+	//extern int bigSlimeIndex;
+	//extern int mediumSlimeIndex;
+	//extern int smallSlimeIndex;
 
 	const int maxBigSlimes = 8;
 	const int maxMediumSlimes = 16;
@@ -32,10 +31,18 @@ namespace Slime
 
 	struct CreateSlime
 	{
+		Rectangle frameRec;
+
 		Vector2 position;
 		Vector2 speed;
+
 		bool state;
+
 		float rad;
+		float frameTime;
+
+		int currentFrame;
+
 		SlimeSize type;
 	};
 
@@ -50,4 +57,8 @@ namespace Slime
 	void slimeBounds(CreateSlime& slime);
 
 	void spawnBigSlimesOverTime(CreateSlime bigSlime[]);
+
+	void updateSlimeAnimation(CreateSlime& slime, float deltaTime);
+
+	void drawSlime(CreateSlime& slime, Texture2D& slimeTexture);
 }

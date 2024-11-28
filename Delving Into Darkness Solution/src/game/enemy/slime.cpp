@@ -43,6 +43,7 @@ namespace Slime
             if (slimes[i].state)
             {
                 slimeBounds(slimes[i]);
+                updateSlimeAnimation(slimes[i], GetFrameTime());
                 slimes[i].position.x += slimes[i].speed.x * GetFrameTime();
                 slimes[i].position.y += slimes[i].speed.y * GetFrameTime();
             }
@@ -82,7 +83,7 @@ namespace Slime
             }
         }
 
-        if (activeBigSlimes < 3) 
+        if (activeBigSlimes < 4) 
         {
             for (int i = 0; i < Slime::maxBigSlimes; i++)
             {
@@ -95,12 +96,38 @@ namespace Slime
                     bigSlime[i].state = true;
 
                     activeBigSlimes++;
-                    if (activeBigSlimes >= 3)
+                    if (activeBigSlimes >= 4)
                     {
                         break;
                     }
                 }
             }
         }
+    }
+
+    void updateSlimeAnimation(CreateSlime& slime, float deltaTime)
+    {
+        slime.frameTime += deltaTime;
+
+        if (slime.frameTime >= 0.2f)
+        {
+            slime.frameTime = 0.0f;
+            slime.currentFrame = (slime.currentFrame + 1) % 8;
+        }
+
+        slime.frameRec.x = slime.currentFrame * slime.frameRec.width;
+        slime.frameRec.y = slime.frameRec.height * 1;
+    }
+
+    void drawSlime(CreateSlime& slime, Texture2D& slimeTexture)
+    {
+        float scale = (slime.rad * 2.5f) / slime.frameRec.width;
+
+        Rectangle textureRec = { slime.position.x, slime.position.y, slime.frameRec.width * scale, slime.frameRec.height * scale };
+
+        Vector2 originTexture = { textureRec.width / 2.0f, textureRec.height / 1.8f };
+
+        DrawTexturePro(slimeTexture, slime.frameRec, textureRec, originTexture, 0.0f, WHITE);
+
     }
 }

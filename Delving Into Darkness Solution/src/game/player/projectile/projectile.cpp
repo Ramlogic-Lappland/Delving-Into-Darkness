@@ -71,6 +71,8 @@ namespace Projectile
                         PlaySound(Game::slimeDeath);
                         bigSlime[a].state = false;
                         player.score += 25;
+                        bigSlime[i].currentFrame = 0;
+                        bigSlime[i].frameTime = 0.0f;
 
                         spawnSlime(mediumSlime, Slime::maxMediumSlimes, Slime::MEDIUM,
                                    bigSlime[a].position, calculateSplitSpeed(bigSlime[a].speed, 45.0f * DEG2RAD));
@@ -87,6 +89,8 @@ namespace Projectile
                         PlaySound(Game::slimeDeath);
                         mediumSlime[b].state = false;
                         player.score += 50;
+                        mediumSlime[i].currentFrame = 0;
+                        mediumSlime[i].frameTime = 0.0f;
 
                         spawnSlime(smallSlime, Slime::maxSmallSlimes, Slime::SMALL,
                                    mediumSlime[b].position, calculateSplitSpeed(mediumSlime[b].speed, +45.0f * DEG2RAD));
@@ -103,6 +107,8 @@ namespace Projectile
                         PlaySound(Game::slimeDeath);
                         smallSlime[c].state = false;
                         player.score += 75;
+                        smallSlime[i].currentFrame = 0;
+                        smallSlime[i].frameTime = 0.0f;
                     }
                 }
             }

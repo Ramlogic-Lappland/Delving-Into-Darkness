@@ -37,6 +37,8 @@ namespace Player
 
 	void resetPlayer(CreatePlayer& player);
 
+	void resetPlayerPosition(CreatePlayer& player);
+
 	void updatePlayer(CreatePlayer& player, Vector2 pointerPosition);
 
 	int checkAnimState(CreatePlayer& player);
