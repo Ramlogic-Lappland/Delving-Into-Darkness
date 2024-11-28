@@ -65,78 +65,19 @@ namespace Menu
 
 	void initMenu()  // START INIT ======================================================================================================================================================
 	{
-		playBttn.amountOfFrames = 2; //   PLAY BTTN INITIALIZATION 
-		playBttn.buttonText[playBttn.amountOfFrames];
-		playBttn.buttonFrame = 0;
-		playBttn.position = { 330, 240 };
-		playBttn.buttonText = new Texture2D[playBttn.amountOfFrames];
+		initBttn(playBttn,    { 330, 240 }, { 200, 44 }, "res/ui/button/play_button_1.png", "res/ui/button/play_button_2.png", 2); // Return to menu button (amount of frames - position - path img1 - path img2 - resize)
 
-		creditsBttn.amountOfFrames = 2;
-		creditsBttn.buttonText[creditsBttn.amountOfFrames];
-		creditsBttn.buttonFrame = 0;
-		creditsBttn.position = { 330, 340 };
-		creditsBttn.buttonText = new Texture2D[creditsBttn.amountOfFrames];
+		initBttn(creditsBttn, { 330, 340 }, { 200, 44 }, "res/ui/button/credits_button_1.png", "res/ui/button/credits_button_2.png", 2);
 
-		exitBttn.amountOfFrames = 2;
-		exitBttn.buttonText[returnBttn.amountOfFrames];
-		exitBttn.buttonFrame = 0;
-		exitBttn.position = { 330, 440 };
-		exitBttn.buttonText = new Texture2D[creditsBttn.amountOfFrames];
+		initBttn(exitBttn,    { 330, 440 }, { 200, 44 }, "res/ui/button/exit_button_1.png", "res/ui/button/exit_button_2.png", 2);
 
-		returnBttn.amountOfFrames = 2;
-		returnBttn.buttonText[returnBttn.amountOfFrames];
-		returnBttn.buttonFrame = 0;
-		returnBttn.position = { 750, 550 };
-		returnBttn.buttonText = new Texture2D[creditsBttn.amountOfFrames];
+		initBttn(returnBttn,  { 750, 550 }, { 160, 38 }, "res/ui/button/return_button_1.png", "res/ui/button/return_button_2.png", 2);
 
 
-		//play Bttn   // change for button function 
-		image = LoadImage("res/ui/button/play_button_1.png");
-		ImageResize(&image,200, 44);
-		playBttn.buttonText[0] = LoadTextureFromImage(image);
-		UnloadImage(image);
-		image = LoadImage("res/ui/button/play_button_2.png");
-		ImageResize(&image, 200, 44);
-		playBttn.buttonText[1] = LoadTextureFromImage(image);
-		UnloadImage(image);
-
-		//credits bttn
-		image = LoadImage("res/ui/button/credits_button_1.png");
-		ImageResize(&image, 200, 44);
-		creditsBttn.buttonText[0] = LoadTextureFromImage(image);
-		UnloadImage(image);
-		image = LoadImage("res/ui/button/credits_button_2.png");
-		ImageResize(&image, 200, 44);
-		creditsBttn.buttonText[1] = LoadTextureFromImage(image);
-		UnloadImage(image);
-		//return bttn
-		image = LoadImage("res/ui/button/return_button_1.png");
-		ImageResize(&image, 160, 38);
-		returnBttn.buttonText[0] = LoadTextureFromImage(image);
-		UnloadImage(image);
-		image = LoadImage("res/ui/button/return_button_2.png");
-		ImageResize(&image, 160, 38);
-		returnBttn.buttonText[1] = LoadTextureFromImage(image);
-		UnloadImage(image);
-		//exit bttn
-		image = LoadImage("res/ui/button/exit_button_1.png");
-		ImageResize(&image, 200, 44);
-		exitBttn.buttonText[0] = LoadTextureFromImage(image);
-		UnloadImage(image);
-		image = LoadImage("res/ui/button/exit_button_2.png");
-		ImageResize(&image, 200, 44);
-		exitBttn.buttonText[1] = LoadTextureFromImage(image);
-		UnloadImage(image);
-
-		button::assignWidthAndHeight(playBttn); //   PLAY BTTN INITIALIZATION END
-		button::assignWidthAndHeight(creditsBttn);
-		button::assignWidthAndHeight(exitBttn);
-		button::assignWidthAndHeight(returnBttn); 
-
-		image = LoadImage("res/BookDesk/grayDesk.png");     // Loaded in CPU memory (RAM)
+		image = LoadImage("res/BookDesk/grayDesk.png");    
 		ImageResize(&image, static_cast<int>(Globals::Screen.size.x), static_cast<int>(Globals::Screen.size.y)); // resize image before aplying to texture
-		menuBackground = LoadTextureFromImage(image);          // Image converted to texture, GPU memory (VRAM)
-		UnloadImage(image);   // Once image has been converted to texture and uploaded to VRAM, it can be unloaded from RAM
+		menuBackground = LoadTextureFromImage(image);       
+		UnloadImage(image);   
 
 		//Book opens
 		bookFrames[0] = LoadTexture("res/OpenBook/1.png");
@@ -175,6 +116,8 @@ namespace Menu
 		bookOpen = LoadSound("res/sounds/openBook.wav");
 		flipPage = LoadSound("res/sounds/pageFlip.wav");
 		buttonBop = LoadSound("res/sounds/buttonpop.wav");
+
+
 		//Init AudioFiles
 		PlayMusicStream(menuMusic);
 		SetMusicVolume(menuMusic, 0.5f);

@@ -1,9 +1,20 @@
 #pragma once
 
+#include <vector>
+
 #include "raylib.h"
+
 
 namespace Slime
 {
+	extern std::vector<int> bigSlimeSlots;
+	extern std::vector<int> mediumSlimeSlots;
+	extern std::vector<int> smallSlimeSlots;
+
+	extern int bigSlimeIndex;
+	extern int mediumSlimeIndex;
+	extern int smallSlimeIndex;
+
 	const int maxBigSlimes = 8;
 	const int maxMediumSlimes = 16;
 	const int maxSmallSlimes = 32;
@@ -38,5 +49,5 @@ namespace Slime
 
 	void slimeBounds(CreateSlime& slime);
 
-	void spawnBigSlimesIfNeeded(CreateSlime bigSlime[]);
+	void spawnBigSlimesOverTime(CreateSlime bigSlime[]);
 }

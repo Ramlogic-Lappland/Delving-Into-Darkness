@@ -70,7 +70,7 @@ namespace Slime
 	}
 
 
-    void spawnBigSlimesIfNeeded(CreateSlime bigSlime[])
+    void spawnBigSlimesOverTime(CreateSlime bigSlime[])
     {
         int activeBigSlimes = 0;
 

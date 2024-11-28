@@ -231,7 +231,7 @@ namespace Game
 
 					/*====================================================== SLIME ======================================================*/
 					
-					spawnBigSlimesIfNeeded(bigSlime);
+					spawnBigSlimesOverTime(bigSlime);
 
 					updateSlimeMovement(bigSlime, maxBigSlimes);
 
@@ -316,7 +316,10 @@ namespace Game
 		DrawTexture(pointerTex, static_cast<int>(pointerPosition.x) - pointerOffSet, static_cast<int>(pointerPosition.y) - pointerOffSet, WHITE);
 		
 	}
+	/* ========================================================== DRAW GAME END ================================================================== */
 
+
+	/* ========================================================== UNLOAD GAME ================================================================== */
 	void unloadGame()
 	{
 		std::cout << "UNLOADING GAME --------------------------------" << "\n";
@@ -345,11 +348,11 @@ namespace Game
 
 		std::cout << "GAME UNLOADED --------------------------------" << "\n";
 	}
+	/* ========================================================== UNLOAD GAME END ================================================================== */
+
 
 
 	/* ========================================================= FUNCTIONS ========================================================= */
-
-
 	createProjectile* GetInactiveProjectile() 
 	{
 		for (int i = 0; i < playerMaxProjectiles; i++) 
