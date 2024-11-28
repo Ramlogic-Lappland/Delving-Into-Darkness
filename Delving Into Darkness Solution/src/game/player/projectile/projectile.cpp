@@ -5,15 +5,18 @@
 
 #include "raylib.h"
 
-#include "game/player/player.h"
 #include "globals.h"
+#include "collisionManager/collisionManager.h"
+#include "game/game.h"
 #include "game/player/player.h"
+#include "game/player/player.h"
+#include "game/enemy/slime.h"
 
 namespace Projectile
 {
     void drawProjectile(createProjectile& projectile, Texture2D& fireballTexture);
     void updateProjectileAnimation(createProjectile& projectile);
-    void updateProjectileCollition();
+    
 
 
     void spawnProjectile(createProjectile& projectile, Player::CreatePlayer& player, Vector2 dirVector)
@@ -52,9 +55,55 @@ namespace Projectile
         }
     }
 
-    void updateProjectileCollition()
+    void updateProjectileCollition(Player::CreatePlayer& player, createProjectile projectile[], Slime::CreateSlime bigSlime[], Slime::CreateSlime mediumSlime[], Slime::CreateSlime smallSlime[])
     {
- 
+
+        for (int i = 0; i < playerMaxProjectiles; i++)
+        {
+            if (projectile[i].state)
+            {
+                for (int a = 0; a < Slime::maxBigSlimes; a++)
+                {
+                    if (bigSlime[a].state && collisions::circleCircle(bigSlime[a].position, bigSlime[a].rad, projectile[i].position, projectile[i].radius))
+                    {
+                        projectile[i].state = false;
+                        projectile[i].lifeSpawn = 0;
+                        PlaySound(Game::slimeDeath);
+                        bigSlime[a].state = false;
+                        player.score += 25;
+                        Vector2 spawnSpeed = { bigSlime[a].speed.x * 2, bigSlime[a].speed.y * 2 };
+                        spawnSlime(mediumSlime, Slime::maxMediumSlimes, Slime::MEDIUM, { bigSlime[a].position.x, bigSlime[a].position.y }, spawnSpeed);
+                        spawnSlime(mediumSlime, Slime::maxMediumSlimes, Slime::MEDIUM, { bigSlime[a].position.x + 75, bigSlime[a].position.y }, spawnSpeed);
+                    }
+                }
+                for (int b = 0; b < Slime::maxMediumSlimes; b++)
+                {
+                    if (mediumSlime[b].state && collisions::circleCircle(mediumSlime[b].position, mediumSlime[b].rad, projectile[i].position, projectile[i].radius))
+                    {
+                        projectile[i].state = false;
+                        projectile[i].lifeSpawn = 0;
+                        PlaySound(Game::slimeDeath);
+                        mediumSlime[b].state = false;
+                        player.score += 50;
+                        Vector2 spawnSpeed = { mediumSlime[b].speed.x * 2, mediumSlime[b].speed.y * 2 };
+                        spawnSlime(smallSlime, Slime::maxSmallSlimes, Slime::SMALL, { mediumSlime[b].position.x, mediumSlime[b].position.y }, spawnSpeed);
+                        spawnSlime(smallSlime, Slime::maxSmallSlimes, Slime::SMALL, { mediumSlime[b].position.x + 55, mediumSlime[b].position.y + 55 }, spawnSpeed);
+                    }
+                }
+                for (int c = 0; c < Slime::maxSmallSlimes; c++)
+                {
+                    if (smallSlime[c].state && collisions::circleCircle(smallSlime[c].position, smallSlime[c].rad, projectile[i].position, projectile[i].radius))
+                    {
+                        projectile[i].state = false;
+                        projectile[i].lifeSpawn = 0;
+                        PlaySound(Game::slimeDeath);
+                        smallSlime[c].state = false;
+                        player.score += 75;
+                    }
+                }
+            }
+        }
+        
     }
 
     void updateProjectileAnimation(createProjectile& projectile)

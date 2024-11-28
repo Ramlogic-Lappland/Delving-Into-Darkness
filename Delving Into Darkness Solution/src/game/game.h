@@ -6,6 +6,7 @@
 
 namespace Game
 {
+	extern Sound slimeDeath;
 	extern bool gameInit;
 
 	void initGame();

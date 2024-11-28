@@ -226,8 +226,7 @@ namespace Game
 					}
 
 					updateProjectiles(projectile, playerMaxProjectiles);
-
-
+					/*
 					for (int i = 0; i < playerMaxProjectiles; i++)
 					{
 						if (projectile[i].state)
@@ -272,6 +271,9 @@ namespace Game
 							}
 						}
 					}
+					*/
+					updateProjectileCollition( player, projectile, bigSlime, mediumSlime,  smallSlime);
+
 					/*=================================================== PROJECTILE LOGIC END ======================================================*/
 
 					/*====================================================== SLIME ======================================================*/
