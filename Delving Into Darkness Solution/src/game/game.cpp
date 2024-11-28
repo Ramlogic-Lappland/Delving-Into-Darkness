@@ -226,58 +226,16 @@ namespace Game
 					}
 
 					updateProjectiles(projectile, playerMaxProjectiles);
-					/*
-					for (int i = 0; i < playerMaxProjectiles; i++)
-					{
-						if (projectile[i].state)
-						{
-							for (int a = 0; a < maxBigSlimes; a++)
-							{
-								if (bigSlime[a].state && collisions::circleCircle(bigSlime[a].position, bigSlime[a].rad, projectile[i].position, projectile[i].radius))
-								{
-									projectile[i].state = false;
-									projectile[i].lifeSpawn = 0;
-									PlaySound(slimeDeath);
-									bigSlime[a].state = false;
-									player.score += 25;
-									Vector2 spawnSpeed = { bigSlime[a].speed.x * 2, bigSlime[a].speed.y * 2 };
-									spawnSlime(mediumSlime, maxMediumSlimes, MEDIUM, { bigSlime[a].position.x, bigSlime[a].position.y }, spawnSpeed);
-									spawnSlime(mediumSlime, maxMediumSlimes, MEDIUM, { bigSlime[a].position.x + 75, bigSlime[a].position.y }, spawnSpeed);
-								}
-							}
-							for (int b = 0; b < maxMediumSlimes; b++)
-							{
-								if (mediumSlime[b].state && collisions::circleCircle(mediumSlime[b].position, mediumSlime[b].rad, projectile[i].position, projectile[i].radius))
-								{
-									projectile[i].state = false;
-									projectile[i].lifeSpawn = 0;
-									PlaySound(slimeDeath);
-									mediumSlime[b].state = false;
-									player.score += 50;
-									Vector2 spawnSpeed = { mediumSlime[b].speed.x * 2, mediumSlime[b].speed.y * 2 };
-									spawnSlime(smallSlime, maxSmallSlimes, SMALL, { mediumSlime[b].position.x, mediumSlime[b].position.y }, spawnSpeed);
-									spawnSlime(smallSlime, maxSmallSlimes, SMALL, { mediumSlime[b].position.x + 55, mediumSlime[b].position.y + 55 }, spawnSpeed);
-								}
-							}
-							for (int c = 0; c < maxSmallSlimes; c++)
-							{
-								if (smallSlime[c].state && collisions::circleCircle(smallSlime[c].position, smallSlime[c].rad, projectile[i].position, projectile[i].radius))
-								{
-									projectile[i].state = false;
-									projectile[i].lifeSpawn = 0;
-									smallSlime[c].state = false;
-									player.score += 75;
-								}
-							}
-						}
-					}
-					*/
+					
 					updateProjectileCollition( player, projectile, bigSlime, mediumSlime,  smallSlime);
 
 					/*=================================================== PROJECTILE LOGIC END ======================================================*/
 
 					/*====================================================== SLIME ======================================================*/
 					// SLIME MOVEMENT
+
+					spawnBigSlimesIfNeeded(bigSlime);
+
 					for (int i = 0; i < maxBigSlimes; i++) // BIG
 					{
 						if (bigSlime[i].state)

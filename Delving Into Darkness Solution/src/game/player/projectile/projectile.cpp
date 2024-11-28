@@ -106,12 +106,12 @@ namespace Projectile
         
     }
 
-    void updateProjectileAnimation(createProjectile& projectile)
+    void updateProjectileAnimation(createProjectile& projectile) // need to fix it does not swap animation 
     {
         const float frameTime = 0.002f;
 
         projectile.fireballFrameCounter += GetFrameTime();
-        //std::cout << "Fireball Frame Counter: " << projectile.fireballFrameCounter << std::endl;
+        //std::cout << "Fireball Frame Counter: " << projectile.fireballFrameCounter << std::endl;  it increases
 
         if (projectile.fireballFrameCounter >= frameTime) 
         {
@@ -120,7 +120,7 @@ namespace Projectile
 
             
 
-           // std::cout << "Fireball Frame Counter: " << projectile.fireballFrameCounter << std::endl;
+           // std::cout << "Fireball Frame Counter: " << projectile.fireballFrameCounter << std::endl; it increases
 
             if (projectile.currentFireballFrame >= projectile.maxFireBallFrames)
             {
@@ -142,12 +142,12 @@ namespace Projectile
 
     void drawProjectile(createProjectile& projectile, Texture2D& fireballTexture) 
     {
-        int frameWidth = fireballTexture.width / 10;
+        int frameWidth = fireballTexture.width / 10; 
         int frameHeight = fireballTexture.height / 6;
 
         Rectangle sourceRec =
         {
-            static_cast<float>((projectile.currentFireballFrame / 10) * frameWidth),  // X pos
+            static_cast<float>((projectile.currentFireballFrame % 10) * frameWidth),  // X pos - divides % the current frame so it gives a round nuumber that can be attached to a specific frame same as below /
             static_cast<float>((projectile.currentFireballFrame / 10) *  frameHeight), // y pos
             static_cast<float>(frameWidth),                                           
             static_cast<float>(frameHeight)                                           

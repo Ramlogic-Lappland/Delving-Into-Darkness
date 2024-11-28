@@ -55,4 +55,38 @@ namespace Slime
 			slime.position.y = static_cast<float>(Globals::Screen.size.y + slime.rad);
 		}
 	}
+
+    void spawnBigSlimesIfNeeded(Slime::CreateSlime bigSlime[])
+    {
+        int activeBigSlimes = 0;
+
+        for (int i = 0; i < Slime::maxBigSlimes; i++)
+        {
+            if (bigSlime[i].state)
+            {
+                activeBigSlimes++;
+            }
+        }
+
+        if (activeBigSlimes < 3) 
+        {
+            for (int i = 0; i < Slime::maxBigSlimes; i++)
+            {
+                if (!bigSlime[i].state)
+                {
+                    bigSlime[i].rad = 40.0f;
+                    bigSlime[i].type = Slime::BIG;
+                    Slime::getSpawnOutOfBounds(bigSlime[i]);
+                    Slime::getRadomSpawnDirection(bigSlime[i]);
+                    bigSlime[i].state = true;
+
+                    activeBigSlimes++;
+                    if (activeBigSlimes >= 3)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }

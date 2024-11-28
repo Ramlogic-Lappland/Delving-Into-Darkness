@@ -1,6 +1,7 @@
 #pragma once
 
 #include "raylib.h"
+
 #include "game/player/player.h"
 
 namespace Projectile

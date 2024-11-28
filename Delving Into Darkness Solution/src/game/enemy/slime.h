@@ -31,4 +31,5 @@ namespace Slime
 	void getRadomSpawnDirection(CreateSlime& slime);
 	void spawnSlime(CreateSlime slime[], int arraySize, SlimeSize type, Vector2 spawnPosition, Vector2 spawnSpeed);
 	void slimeBounds(CreateSlime& slime);
+	void spawnBigSlimesIfNeeded(Slime::CreateSlime bigSlime[]);
 }
