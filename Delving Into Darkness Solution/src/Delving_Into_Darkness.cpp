@@ -6,8 +6,8 @@
 #include "ui/menu.h"
 #include "game/game.h"
 #include "globals.h"
-using namespace std;
 
+using namespace std;
 
 namespace gameManager
 {

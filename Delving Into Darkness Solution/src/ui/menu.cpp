@@ -301,20 +301,20 @@ namespace Menu
 			DrawTexture(creditsBttn.buttonText[creditsBttn.buttonFrame], static_cast<int>(creditsBttn.position.x), static_cast<int>(creditsBttn.position.y), WHITE); 
 			DrawTexture(exitBttn.buttonText[exitBttn.buttonFrame], static_cast<int>(exitBttn.position.x), static_cast<int>(exitBttn.position.y), WHITE);
 
-			DrawText("CONTROLS: ", 630, 250, 20, BLACK);
-			DrawText("Movement: ", 630, 275, 18, BLACK);
-			DrawText("You accelerate in the direction your ", 630, 300, 16, BLACK);
-			DrawText("pointer is, by holding right click.", 630, 320, 16, BLACK);
-			DrawText("Shooting: ", 630, 350, 18, BLACK);
-			DrawText("You shoot in the direction your", 630, 370, 16, BLACK);
-			DrawText("pointer is, by clicking left click.", 630, 390, 16, BLACK);
-			DrawText("Health: ", 630, 420, 18, BLACK);
-			DrawText("if you hit a slime you lose hp", 630, 440, 16, BLACK);
-			DrawText("the bigger the slime the more u lose.", 630, 460, 16, BLACK);
-			DrawText("Points: ", 630, 500, 18, BLACK);
-			DrawText("the smaller the slime", 630, 520, 16, BLACK);
-			DrawText("the more points it gives.", 630, 540, 16, BLACK);
-			DrawText("During game press P to pause.", 630, 570, 16, BLACK);
+			DrawText("CONTROLS: ", 650, 240, 20, BLACK);
+			DrawText("Movement: ", 650, 265, 18, BLACK);
+			DrawText("You accelerate in the direction your ", 650, 290, 16, BLACK);
+			DrawText("pointer is, by holding right click.", 650, 310, 16, BLACK);
+			DrawText("Shooting: ", 650, 340, 18, BLACK);
+			DrawText("You shoot in the direction your", 650, 360, 16, BLACK);
+			DrawText("pointer is, by clicking left click.", 640, 390, 16, BLACK);
+			DrawText("Health: ", 650, 410, 18, BLACK);
+			DrawText("if you hit a slime you lose hp", 650, 430, 16, BLACK);
+			DrawText("the bigger the slime the more u lose.", 650, 450, 16, BLACK);
+			DrawText("Points: ", 650, 490, 18, BLACK);
+			DrawText("the smaller the slime", 650, 510, 16, BLACK);
+			DrawText("the more points it gives.", 650, 530, 16, BLACK);
+			DrawText("During game press P to pause.", 650, 560, 16, BLACK);
 		}
 
 		if (gameManager::CurrentScreen == gameManager::credits && currentFrame > 16 ) // MENU STATE AND NO ANIMATION 
