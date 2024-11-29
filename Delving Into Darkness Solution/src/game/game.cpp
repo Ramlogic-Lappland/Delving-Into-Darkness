@@ -392,6 +392,13 @@ namespace Game
 		}
 		delete[] playAgainBttn.buttonText;
 
+		for (int i = 0; i < returnToGameBttn.amountOfFrames; i++)
+		{
+			UnloadTexture(returnToGameBttn.buttonText[i]);
+		}
+		delete[] returnToGameBttn.buttonText;
+		
+
 		UnloadTexture(player.playerTexture);
 		UnloadTexture(gameBackground);
 		UnloadTexture(fireBallText);
