@@ -41,6 +41,7 @@ namespace Player
 		//player.shield = 0;
 		//player.shieldRegenTimer = 0;
 		//player.shieldRegenRate = 1;
+		//player.shieldRad = player.rad + 8;
 		player.score = 0;
 	}
 

@@ -4,7 +4,6 @@
 #include <iostream>
 #include <cmath>
 
-
 #include "Delving_Into_Darkness.h"
 #include "globals.h"
 #include "collisionManager/collisionManager.h"
@@ -17,7 +16,6 @@
 using namespace Player;
 using namespace Projectile;
 using namespace Slime;
-
 
 namespace Game
 {
@@ -369,6 +367,7 @@ namespace Game
 		//DrawRectangle(10, 10 + (hpBarTex.height * 2), static_cast<int>(hpbarwidth * player.shield), hpBarTex.height, WHITE);
 		//DrawTexture(hpBarTex, 10, 10 + (hpBarTex.height * 2), WHITE);
 		//DrawText(TextFormat("Shield: %i", player.shield), 15, 12 + (hpBarTex.height * 2), 16, RED);
+		//DrawCircleLines(static_cast<int>(player.position.x + 2), static_cast<int>(player.position.y),player.rad + 8, WHITE);
 
 		DrawTexture(pointerTex, static_cast<int>(pointerPosition.x) - pointerOffSet, static_cast<int>(pointerPosition.y) - pointerOffSet, WHITE);
 		

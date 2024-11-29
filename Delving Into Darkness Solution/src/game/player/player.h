@@ -39,6 +39,7 @@ namespace Player
 		//float shieldRegenRate;
 		//int maxShield;
 		//int shield;
+		//float shieldRad;
 	};
 
 	void initPlayer(CreatePlayer& player);

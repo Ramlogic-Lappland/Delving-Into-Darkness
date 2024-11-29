@@ -15,11 +15,9 @@
 
 namespace Menu
 {
-
 	void openBookAnim();
 	void swapMenuPage();
 	void OpenURL(const char* url);
-
 
 	button::createButton playBttn;
 	button::createButton creditsBttn;
@@ -74,6 +72,8 @@ namespace Menu
 	bool bookOpenAnimationOn = true;
 	bool bookSwapRight = false;
 	bool bookSwapLeft = false;
+
+	bool flag;
 
 	void initMenu()  // START INIT ======================================================================================================================================================
 	{
@@ -195,6 +195,7 @@ namespace Menu
 			creditsBttn.buttonFrame = 1;
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
+				flag = true;
 				if (!bookSwapRight && currentFrame == bookOpenFrames - 1)
 				{
 					PlaySound(buttonBop);
@@ -202,6 +203,10 @@ namespace Menu
 					PlaySound(flipPage);
 					gameManager::CurrentScreen = gameManager::credits;
 				}
+			}
+			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+			{
+				if (flag == true) flag = false;
 			}
 		}else
 		{

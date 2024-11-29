@@ -121,7 +121,7 @@ namespace Projectile
     {
         projectile.frameTime += deltaTime;
 
-        if (projectile.frameTime >= 0.2f)
+        if (projectile.frameTime >= 0.008f)
         {
             projectile.frameTime = 0.0f;
 

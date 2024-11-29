@@ -2,6 +2,8 @@
 
 namespace Menu
 {
+	extern bool flag;
+
 	void initMenu();
 
 	void updateMenu();
