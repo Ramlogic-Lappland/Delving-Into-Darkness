@@ -125,7 +125,7 @@ namespace Slime
 
         Rectangle textureRec = { slime.position.x, slime.position.y, slime.frameRec.width * scale, slime.frameRec.height * scale };
 
-        Vector2 originTexture = { textureRec.width / 2.0f, textureRec.height / 1.8f };
+        Vector2 originTexture = { textureRec.width / 2.0f, textureRec.height / 2.0f };
 
         DrawTexturePro(slimeTexture, slime.frameRec, textureRec, originTexture, 0.0f, WHITE);
 

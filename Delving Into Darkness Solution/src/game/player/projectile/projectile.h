@@ -6,7 +6,7 @@
 
 namespace Projectile
 {
-	const int playerMaxProjectiles = 3;
+	const int playerMaxProjectiles = 8;
 
 	struct createProjectile
 	{

@@ -33,6 +33,10 @@ namespace Player
 		player.acceleration = 400.0f;
 		player.rad = 18.0f;
 		player.hp = 100;
+		player.maxMana = 100;
+		player.mana = 100;
+		player.manaRegenTimer = 0;
+		player.manaRegenRate = 1;
 		player.score = 0;
 	}
 
@@ -46,6 +50,8 @@ namespace Player
 		player.speed = { 0, 0 };
 		player.animationState = 1;
 		player.hp = 100;
+		player.mana = 100;
+		player.manaRegenTimer = 0;
 		player.score = 0;
 	}
 
@@ -56,6 +62,7 @@ namespace Player
 		player.rotation = 0;
 		player.speed = { 0, 0 };
 		player.animationState = 1;
+		player.mana = 100;
 	}
 
 	void updatePlayer(CreatePlayer& player, Vector2 pointerPosition)
@@ -67,6 +74,26 @@ namespace Player
 		dirVector = NormalizeVector(dirVector);
 
 		playerMovementUpdate (player, pointerPosition);
+	}
+
+	void updateMana(CreatePlayer& player)
+	{
+		player.manaRegenTimer += GetFrameTime();
+
+		if (player.manaRegenTimer >= 0.1f) //speed
+		{
+			
+			if (player.mana < player.maxMana)
+			{
+				player.mana += static_cast<int>(player.manaRegenRate);
+				if (player.mana > player.maxMana)
+				{
+					player.mana = player.maxMana;
+				}
+			}
+
+			player.manaRegenTimer = 0.0f;
+		}
 	}
 
 	void playerRotationUpdate(CreatePlayer& player, Vector2& pointerPosition, Vector2& playerPosition)

@@ -26,9 +26,15 @@ namespace Player
 		float rotation;
 		float rad; 
 
+		float manaRegenTimer;
+		float manaRegenRate;
+		int maxMana;
+		int mana;
+
 		int hp;
 		int score;
 		int animationState;
+
 		//int shieldCharge;
         //bool shieldState;
 	};
@@ -40,6 +46,8 @@ namespace Player
 	void resetPlayerPosition(CreatePlayer& player);
 
 	void updatePlayer(CreatePlayer& player, Vector2 pointerPosition);
+
+	void updateMana(CreatePlayer& player);
 
 	int checkAnimState(CreatePlayer& player);
 

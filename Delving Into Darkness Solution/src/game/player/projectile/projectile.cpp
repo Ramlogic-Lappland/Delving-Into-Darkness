@@ -33,7 +33,6 @@ namespace Projectile
 	}
 
 
-
     void updateProjectiles(createProjectile projectiles[], int maxProyectiles)
     {
         for (int i = 0; i < maxProyectiles; i++)

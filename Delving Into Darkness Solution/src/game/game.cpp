@@ -226,22 +226,31 @@ namespace Game
 					/*=================================================== PLAYER END ======================================================*/
 
 					/*====================================================== PROJECTILE ======================================================*/
+
+					updateMana(player);
+
 					if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 					{
-						createProjectile* newProjectile = GetInactiveProjectile();
-						if (newProjectile != nullptr)
+						if (player.mana >= 25)
 						{
-							newProjectile->position = {
-								player.playerRect.x + dirVector.x * projectileSpawnDistance,
-								player.playerRect.y + dirVector.y * projectileSpawnDistance
-							};
-							newProjectile->direction = dirVector;
-							newProjectile->state = true;
-							newProjectile->rotation = player.rotation;
-							newProjectile->currentFireballFrame = 0;
-							newProjectile ->fireballFrameCounter = 0;
-							PlaySound(fireBallWav);
+							createProjectile* newProjectile = GetInactiveProjectile();
+							if (newProjectile != nullptr)
+							{
+								newProjectile->position = {
+									player.playerRect.x + dirVector.x * projectileSpawnDistance,
+									player.playerRect.y + dirVector.y * projectileSpawnDistance
+								};
+								newProjectile->direction = dirVector;
+								newProjectile->state = true;
+								newProjectile->rotation = player.rotation;
+								newProjectile->currentFireballFrame = 0;
+								newProjectile->fireballFrameCounter = 0;
+								PlaySound(fireBallWav);
+							}
+
+							player.mana -= 25;
 						}
+
 					}
 
 					updateProjectiles(projectile, playerMaxProjectiles);
@@ -347,6 +356,9 @@ namespace Game
 
 		DrawRectangle(10, 10, static_cast<int>(hpbarwidth * player.hp), hpBarTex.height, RED);
 		DrawTexture(hpBarTex, 10, 10, WHITE);
+		DrawRectangle(10, 10 + hpBarTex.height, static_cast<int>(hpbarwidth * player.mana), hpBarTex.height, BLUE);
+		DrawText(TextFormat("Mana: %i", player.mana), 15, 12 + hpBarTex.height, 16, WHITE);
+		DrawTexture(hpBarTex, 10, 10 + hpBarTex.height, WHITE);
 		DrawTexture(pointerTex, static_cast<int>(pointerPosition.x) - pointerOffSet, static_cast<int>(pointerPosition.y) - pointerOffSet, WHITE);
 		DrawText(TextFormat("HP: %i", player.hp), 15, 12 , 16, WHITE);
 		
