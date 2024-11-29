@@ -252,6 +252,8 @@ namespace Menu
 
 		urlManager::urlCollision(soundsLink, pointerTex, pointerPosition);
 
+		urlManager::urlCollision(characterLink, pointerTex, pointerPosition);
+
 		urlManager::urlCollision(fireballLink, pointerTex, pointerPosition);
 
 		urlManager::urlCollision(humblepixelLink, pointerTex, pointerPosition);
