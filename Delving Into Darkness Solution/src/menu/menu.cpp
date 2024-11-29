@@ -128,8 +128,8 @@ namespace Menu
 		flipPage = LoadSound("res/sounds/pageFlip.wav");
 		buttonBop = LoadSound("res/sounds/buttonpop.wav");
 
-		urlManager::initUrlButton(creatorItchLink, { 280, 270 }, 13, "https://ramlogic.itch.io");
-		urlManager::initUrlButton(raylibLink, { 280, 310 }, 13, "https://www.raylib.com");  
+		urlManager::initUrlButton(creatorItchLink, { 280, 265 }, 13, "https://ramlogic.itch.io");
+		urlManager::initUrlButton(raylibLink, { 280, 300 }, 13, "https://www.raylib.com");  
 		urlManager::initUrlButton(menuSongLink, { 280, 340 }, 13, "https://crowshade.itch.io/horror-music-pack");  
 		urlManager::initUrlButton(gameSongLink, { 280, 380 }, 13, "https://suno.com"); 
 		urlManager::initUrlButton(soundsLink, { 280, 420 }, 13, "https://artlist.io/sfx"); 

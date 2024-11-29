@@ -37,6 +37,10 @@ namespace Player
 		player.mana = 100;
 		player.manaRegenTimer = 0;
 		player.manaRegenRate = 1;
+		//player.maxShield = 100;
+		//player.shield = 0;
+		//player.shieldRegenTimer = 0;
+		//player.shieldRegenRate = 1;
 		player.score = 0;
 	}
 
@@ -51,7 +55,9 @@ namespace Player
 		player.animationState = 1;
 		player.hp = 100;
 		player.mana = 100;
+		//player.shield = 0;
 		player.manaRegenTimer = 0;
+		//player.shieldRegenTimer = 0;
 		player.score = 0;
 	}
 
@@ -63,6 +69,7 @@ namespace Player
 		player.speed = { 0, 0 };
 		player.animationState = 1;
 		player.mana = 100;
+		//player.shield = 0;
 	}
 
 	void updatePlayer(CreatePlayer& player, Vector2 pointerPosition)
@@ -93,6 +100,27 @@ namespace Player
 			player.manaRegenTimer = 0.0f;
 		}
 	}
+
+	/*
+		void updateShield(CreatePlayer& player)
+	{
+		player.shieldRegenTimer += GetFrameTime();
+
+		if (player.shieldRegenTimer >= 0.4f) //speed
+		{
+			if (player.shield < player.maxShield)
+			{
+				player.shield += static_cast<int>(player.shieldRegenRate);
+				if (player.shield > player.maxShield)
+				{
+					player.shield = player.maxShield;
+				}
+			}
+			player.shieldRegenTimer = 0.0f;
+		}
+	}
+	*/
+
 
 	void playerRotationUpdate(CreatePlayer& player, Vector2& pointerPosition, Vector2& playerPosition)
 	{
@@ -191,13 +219,14 @@ namespace Player
 		{
 			if (bigSlime[i].state && collisions::circleCircle({ player.playerRect.x , player.playerRect.y }, player.rad, bigSlime[i].position, bigSlime[i].rad))
 			{
-				player.hp -= 50;
-				if (player.hp < 0)
-				{
-					player.hp = 0;
-				}
-				Game::spawnElements();
-				resetPlayerPosition(player);
+					player.hp -= 50;
+					if (player.hp < 0)
+					{
+						player.hp = 0;
+					}
+					Game::spawnElements();
+					resetPlayerPosition(player);
+				
 			}
 		}
 		for (int i = 0; i < Slime::maxMediumSlimes; i++)

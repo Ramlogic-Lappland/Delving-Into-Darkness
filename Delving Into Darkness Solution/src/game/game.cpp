@@ -219,6 +219,10 @@ namespace Game
 
 					updatePlayer(player, pointerPosition); // player rotation & movement update 
 
+					updateMana(player);
+					
+					//updateShield(player);
+
 					playerBounds(player); // checks if player hits the wall and spawns on oposite side
 
 					playerCheckColl(player, bigSlime, mediumSlime, smallSlime); // check player collisions
@@ -226,8 +230,6 @@ namespace Game
 					/*=================================================== PLAYER END ======================================================*/
 
 					/*====================================================== PROJECTILE ======================================================*/
-
-					updateMana(player);
 
 					if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 					{
@@ -356,11 +358,18 @@ namespace Game
 
 		DrawRectangle(10, 10, static_cast<int>(hpbarwidth * player.hp), hpBarTex.height, RED);
 		DrawTexture(hpBarTex, 10, 10, WHITE);
+		DrawText(TextFormat("HP: %i", player.hp), 15, 12, 16, WHITE);
+
 		DrawRectangle(10, 10 + hpBarTex.height, static_cast<int>(hpbarwidth * player.mana), hpBarTex.height, BLUE);
-		DrawText(TextFormat("Mana: %i", player.mana), 15, 12 + hpBarTex.height, 16, WHITE);
 		DrawTexture(hpBarTex, 10, 10 + hpBarTex.height, WHITE);
+		DrawText(TextFormat("Mana: %i", player.mana), 15, 12 + hpBarTex.height, 16, WHITE);
+
+		//DrawRectangle(10, 10 + (hpBarTex.height * 2), static_cast<int>(hpbarwidth * player.shield), hpBarTex.height, WHITE);
+		//DrawTexture(hpBarTex, 10, 10 + (hpBarTex.height * 2), WHITE);
+		//DrawText(TextFormat("Shield: %i", player.shield), 15, 12 + (hpBarTex.height * 2), 16, RED);
+
 		DrawTexture(pointerTex, static_cast<int>(pointerPosition.x) - pointerOffSet, static_cast<int>(pointerPosition.y) - pointerOffSet, WHITE);
-		DrawText(TextFormat("HP: %i", player.hp), 15, 12 , 16, WHITE);
+		
 		
 	}
 	/* ========================================================== DRAW GAME END ================================================================== */
