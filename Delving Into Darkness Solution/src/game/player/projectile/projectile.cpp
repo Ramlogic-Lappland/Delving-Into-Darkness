@@ -14,8 +14,9 @@
 
 namespace Projectile
 {
-    void drawProjectile(createProjectile& projectile, Texture2D& fireballTexture);
-    void updateProjectileAnimation(createProjectile& projectile);
+    //void drawProjectile(createProjectile& projectile, Texture2D& fireballTexture);
+    //void updateProjectileAnimation(createProjectile& projectile);
+    void drawProjectile(createProjectile& projectile, Texture2D& projectileTexture);
     Vector2 calculateSplitSpeed(Vector2 originalSpeed, float angleOffset);
 
 
@@ -33,13 +34,15 @@ namespace Projectile
 	}
 
 
-    void updateProjectiles(createProjectile projectiles[], int maxProyectiles)
+    void updateProjectiles(createProjectile projectiles[], int maxProyectiles, Texture2D& texture)
     {
         for (int i = 0; i < maxProyectiles; i++)
         {
             if (projectiles[i].state)
             {
                 //updateProjectileAnimation(projectiles[i]);
+
+                updateProjectileAnimation(projectiles[i], GetFrameTime(), 6, 10, texture);
 
                 projectiles[i].position.x += projectiles[i].direction.x * projectiles[i].speed * GetFrameTime();
                 projectiles[i].position.y += projectiles[i].direction.y * projectiles[i].speed * GetFrameTime();
@@ -115,70 +118,62 @@ namespace Projectile
         
     }
 
-    void updateProjectileAnimation(createProjectile& projectile) // need to fix it does not swap animation (USE SLIME LOGIC) 
+    void updateProjectileAnimation(createProjectile& projectile, float deltaTime, int rows, int cols, Texture2D& texture)
     {
-        const float frameTime = 0.002f;
+        projectile.frameTime += deltaTime;
 
-        projectile.fireballFrameCounter += GetFrameTime();
-
-        if (projectile.fireballFrameCounter >= frameTime) 
+        if (projectile.frameTime >= 0.2f)
         {
-            projectile.fireballFrameCounter = 0;
-            projectile.currentFireballFrame++;
-           
-           // std::cout << "Fireball Frame Counter: " << projectile.fireballFrameCounter << std::endl; it increases
+            projectile.frameTime = 0.0f;
 
-            if (projectile.currentFireballFrame >= projectile.maxFireBallFrames)
+            projectile.currentFrame++;
+
+            if (projectile.currentFrame >= cols)
             {
-                projectile.currentFireballFrame = 0;
+                projectile.currentFrame = 0;
+                projectile.currentRow++;
+
+
+                if (projectile.currentRow >= rows)
+                {
+                    projectile.currentRow = 0;
+                }
+            }
+        }
+
+        
+        float frameWidth = texture.width / static_cast<float>(cols);
+        float frameHeight = texture.height / static_cast<float>(rows);
+
+        projectile.frameRec.x = projectile.currentFrame * frameWidth;
+        projectile.frameRec.y = projectile.currentRow * frameHeight;
+        projectile.frameRec.width = frameWidth;
+        projectile.frameRec.height = frameHeight;
+    }
+
+    void drawProjectiles(createProjectile projectiles[], int projectileCount, Texture2D& projectileTexture)
+    {
+        for (int i = 0; i < projectileCount; i++)
+        {
+            if (projectiles[i].state) // Only draw active projectiles
+            {
+                drawProjectile(projectiles[i], projectileTexture);
             }
         }
     }
 
-    void drawProjectiles(createProjectile projectiles[], int maxProjectiles, Texture2D& fireballTexture)
+    void drawProjectile(createProjectile& projectile, Texture2D& projectileTexture)
     {
-        for (int i = 0; i < maxProjectiles; i++) 
-        {
-            if (projectiles[i].state) 
-            {
-                drawProjectile(projectiles[i], fireballTexture);
-            }
-        }
+        float scale = projectile.radius / (projectile.frameRec.width / 2.0f); // Scale based on projectile radius
+
+        Rectangle textureRec = { projectile.position.x, projectile.position.y, projectile.frameRec.width * scale, projectile.frameRec.height * scale };
+
+        Vector2 originTexture = { textureRec.width / 2.0f, textureRec.height / 2.0f };
+
+        DrawTexturePro(projectileTexture, projectile.frameRec, textureRec, originTexture, projectile.rotation, WHITE);
     }
 
-    void drawProjectile(createProjectile& projectile, Texture2D& fireballTexture) 
-    {
-        int frameWidth = fireballTexture.width / 10; 
-        int frameHeight = fireballTexture.height / 6;
-
-        Rectangle sourceRec =
-        {
-            static_cast<float>((projectile.currentFireballFrame % 10) * frameWidth),  // X pos - divides % the current frame so it gives a round nuumber that can be attached to a specific frame same as below /
-            static_cast<float>((projectile.currentFireballFrame / 10) *  frameHeight), // y pos
-            static_cast<float>(frameWidth),                                           
-            static_cast<float>(frameHeight)                                           
-        };
-        Rectangle destRec = 
-        {   
-            projectile.position.x,    
-            projectile.position.y,    
-            static_cast<float>(frameWidth),    
-            static_cast<float>(frameHeight)
-        };
-
-        Vector2 origin = { frameWidth / 2.0f, frameHeight / 2.0f };
-
-        DrawTexturePro(
-            fireballTexture,   
-            sourceRec,         
-            destRec,           
-            origin,            
-            projectile.rotation, 
-            WHITE              
-        );
-
-
-    }
+    
 
     Vector2 calculateSplitSpeed(Vector2 originalSpeed, float angleOffset)
     {

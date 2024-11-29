@@ -81,8 +81,7 @@ namespace Player
 		player.manaRegenTimer += GetFrameTime();
 
 		if (player.manaRegenTimer >= 0.1f) //speed
-		{
-			
+		{		
 			if (player.mana < player.maxMana)
 			{
 				player.mana += static_cast<int>(player.manaRegenRate);
@@ -91,7 +90,6 @@ namespace Player
 					player.mana = player.maxMana;
 				}
 			}
-
 			player.manaRegenTimer = 0.0f;
 		}
 	}

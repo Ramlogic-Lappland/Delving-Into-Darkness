@@ -253,7 +253,7 @@ namespace Game
 
 					}
 
-					updateProjectiles(projectile, playerMaxProjectiles);
+					updateProjectiles(projectile, playerMaxProjectiles, fireBallText);
 					
 					updateProjectileCollition( player, projectile, bigSlime, mediumSlime,  smallSlime);
 
@@ -298,7 +298,7 @@ namespace Game
 #endif	     // end hit boxes
 
 		drawProjectiles(projectile, playerMaxProjectiles, fireBallText);
-		
+
 		DrawTexturePro(player.playerTexture, player.playerTextureCoordinate, player.playerRect, player.pivot, player.rotation, WHITE);
 
 		// Draw all big slimes

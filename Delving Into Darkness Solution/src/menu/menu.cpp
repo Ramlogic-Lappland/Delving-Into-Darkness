@@ -313,6 +313,7 @@ namespace Menu
 			DrawText("Points: ", 630, 500, 18, BLACK);
 			DrawText("the smaller the slime", 630, 520, 16, BLACK);
 			DrawText("the more points it gives.", 630, 540, 16, BLACK);
+			DrawText("During game press P to pause.", 630, 570, 16, BLACK);
 		}
 
 		if (gameManager::CurrentScreen == gameManager::credits && currentFrame > 16 ) // MENU STATE AND NO ANIMATION 
