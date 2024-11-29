@@ -10,6 +10,7 @@
 #include "Delving_Into_Darkness.h"
 #include "button/button.h"
 #include "game/game.h"
+#include "urlManager/urlManager.h"
 
 namespace Menu
 {
@@ -23,6 +24,8 @@ namespace Menu
 	button::createButton creditsBttn;
 	button::createButton returnBttn;
 	button::createButton exitBttn;
+
+	urlManager::urlButton creatorItchLink;
 
 	const int candleAmountFrames = 4;
 	const int bookAmountFrames = 19;
@@ -117,6 +120,7 @@ namespace Menu
 		flipPage = LoadSound("res/sounds/pageFlip.wav");
 		buttonBop = LoadSound("res/sounds/buttonpop.wav");
 
+		urlManager::initUrlButton(creatorItchLink, { 300, 265 }, 14, "https://ramlogic.itch.io"); 
 
 		//Init AudioFiles
 		PlayMusicStream(menuMusic);
@@ -219,6 +223,14 @@ namespace Menu
 			returnBttn.buttonFrame = 0;
 		}
 
+		if (collisions::rectangleXrectangle(creatorItchLink.urlBounds.x, creatorItchLink.urlBounds.y, creatorItchLink.urlBounds.width, creatorItchLink.urlBounds.height, pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)) && gameManager::CurrentScreen == gameManager::credits)
+		{
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			{
+				OpenURL(creatorItchLink.path);
+			}
+		}
+
 		if (collisions::rectangleXrectangle(itchIoPos.x, itchIoPos.y, static_cast<float>(itchLogo.width), static_cast<float>(itchLogo.height), pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)))
 		{
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
@@ -271,9 +283,15 @@ namespace Menu
 		if (gameManager::CurrentScreen == gameManager::credits && currentFrame > 16 ) // MENU STATE AND NO ANIMATION 
 		{
 			DrawTexture(returnBttn.buttonText[returnBttn.buttonFrame], static_cast<int>(returnBttn.position.x), static_cast<int>(returnBttn.position.y), WHITE);
-			DrawText("Game Made By Estanislao Sala Barraquero", 300, 250, 10, BLACK);
-			DrawText("Made using Raylib", 300, 280, 10, BLACK);
-			DrawText("Menu song made by Crow Shade ", 300, 300, 10, BLACK);
+
+			DrawText("Made By: Estanislao Sala Barraquero", 280, 250, 16, BLACK);
+			DrawText(creatorItchLink.path, static_cast<int>(creatorItchLink.urlBounds.x), static_cast<int>(creatorItchLink.urlBounds.y), 14, BLUE);
+			DrawLine(static_cast<int>(creatorItchLink.urlBounds.x), static_cast<int>(creatorItchLink.urlBounds.y + 13),
+				     static_cast<int>(creatorItchLink.urlBounds.x + creatorItchLink.urlBounds.width), static_cast<int>(creatorItchLink.urlBounds.y + 13), BLUE);
+
+
+			DrawText("Made using Raylib", 280, 300, 16, BLACK);
+			//DrawText("Menu song made by Crow Shade ", 300, 300, 10, BLACK);
 			DrawText("Character made by PixiVan", 300, 320, 10, BLACK);
 			DrawText("Fireball made by Stealthix", 300, 340, 10, BLACK);
 			DrawText("Book made by humblepixel", 300, 360, 10, BLACK);

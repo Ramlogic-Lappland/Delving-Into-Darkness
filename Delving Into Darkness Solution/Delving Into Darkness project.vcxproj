@@ -161,6 +161,7 @@
     <ClCompile Include="src\Delving_Into_Darkness.cpp" />
     <ClCompile Include="src\game\game.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\urlManager\urlManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game\enemy\slime.h" />
@@ -173,6 +174,7 @@
     <ClInclude Include="src\menu\menu.h" />
     <ClInclude Include="src\Delving_Into_Darkness.h" />
     <ClInclude Include="src\game\game.h" />
+    <ClInclude Include="src\urlManager\urlManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
