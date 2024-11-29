@@ -364,6 +364,8 @@ namespace Game
 		DrawTexture(hpBarTex, 10, 10 + hpBarTex.height, WHITE);
 		DrawText(TextFormat("Mana: %i", player.mana), 15, 12 + hpBarTex.height, 16, WHITE);
 
+		DrawText(TextFormat("Fireball mana cost %i", 25), 290, 32, 20, WHITE);
+
 		//DrawRectangle(10, 10 + (hpBarTex.height * 2), static_cast<int>(hpbarwidth * player.shield), hpBarTex.height, WHITE);
 		//DrawTexture(hpBarTex, 10, 10 + (hpBarTex.height * 2), WHITE);
 		//DrawText(TextFormat("Shield: %i", player.shield), 15, 12 + (hpBarTex.height * 2), 16, RED);
