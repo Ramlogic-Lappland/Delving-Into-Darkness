@@ -1,6 +1,7 @@
 #include "collisionManager.h"
 
 #include <iostream>
+
 #include "raylib.h"
 
 namespace collisions

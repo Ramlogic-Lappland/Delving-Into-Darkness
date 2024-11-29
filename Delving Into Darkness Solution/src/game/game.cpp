@@ -8,7 +8,7 @@
 #include "Delving_Into_Darkness.h"
 #include "globals.h"
 #include "collisionManager/collisionManager.h"
-#include "button/button.h"
+#include "ui/button.h"
 #include "game/player/player.h"
 #include "game/player/projectile/projectile.h"
 #include "enemy/slime.h"

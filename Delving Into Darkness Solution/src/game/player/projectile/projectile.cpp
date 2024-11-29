@@ -9,7 +9,6 @@
 #include "collisionManager/collisionManager.h"
 #include "game/game.h"
 #include "game/player/player.h"
-#include "game/player/player.h"
 #include "game/enemy/slime.h"
 
 namespace Projectile

@@ -8,9 +8,10 @@
 #include "globals.h"
 #include "collisionManager/collisionManager.h"
 #include "Delving_Into_Darkness.h"
-#include "button/button.h"
+#include "ui/button.h"
+#include "ui/urlManager.h"
 #include "game/game.h"
-#include "urlManager/urlManager.h"
+
 
 namespace Menu
 {

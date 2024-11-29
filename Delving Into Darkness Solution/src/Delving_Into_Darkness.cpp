@@ -3,7 +3,7 @@
 #include <iostream>
 #include "raylib.h"
 
-#include "menu/menu.h"
+#include "ui/menu.h"
 #include "game/game.h"
 #include "globals.h"
 using namespace std;
