@@ -118,7 +118,7 @@
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)res" "$(OutDir)res" /i /y /e</Command>
+      <Command>call "$(SolutionDir)scripts\copyScript.bat" "$(solutionDir)" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
