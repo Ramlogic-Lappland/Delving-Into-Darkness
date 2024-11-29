@@ -289,6 +289,8 @@ namespace Menu
 
 		DrawTexture(pointerTex, static_cast<int>(pointerPosition.x) - pointerOffSet, static_cast<int>(pointerPosition.y) - pointerOffSet, WHITE);
 
+		DrawText(TextFormat("Version : %f", Globals::gameVersion), 40, static_cast<int> (Globals::Screen.size.y - 28), 24, WHITE);
+		
 
 	} // END DRAW ======================================================================================================================================================
 

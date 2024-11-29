@@ -25,6 +25,7 @@ namespace Game
 	const int pointerOffSet = 10; //texture shows slightly off to the side of were the pointer is registered 
 
 	button::createButton returnToMenuBttn;
+	button::createButton returnToGameBttn;
 	button::createButton playAgainBttn;
 
 	CreatePlayer player;
@@ -83,6 +84,8 @@ namespace Game
 		initBttn(returnToMenuBttn, { 450, 350 }, { 350, 80 }, "res/ui/button/menu_button_1.png", "res/ui/button/menu_button_2.png", 2); // Return to menu button (amount of frames - position - path img1 - path img2 - resize)
 
 		initBttn(playAgainBttn, { 450, 550 }, { 350, 80 }, "res/ui/button/playAgain_button_1.png", "res/ui/button/playAgain_button_2.png", 2); // Play again Button
+
+		initBttn(returnToGameBttn, { 450, 550 }, { 350 , 80 }, "res/ui/button/return_button_1.png", "res/ui/button/return_button_2.png", 2); // return to game bttn = cancel pause 
 
 		// END BUTTON Init
 
@@ -175,6 +178,19 @@ namespace Game
 			else
 			{
 				returnToMenuBttn.buttonFrame = 0;
+			}
+
+			if (collisions::rectangleXrectangle(returnToGameBttn.position.x, returnToGameBttn.position.y, returnToGameBttn.width, returnToGameBttn.height, pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)) && pauseMenu == true)
+			{
+				returnToGameBttn.buttonFrame = 1;
+				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+				{
+					pauseMenu = !pauseMenu;
+				}
+			}
+			else
+			{
+				returnToGameBttn.buttonFrame = 0;
 			}
 
 			if (IsKeyPressed(KEY_P))
@@ -311,20 +327,20 @@ namespace Game
 		{
 			DrawText(TextFormat("SCORE: %i", player.score), 900, 50, 30, WHITE);
 		}
-		DrawText(TextFormat("HP: %i", player.hp), 900, 100, 20, WHITE);
 		DrawTexture(menuBttn, static_cast<int>(menuBttnPosition.x), static_cast<int>(menuBttnPosition.y), WHITE);
 
 		if (pauseMenu == true)
 		{
 			DrawTexture(gameMenutexture, 300, 0, WHITE);
-			DrawText(TextFormat("SCORE: %i", player.score), 500, 150, 30, RED);
+			DrawText(TextFormat("SCORE: %i", player.score), 485, 150, 30, RED);
 			DrawTexture(returnToMenuBttn.buttonText[returnToMenuBttn.buttonFrame], static_cast<int>(returnToMenuBttn.position.x), static_cast<int>(returnToMenuBttn.position.y), WHITE);
+			DrawTexture(returnToGameBttn.buttonText[returnToGameBttn.buttonFrame], static_cast<int>(returnToGameBttn.position.x), static_cast<int>(returnToGameBttn.position.y), WHITE);
 		}
 
 		if (gameOver == true)
 		{
 			DrawTexture(DefeatMenuTexture, 150, 100, LIGHTGRAY);
-			DrawText(TextFormat("SCORE: %i", player.score), 500, 250, 50, RED);
+			DrawText(TextFormat("SCORE: %i", player.score), 450, 250, 50, RED);
 			DrawTexture(returnToMenuBttn.buttonText[returnToMenuBttn.buttonFrame], static_cast<int>(returnToMenuBttn.position.x), static_cast<int>(returnToMenuBttn.position.y), LIGHTGRAY);
 			DrawTexture(playAgainBttn.buttonText[playAgainBttn.buttonFrame], static_cast<int>(playAgainBttn.position.x), static_cast<int>(playAgainBttn.position.y), LIGHTGRAY);
 		}
@@ -332,6 +348,7 @@ namespace Game
 		DrawRectangle(10, 10, static_cast<int>(hpbarwidth * player.hp), hpBarTex.height, RED);
 		DrawTexture(hpBarTex, 10, 10, WHITE);
 		DrawTexture(pointerTex, static_cast<int>(pointerPosition.x) - pointerOffSet, static_cast<int>(pointerPosition.y) - pointerOffSet, WHITE);
+		DrawText(TextFormat("HP: %i", Globals::gameVersion), 0, static_cast<int> ( Globals::Screen.size.y - 28 ) , 24, WHITE);
 		
 	}
 	/* ========================================================== DRAW GAME END ================================================================== */

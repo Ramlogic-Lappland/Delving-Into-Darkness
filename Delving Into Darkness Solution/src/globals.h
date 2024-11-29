@@ -4,6 +4,8 @@
 
 namespace Globals
 {
+	extern float gameVersion;
+
 	struct CreateScreen 
 	{
 		const char* name;

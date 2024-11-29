@@ -116,7 +116,7 @@ namespace Projectile
         
     }
 
-    void updateProjectileAnimation(createProjectile& projectile) // need to fix it does not swap animation 
+    void updateProjectileAnimation(createProjectile& projectile) // need to fix it does not swap animation (USE SLIME LOGIC) 
     {
         const float frameTime = 0.002f;
 

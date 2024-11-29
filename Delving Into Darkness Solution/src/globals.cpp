@@ -4,10 +4,14 @@
 
 namespace Globals
 {
+	float gameVersion;
+
 	CreateScreen Screen;
 
 	void initGlobals()
 	{
+		gameVersion = 2.0f;
+
 		Screen.originalIntendedSize = { 1200, 850 };
 		Screen.size = { 1200, 850 };
 		Screen.currentSize = { 1024, 768 };
