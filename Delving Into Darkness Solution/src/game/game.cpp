@@ -348,7 +348,7 @@ namespace Game
 		DrawRectangle(10, 10, static_cast<int>(hpbarwidth * player.hp), hpBarTex.height, RED);
 		DrawTexture(hpBarTex, 10, 10, WHITE);
 		DrawTexture(pointerTex, static_cast<int>(pointerPosition.x) - pointerOffSet, static_cast<int>(pointerPosition.y) - pointerOffSet, WHITE);
-		DrawText(TextFormat("HP: %i", Globals::gameVersion), 0, static_cast<int> ( Globals::Screen.size.y - 28 ) , 24, WHITE);
+		DrawText(TextFormat("HP: %i", player.hp), 15, 12 , 16, WHITE);
 		
 	}
 	/* ========================================================== DRAW GAME END ================================================================== */
