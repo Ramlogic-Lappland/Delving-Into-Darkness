@@ -19,7 +19,7 @@ using namespace Slime;
 
 namespace Game
 {
-
+	bool flag;
 	const int pointerOffSet = 10; //texture shows slightly off to the side of were the pointer is registered 
 
 	button::createButton returnToMenuBttn;
@@ -71,6 +71,7 @@ namespace Game
 	/* ========================================================== INIT GAME =================================================================== */
 	void initGame()
 	{
+		flag = false; 
 		pause = false;
 		pauseMenu = false;
 		gameOver = false;
@@ -139,11 +140,13 @@ namespace Game
 				playAgainBttn.buttonFrame = 1;
 				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 				{
+					flag = true;
 					resetGame();
 				}
 			}
 			else
 			{
+				flag = false;
 				playAgainBttn.buttonFrame = 0;
 			}
 
@@ -152,11 +155,13 @@ namespace Game
 				returnToMenuBttn.buttonFrame = 1;
 				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 				{
+					flag = true;
 					gameManager::CurrentScreen = gameManager::menu;
 				}
 			}
 			else
 			{
+				flag = false;
 				returnToMenuBttn.buttonFrame = 0;
 			}
 		}
@@ -170,11 +175,13 @@ namespace Game
 				returnToMenuBttn.buttonFrame = 1;
 				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 				{
+					flag = true;
 					gameManager::CurrentScreen = gameManager::menu;
 				}
 			}
 			else
 			{
+				flag = false;
 				returnToMenuBttn.buttonFrame = 0;
 			}
 
@@ -183,11 +190,13 @@ namespace Game
 				returnToGameBttn.buttonFrame = 1;
 				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 				{
+					flag = true;
 					pauseMenu = !pauseMenu;
 				}
 			}
 			else
 			{
+				flag = false;
 				returnToGameBttn.buttonFrame = 0;
 			}
 
@@ -229,9 +238,9 @@ namespace Game
 
 					/*====================================================== PROJECTILE ======================================================*/
 
-					if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+					if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && flag == false)
 					{
-						if (player.mana >= 25)
+						if (player.mana >= 25 )
 						{
 							createProjectile* newProjectile = GetInactiveProjectile();
 							if (newProjectile != nullptr)
