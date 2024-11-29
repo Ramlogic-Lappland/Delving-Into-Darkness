@@ -13,8 +13,6 @@
 
 namespace Projectile
 {
-    //void drawProjectile(createProjectile& projectile, Texture2D& fireballTexture);
-    //void updateProjectileAnimation(createProjectile& projectile);
     void drawProjectile(createProjectile& projectile, Texture2D& projectileTexture);
     Vector2 calculateSplitSpeed(Vector2 originalSpeed, float angleOffset);
 
