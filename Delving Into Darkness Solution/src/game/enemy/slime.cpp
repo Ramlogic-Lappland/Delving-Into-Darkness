@@ -9,15 +9,14 @@ namespace Slime
 
 	void getSpawnOutOfBounds(CreateSlime& slime)
 	{
-		slime.position.x = (rand() % 2 == 0) ? -50.0f : Globals::Screen.size.x + 50.0f;
+		slime.position.x = (rand() % 2 == 0) ? -50.0f : Globals::Screen.size.x + 50.0f; // instead of 50 have a declared value so is easier 
         slime.position.y = (rand() % 2 == 0) ? -50.0f : Globals::Screen.size.y + 50.0f;
 	}
 
 	void getRadomSpawnDirection(CreateSlime& slime)
 	{
         float angle = rand() % 360 * (PI / 180.0f);
-        float speedMultiplier = (slime.type == Slime::BIG) ? 140.0f :
-            (slime.type == Slime::MEDIUM) ? 180.0f : 200.0f;
+        float speedMultiplier = (slime.type == Slime::BIG) ? 140.0f : (slime.type == Slime::MEDIUM) ? 180.0f : 200.0f; // better to make it a switch 
         slime.speed = { cosf(angle) * speedMultiplier, sinf(angle) * speedMultiplier };
 	}
 

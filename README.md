@@ -16,6 +16,8 @@
 
 * [x] Animation system for textures
 
+* [ ] Get Rid Of All Magical Numbers 
+
 * [ ] Second type of enemy
 
 * [ ] Character animation depending on where it is pointing at
@@ -23,6 +25,7 @@
 * [ ] Power up
 
 * [ ] Full Screen Mode
+
 
 
 
