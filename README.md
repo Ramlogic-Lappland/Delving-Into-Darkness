@@ -2,8 +2,9 @@
 ***
 
 **Game made using Graphic library Raylib**
+***
 **Made by:** 
-#### Link to itch.io: https://github.com/Ramlogic-Lappland
+#### https://github.com/Ramlogic-Lappland
 ---
 ***
 
@@ -15,13 +16,13 @@
 
 * [x] Animation system for textures
 
-* [] Second type of enemy
+* [ ] Second type of enemy
 
-* [] Character animation depending on where it is pointing at
+* [ ] Character animation depending on where it is pointing at
 
-* [] Power up
+* [ ] Power up
 
-* [] Full Screen Mode
+* [ ] Full Screen Mode
 
 
 
