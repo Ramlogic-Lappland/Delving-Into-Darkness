@@ -57,15 +57,15 @@ namespace Menu
 	Vector2 itchIoPos = {948, 265};
 
 	int candleCurrentFrame = 0;
-	int currentFrame = 0;    // current frame
+	int currentFrame = 0;    
 	int bookWidth = static_cast<int>(Globals::Screen.size.x * 0.75);
 	int bookHeight = static_cast<int>(Globals::Screen.size.y * 0.75);
 	int correction = 0;
 
 	float candleFrameTime = 0.5f;
 	float candleElapsedTime = 0.0f;
-	float frameTime = 0.2f;  // Time for each frame (in seconds)
-	float elapsedTime = 0.0f; // elapsed time
+	float frameTime = 0.2f; 
+	float elapsedTime = 0.0f; 
 
     float timePlayed = 0.0f;
 
@@ -77,7 +77,7 @@ namespace Menu
 
 	void initMenu()  // START INIT ======================================================================================================================================================
 	{
-		initBttn(playBttn,    { 330, 240 }, { 200, 44 }, "res/ui/button/play_button_1.png", "res/ui/button/play_button_2.png", 2); // Return to menu button (amount of frames - position - path img1 - path img2 - resize)
+		initBttn(playBttn,    { 330, 240 }, { 200, 44 }, "res/ui/button/play_button_1.png", "res/ui/button/play_button_2.png", 2);
 
 		initBttn(creditsBttn, { 330, 340 }, { 200, 44 }, "res/ui/button/credits_button_1.png", "res/ui/button/credits_button_2.png", 2);
 
@@ -270,8 +270,8 @@ namespace Menu
 
 		if (candleElapsedTime >= candleFrameTime) 
 		{
-			candleCurrentFrame = (candleCurrentFrame + 1) % candleAmountFrames; // Cycle to the next frame
-			candleElapsedTime = 0.0f; // Reset elapsed time
+			candleCurrentFrame = (candleCurrentFrame + 1) % candleAmountFrames; 
+			candleElapsedTime = 0.0f; 
 		}
 		
 		swapMenuPage(); 
@@ -513,7 +513,7 @@ namespace Menu
 				{
 					bookSwapLeft = true;
 					PlaySound(flipPage);
-					gameManager::CurrentScreen = gameManager::menu; // CHANGE MENU DRAW STATE FROM CREDITS TO MENU ==================================================================
+					gameManager::CurrentScreen = gameManager::menu; // CHANGE MENU DRAW STATE FROM CREDITS TO MENU
 				}
 			}
 			if (bookSwapLeft) 

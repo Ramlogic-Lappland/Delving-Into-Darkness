@@ -79,15 +79,15 @@ namespace Game
 
 		// BUTTON Init
 		
-		initBttn(returnToMenuBttn, { 450, 350 }, { 350, 80 }, "res/ui/button/menu_button_1.png", "res/ui/button/menu_button_2.png", 2); // Return to menu button (amount of frames - position - path img1 - path img2 - resize)
+		initBttn(returnToMenuBttn, { 450, 350 }, { 350, 80 }, "res/ui/button/menu_button_1.png", "res/ui/button/menu_button_2.png", 2); 
 
-		initBttn(playAgainBttn, { 450, 550 }, { 350, 80 }, "res/ui/button/playAgain_button_1.png", "res/ui/button/playAgain_button_2.png", 2); // Play again Button
+		initBttn(playAgainBttn, { 450, 550 }, { 350, 80 }, "res/ui/button/playAgain_button_1.png", "res/ui/button/playAgain_button_2.png", 2); 
 
-		initBttn(returnToGameBttn, { 450, 550 }, { 350 , 80 }, "res/ui/button/return_button_1.png", "res/ui/button/return_button_2.png", 2); // return to game bttn = cancel pause 
+		initBttn(returnToGameBttn, { 450, 550 }, { 350 , 80 }, "res/ui/button/return_button_1.png", "res/ui/button/return_button_2.png", 2); 
 
 		// END BUTTON Init
 
-		imageLoader::initImage(gameBackground, { Globals::Screen.size.x, Globals::Screen.size.y }, "res/gamebackground/gameGridB.png"); // texture - size.x - size.y - path
+		imageLoader::initImage(gameBackground, { Globals::Screen.size.x, Globals::Screen.size.y }, "res/gamebackground/gameGridB.png"); 
 		imageLoader::initImage(DefeatMenuTexture, { static_cast<float>(Globals::Screen.size.x * 0.75) , static_cast<float>(Globals::Screen.size.y * 0.75) }, "res/ui/defeatMenu.png");
 		imageLoader::initImage(gameMenutexture, { static_cast<float>(Globals::Screen.size.x / 2) , static_cast<float>(Globals::Screen.size.y) }, "res/ui/ingame_menu_canvas.png");
 		imageLoader::initImage(menuBttn, {40, 40}, "res/ui/ingame_menu_button.png");
@@ -110,7 +110,7 @@ namespace Game
 		
 		menuBttnPosition = { Globals::Screen.size.x - menuBttn.width - 20, static_cast<float>(0) };
 
-		initPlayer(player); // init player
+		initPlayer(player); 
 		spawnElements();
 		
 		SetMusicVolume(gameMusic, 0.2f);
