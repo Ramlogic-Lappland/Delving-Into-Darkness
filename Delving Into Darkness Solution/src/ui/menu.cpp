@@ -204,13 +204,10 @@ namespace Menu
 					gameManager::CurrentScreen = gameManager::credits;
 				}
 			}
-			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
-			{
-				if (flag == true) flag = false;
-			}
 		}else
 		{
 			creditsBttn.buttonFrame = 0;
+			flag = false;
 		}
 
 		if (collisions::rectangleXrectangle(exitBttn.position.x, exitBttn.position.y, exitBttn.width, exitBttn.height, pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)) && gameManager::CurrentScreen == gameManager::menu)
@@ -277,7 +274,6 @@ namespace Menu
 		swapMenuPage(); 
 
 	} // END UPDATE ======================================================================================================================================================
-
 
 
 

@@ -19,15 +19,12 @@ namespace urlManager
 	    
 		if (collisions::rectangleXrectangle(buttn.urlBounds.x, buttn.urlBounds.y, buttn.urlBounds.width, buttn.urlBounds.height, pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)) && gameManager::CurrentScreen == gameManager::credits)
 		{
-			Menu::flag = false;
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && Menu::flag == false)
 			{
 				OpenURL(buttn.path);
-				Menu::flag = true;
 			}
 			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
 			{
-				if (Menu::flag == true) Menu::flag = false;
 			}
 		}
 	}
