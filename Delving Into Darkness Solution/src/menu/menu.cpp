@@ -26,6 +26,13 @@ namespace Menu
 	button::createButton exitBttn;
 
 	urlManager::urlButton creatorItchLink;
+	urlManager::urlButton raylibLink;
+	urlManager::urlButton menuSongLink;
+	urlManager::urlButton gameSongLink;
+	urlManager::urlButton soundsLink;
+	urlManager::urlButton characterLink; 
+	urlManager::urlButton fireballLink;
+	urlManager::urlButton humblepixelLink;
 
 	const int candleAmountFrames = 4;
 	const int bookAmountFrames = 19;
@@ -120,8 +127,15 @@ namespace Menu
 		flipPage = LoadSound("res/sounds/pageFlip.wav");
 		buttonBop = LoadSound("res/sounds/buttonpop.wav");
 
-		urlManager::initUrlButton(creatorItchLink, { 300, 265 }, 14, "https://ramlogic.itch.io"); 
-
+		urlManager::initUrlButton(creatorItchLink, { 280, 270 }, 13, "https://ramlogic.itch.io");
+		urlManager::initUrlButton(raylibLink, { 280, 310 }, 13, "https://www.raylib.com");  
+		urlManager::initUrlButton(menuSongLink, { 280, 340 }, 13, "https://crowshade.itch.io/horror-music-pack");  
+		urlManager::initUrlButton(gameSongLink, { 280, 380 }, 13, "https://suno.com"); 
+		urlManager::initUrlButton(soundsLink, { 280, 420 }, 13, "https://artlist.io/sfx"); 
+		urlManager::initUrlButton(characterLink, { 630, 270 }, 13, "https://pixivan.itch.io");
+		urlManager::initUrlButton(fireballLink, { 630, 310 }, 13, "https://stealthix.itch.io/animated-fires");
+		urlManager::initUrlButton(humblepixelLink, { 630, 410 }, 13, "https://itch.io/queue/c/4957050/delving");
+		
 		//Init AudioFiles
 		PlayMusicStream(menuMusic);
 		SetMusicVolume(menuMusic, 0.5f);
@@ -222,14 +236,19 @@ namespace Menu
 		{
 			returnBttn.buttonFrame = 0;
 		}
+		
+		urlManager::urlCollision(creatorItchLink, pointerTex, pointerPosition);
 
-		if (collisions::rectangleXrectangle(creatorItchLink.urlBounds.x, creatorItchLink.urlBounds.y, creatorItchLink.urlBounds.width, creatorItchLink.urlBounds.height, pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)) && gameManager::CurrentScreen == gameManager::credits)
-		{
-			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-			{
-				OpenURL(creatorItchLink.path);
-			}
-		}
+		urlManager::urlCollision(raylibLink, pointerTex, pointerPosition);
+
+		urlManager::urlCollision(menuSongLink, pointerTex, pointerPosition);
+
+		urlManager::urlCollision(soundsLink, pointerTex, pointerPosition);
+
+		urlManager::urlCollision(fireballLink, pointerTex, pointerPosition);
+
+		urlManager::urlCollision(humblepixelLink, pointerTex, pointerPosition);
+
 
 		if (collisions::rectangleXrectangle(itchIoPos.x, itchIoPos.y, static_cast<float>(itchLogo.width), static_cast<float>(itchLogo.height), pointerPosition.x, pointerPosition.y, static_cast<float>(pointerTex.width), static_cast<float>(pointerTex.height)))
 		{
@@ -238,6 +257,7 @@ namespace Menu
 				OpenURL(linkURL);
 			}
 		}
+		
 
 		if (candleElapsedTime >= candleFrameTime) 
 		{
@@ -245,7 +265,7 @@ namespace Menu
 			candleElapsedTime = 0.0f; // Reset elapsed time
 		}
 		
-		swapMenuPage();
+		swapMenuPage(); 
 
 	} // END UPDATE ======================================================================================================================================================
 
@@ -284,22 +304,52 @@ namespace Menu
 		{
 			DrawTexture(returnBttn.buttonText[returnBttn.buttonFrame], static_cast<int>(returnBttn.position.x), static_cast<int>(returnBttn.position.y), WHITE);
 
-			DrawText("Made By: Estanislao Sala Barraquero", 280, 250, 16, BLACK);
+			DrawText("Made By: Estanislao Sala Barraquero", 280, 250, 14, BLACK);
 			DrawText(creatorItchLink.path, static_cast<int>(creatorItchLink.urlBounds.x), static_cast<int>(creatorItchLink.urlBounds.y), 14, BLUE);
 			DrawLine(static_cast<int>(creatorItchLink.urlBounds.x), static_cast<int>(creatorItchLink.urlBounds.y + 13),
 				     static_cast<int>(creatorItchLink.urlBounds.x + creatorItchLink.urlBounds.width), static_cast<int>(creatorItchLink.urlBounds.y + 13), BLUE);
 
+			DrawText("Made using: Raylib", 280, 285, 14, BLACK); 
+			DrawText(raylibLink.path, static_cast<int>(raylibLink.urlBounds.x), static_cast<int>(raylibLink.urlBounds.y), 14, BLUE);
+			DrawLine(static_cast<int>(raylibLink.urlBounds.x), static_cast<int>(raylibLink.urlBounds.y + 13),
+				     static_cast<int>(raylibLink.urlBounds.x + raylibLink.urlBounds.width), static_cast<int>(raylibLink.urlBounds.y + 13), BLUE);
 
-			DrawText("Made using Raylib", 280, 300, 16, BLACK);
-			//DrawText("Menu song made by Crow Shade ", 300, 300, 10, BLACK);
-			DrawText("Character made by PixiVan", 300, 320, 10, BLACK);
-			DrawText("Fireball made by Stealthix", 300, 340, 10, BLACK);
-			DrawText("Book made by humblepixel", 300, 360, 10, BLACK);
-			DrawText("Game song made with suno (ai)", 300, 380, 10, BLACK);
-			DrawText("Character portrair made with (ai)", 300, 400, 10, BLACK);
-			DrawText("sounds made by floraphonic (ai)", 300, 420, 10, BLACK);
+			DrawText("Menu song by: Crow Shade ", 280, 320, 14, BLACK); 
+			DrawText(menuSongLink.path, static_cast<int>(menuSongLink.urlBounds.x), static_cast<int>(menuSongLink.urlBounds.y), 14, BLUE);
+			DrawLine(static_cast<int>(menuSongLink.urlBounds.x), static_cast<int>(menuSongLink.urlBounds.y + 13),
+				static_cast<int>(menuSongLink.urlBounds.x + menuSongLink.urlBounds.width), static_cast<int>(menuSongLink.urlBounds.y + 13), BLUE);
 
-			DrawText("FOR LINKS CLICK ON ITCH.IO LOGO", 300, 460, 14, BLACK);
+			DrawText("Game song made with suno (ai)", 280, 360, 14, BLACK);
+			DrawText(gameSongLink.path, static_cast<int>(gameSongLink.urlBounds.x), static_cast<int>(gameSongLink.urlBounds.y), 14, BLUE);
+			DrawLine(static_cast<int>(gameSongLink.urlBounds.x), static_cast<int>(gameSongLink.urlBounds.y + 13),
+				     static_cast<int>(gameSongLink.urlBounds.x + gameSongLink.urlBounds.width), static_cast<int>(gameSongLink.urlBounds.y + 13), BLUE);
+			
+			DrawText("sounds made with artlist (ai)", 280, 400, 14, BLACK);
+			DrawText(soundsLink.path, static_cast<int>(soundsLink.urlBounds.x), static_cast<int>(soundsLink.urlBounds.y), 14, BLUE);
+			DrawLine(static_cast<int>(soundsLink.urlBounds.x), static_cast<int>(soundsLink.urlBounds.y + 13),
+				     static_cast<int>(soundsLink.urlBounds.x + soundsLink.urlBounds.width), static_cast<int>(soundsLink.urlBounds.y + 13), BLUE);
+			
+			DrawText("Character made by PixiVan", 630, 250, 14, BLACK); 
+			DrawText(characterLink.path, static_cast<int>(characterLink.urlBounds.x), static_cast<int>(characterLink.urlBounds.y), 14, BLUE);
+			DrawLine(static_cast<int>(characterLink.urlBounds.x), static_cast<int>(characterLink.urlBounds.y + 13),
+				     static_cast<int>(characterLink.urlBounds.x + characterLink.urlBounds.width), static_cast<int>(characterLink.urlBounds.y + 13), BLUE);
+
+			DrawText("Fireball made by Stealthix", 630, 290, 14, BLACK);
+			DrawText(fireballLink.path, static_cast<int>(fireballLink.urlBounds.x), static_cast<int>(fireballLink.urlBounds.y), 14, BLUE);
+			DrawLine(static_cast<int>(fireballLink.urlBounds.x), static_cast<int>(fireballLink.urlBounds.y + 13),
+				     static_cast<int>(fireballLink.urlBounds.x + fireballLink.urlBounds.width), static_cast<int>(fireballLink.urlBounds.y + 13), BLUE);
+
+			DrawText("Book made by humblepixel", 630, 330, 14, BLACK);
+			DrawText("Menu background by humblepixel", 630, 350, 14, BLACK);
+			DrawText("Defeat menu background by humblepixel", 630, 370, 14, BLACK);
+			DrawText("Pause menu background humblepixel", 630, 390, 14, BLACK);
+			DrawText(humblepixelLink.path, static_cast<int>(humblepixelLink.urlBounds.x), static_cast<int>(humblepixelLink.urlBounds.y), 14, BLUE);
+			DrawLine(static_cast<int>(humblepixelLink.urlBounds.x), static_cast<int>(humblepixelLink.urlBounds.y + 13),
+				     static_cast<int>(humblepixelLink.urlBounds.x + humblepixelLink.urlBounds.width), static_cast<int>(humblepixelLink.urlBounds.y + 13), BLUE);
+
+			DrawText("Slime: missing", 630, 430, 14, BLACK);
+			
+			DrawText("FOR LINKS CLICK ON ITCH.IO LOGO", 630, 480, 14, BLACK);
 		}
 
 
